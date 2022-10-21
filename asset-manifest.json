@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/react-pwa/static/css/main.471fc0c7.css",
-    "main.js": "/react-pwa/static/js/main.b5201e90.js",
-    "static/js/787.648bf971.chunk.js": "/react-pwa/static/js/787.648bf971.chunk.js",
-    "service-worker.js": "/react-pwa/service-worker.js",
-    "index.html": "/react-pwa/index.html",
-    "main.471fc0c7.css.map": "/react-pwa/static/css/main.471fc0c7.css.map",
-    "main.b5201e90.js.map": "/react-pwa/static/js/main.b5201e90.js.map",
-    "787.648bf971.chunk.js.map": "/react-pwa/static/js/787.648bf971.chunk.js.map"
+    "main.css": "/mohankrishna007/react-pwa/static/css/main.fb814ca1.css",
+    "main.js": "/mohankrishna007/react-pwa/static/js/main.a73a5173.js",
+    "static/js/787.648bf971.chunk.js": "/mohankrishna007/react-pwa/static/js/787.648bf971.chunk.js",
+    "service-worker.js": "/mohankrishna007/react-pwa/service-worker.js",
+    "index.html": "/mohankrishna007/react-pwa/index.html",
+    "main.fb814ca1.css.map": "/mohankrishna007/react-pwa/static/css/main.fb814ca1.css.map",
+    "main.a73a5173.js.map": "/mohankrishna007/react-pwa/static/js/main.a73a5173.js.map",
+    "787.648bf971.chunk.js.map": "/mohankrishna007/react-pwa/static/js/787.648bf971.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.471fc0c7.css",
-    "static/js/main.b5201e90.js"
+    "static/css/main.fb814ca1.css",
+    "static/js/main.a73a5173.js"
   ]
 }
