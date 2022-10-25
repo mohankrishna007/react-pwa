@@ -57,7 +57,12 @@ export default function DialogBox(props) {
   }
 
   const navigate = useNavigate();
-  const gotoDashBoard = () => navigate("/dashboard");
+  const gotoDashBoard = () => navigate("/dashboard", {
+    state: {
+      id: props.UserId,
+      filled: true,
+    }
+  });
 
   const handleNext = () => {
     if(activeStep === 1){

@@ -432,7 +432,6 @@ const PreferenceMotivation = (props, ref) => {
                   disableCloseOnSelect
                   getOptionLabel={(option) => option}
                   getOptionDisabled={(option) => {
-                    console.log(option);
                     if (location.indexOf("Entire US") !== -1) {
                       return true;
                     }

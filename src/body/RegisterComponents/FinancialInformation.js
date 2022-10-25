@@ -33,7 +33,7 @@ const FinancialInformation = (props, ref) => {
 
   const postFinancial = () => {
     const Financial = {
-      "userId": props.userId,
+      "userId": props.UserId,
       "ApplyingFinancialAid": appplyingFinancialAid,
       "MeritScholarShip": meritScholarShipImp,
       "WhoWillPayForCollege": whoPayForCollege,
