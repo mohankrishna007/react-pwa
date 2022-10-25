@@ -20,13 +20,15 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
+  responsiveFontSizes,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import PercentIcon from "@mui/icons-material/Percent";
-import FOS from "./fos";
+import FOS from "./Assets/fos.json";
 import axios from "axios";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import RegisterTheme from "../../Themes/RegisterTheme";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -88,10 +90,10 @@ const States = [
 ];
 
 const PreferenceMotivation = (props, ref) => {
-  const [collegeType, setCollegeType] = useState("");
+  const [collegeType, setCollegeType] = useState([]);
   const [fieldOfStudy, setFieldOfStudy] = useState(null);
-  const [regiliousAffliations, setReligiousAffliations] = useState(null);
-  const [specializedMission, setSpecializedMission] = useState(null);
+  const [regiliousAffliations, setReligiousAffliations] = useState("");
+  const [specializedMission, setSpecializedMission] = useState("");
   const [location, setLocation] = useState([]);
   const [schoolSize, setSchoolSize] = useState({});
   const [urbanicity, setUrbanicity] = useState({});
@@ -122,11 +124,13 @@ const PreferenceMotivation = (props, ref) => {
       if (value === true) {
         selectedUrbanicity.push(key);
       }
-    }for (const [key, value] of Object.entries(reasonsToAttendCollege)) {
+    }
+    for (const [key, value] of Object.entries(reasonsToAttendCollege)) {
       if (value === true) {
         selectedReasonstoAttend.push(key);
       }
-    }for (const [key, value] of Object.entries(keyConsiderations)) {
+    }
+    for (const [key, value] of Object.entries(keyConsiderations)) {
       if (value === true) {
         selectedKeyConsiderations.push(key);
       }
@@ -218,7 +222,7 @@ const PreferenceMotivation = (props, ref) => {
   const handleCollegeType = (value) => {
     var str = [];
     value.map((ele) => str.push(ele.title));
-    setCollegeType(String(str));
+    setCollegeType(str);
   };
 
   const handleLocation = (value) => {
@@ -305,21 +309,6 @@ const PreferenceMotivation = (props, ref) => {
     },
   ];
 
-  const theme = createTheme({
-    components: {
-      MuiFormLabel: {
-        styleOverrides: {
-          asterisk: {
-            color: "#db3131",
-            "&$error": {
-              color: "#db3131",
-            },
-          },
-        },
-      },
-    },
-  });
-
   React.useEffect(() => {
     if (collegeType == null || fieldOfStudy == null || scoreError) {
       props.handleError(true);
@@ -344,14 +333,13 @@ const PreferenceMotivation = (props, ref) => {
 
   return (
     <div>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={responsiveFontSizes(createTheme(RegisterTheme))}>
         <MDBCard>
           <MDBCardBody className="px-4">
             <MDBRow>
               <MDBCol md="12">
                 <Autocomplete
                   multiple
-                  id="preferences-and-motivations"
                   options={collegePreferenceOptions}
                   getOptionLabel={(option) => option.title}
                   onChange={(event, value) => {
@@ -389,7 +377,6 @@ const PreferenceMotivation = (props, ref) => {
                   </InputLabel>
                   <Select
                     labelId="religious-affiliation-select-label"
-                    id="religious-affiliation-select"
                     value={regiliousAffliations}
                     label="Religious Affliations"
                     sx={{ mb: 2 }}
@@ -397,7 +384,9 @@ const PreferenceMotivation = (props, ref) => {
                     fullWidth
                   >
                     {religiousAffliationOptions.map((option) => (
-                      <MenuItem value={option.value}>{option.title}</MenuItem>
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.title}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -418,7 +407,9 @@ const PreferenceMotivation = (props, ref) => {
                     onChange={handleSpecializedMission}
                   >
                     {specializedMissionsOptions.map((option) => (
-                      <MenuItem value={option.value}>{option.title}</MenuItem>
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.title}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -472,6 +463,7 @@ const PreferenceMotivation = (props, ref) => {
                             onChange={handleSchoolSize}
                           />
                         }
+                        key={option.value}
                         label={option.title}
                         labelPlacement="end"
                         onChange={handleSchoolSize}
@@ -493,8 +485,10 @@ const PreferenceMotivation = (props, ref) => {
                           onChange={handleUrbanicity}
                         />
                       }
+                      key={option.value}
                       label={option.title}
                       labelPlacement="end"
+                      sx={{ mb: 2 }}
                       onChange={handleUrbanicity}
                     />
                   ))}
@@ -509,7 +503,7 @@ const PreferenceMotivation = (props, ref) => {
                 <FormGroup aria-label="position">
                   <br />
                   {reasonsToAttendCollegeOptions.map((option) => (
-                    <Grid direction="row">
+                    <Grid container direction="row" key={option.value}>
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -517,6 +511,7 @@ const PreferenceMotivation = (props, ref) => {
                             onChange={handleReasonsToAttendCollege}
                           />
                         }
+                        key={option.value}
                         label={option.title}
                         labelPlacement="end"
                         onChange={handleReasonsToAttendCollege}
@@ -538,124 +533,136 @@ const PreferenceMotivation = (props, ref) => {
                   Key selection considerations and importance
                 </FormLabel>
                 <FormGroup aria-label="position">
-                  <Grid direction="row">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          value="1"
-                          onChange={handleKeyConsiderations}
-                        />
-                      }
-                      label={"Affinity"}
-                      labelPlacement="end"
-                      onChange={handleKeyConsiderations}
-                    />
-                    <Tooltip
-                      style={{ marginLeft: "-20px" }}
-                      title={
-                        "Takes into account factors such as college's reputation, ranking, campus safety, transporation access, weather, and perceived cultural fit"
-                      }
-                    >
-                      <IconButton>
-                        <InfoIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <div style={{ float: "right" }}>
+                  <Grid container direction="row">
+                    <Grid item xs={10}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            value="1"
+                            onChange={handleKeyConsiderations}
+                          />
+                        }
+                        key={"1"}
+                        label={"Affinity"}
+                        labelPlacement="end"
+                        onChange={handleKeyConsiderations}
+                      />
+                      <Tooltip
+                        style={{ marginLeft: "-20px" }}
+                        title={
+                          "Takes into account factors such as college's reputation, ranking, campus safety, transporation access, weather, and perceived cultural fit"
+                        }
+                      >
+                        <IconButton>
+                          <InfoIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item xs={2}>
                       <Input
-                        error={scoreError & keyConsiderations[1]}
+                        error={scoreError & keyConsiderations[1] ? true : false}
                         endAdornment={
                           <InputAdornment position="end">
                             <PercentIcon style={{ fontSize: "1em" }} />
                           </InputAdornment>
                         }
                         style={{
-                          width: "50px",
+                          width: "150%",
                         }}
                         value={affinityScore}
                         onChange={handleAffinityScore}
                         disabled={!keyConsiderations[1]}
                       />
-                    </div>
+                    </Grid>
                   </Grid>
-                  <Grid direction="row">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          value="2"
-                          onChange={handleKeyConsiderations}
-                        />
-                      }
-                      label="Affordability"
-                      labelPlacement="end"
-                      onChange={handleKeyConsiderations}
-                    />
-                    <Tooltip
-                      style={{ marginLeft: "-20px" }}
-                      title={"Whether I/we can afford it "}
-                    >
-                      <IconButton>
-                        <InfoIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <div style={{ float: "right" }}>
+                  <Grid container direction="row" key={"2"}>
+                    <Grid item xs={10}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            value="2"
+                            onChange={handleKeyConsiderations}
+                          />
+                        }
+                        key={"2"}
+                        label="Affordability"
+                        labelPlacement="end"
+                        onChange={handleKeyConsiderations}
+                      />
+                      <Tooltip
+                        style={{ marginLeft: "-20px" }}
+                        title={"Whether I/we can afford it "}
+                      >
+                        <IconButton>
+                          <InfoIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item xs={2}>
                       <Input
-                        error={scoreError & keyConsiderations[2]}
+                        error={scoreError & keyConsiderations[2] ? true : false}
                         endAdornment={
                           <InputAdornment position="end">
                             <PercentIcon style={{ fontSize: "1em" }} />
                           </InputAdornment>
                         }
                         style={{
-                          width: "50px",
+                          width: "150%",
                         }}
                         value={affordabilityScore}
                         onChange={handleAffordabilityScore}
                         disabled={!keyConsiderations[2]}
                       />
-                    </div>
+                    </Grid>
                   </Grid>
-                  <Grid direction="row">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          value="3"
-                          onChange={handleKeyConsiderations}
-                        />
-                      }
-                      label="Admissibility"
-                      labelPlacement="end"
-                      onChange={handleKeyConsiderations}
-                    />
-                    <Tooltip
-                      style={{ marginLeft: "-20px" }}
-                      title={"Student's chances of getting admitted."}
-                    >
-                      <IconButton>
-                        <InfoIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <div style={{ float: "right" }}>
+                  <Grid container direction="row" key={"3"}>
+                    <Grid item xs={10}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            value="3"
+                            onChange={handleKeyConsiderations}
+                          />
+                        }
+                        key={"3"}
+                        label="Admissibility"
+                        labelPlacement="end"
+                        onChange={handleKeyConsiderations}
+                      />
+                      <Tooltip
+                        style={{ marginLeft: "-20px" }}
+                        title={"Student's chances of getting admitted."}
+                      >
+                        <IconButton>
+                          <InfoIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item xs={2}>
                       <Input
-                        error={scoreError & keyConsiderations[3]}
+                        error={scoreError & keyConsiderations[3] ? true : false}
                         endAdornment={
                           <InputAdornment position="end">
                             <PercentIcon style={{ fontSize: "1em" }} />
                           </InputAdornment>
                         }
                         style={{
-                          width: "50px",
+                          width: "150%",
                         }}
                         value={admissibilityScore}
                         onChange={handleAdmissibilityScore}
                         disabled={!keyConsiderations[3]}
                       />
-                    </div>
+                    </Grid>
                   </Grid>
                 </FormGroup>
               </MDBCol>
             </MDBRow>
 
-            <Snackbar open={scoreError & scoreClicked} autoHideDuration={6000}>
+            <Snackbar
+              open={scoreError & scoreClicked ? true : false}
+              autoHideDuration={3000}
+            >
               <Alert severity="error" sx={{ width: "100%" }}>
                 Sum of Percentages should be 100%
               </Alert>

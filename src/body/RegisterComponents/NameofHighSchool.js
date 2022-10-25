@@ -9,7 +9,7 @@ import { useTheme, styled } from "@mui/material/styles";
 import { VariableSizeList } from "react-window";
 import Typography from "@mui/material/Typography";
 
-import Schools from "./Schools.json";
+import Schools from "./Assets/Schools.json"
 const LISTBOX_PADDING = 8; // px
 
 function renderRow(props) {
