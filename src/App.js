@@ -4,6 +4,7 @@ import Home from './Home';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './Header/Header';
 import DashBoard from './body/DashBoard';
+import ShowData from './body/ShowData';
 
 class App extends React.Component {
   render(){
@@ -15,6 +16,7 @@ class App extends React.Component {
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='dashboard' element={<DashBoard />}/>
+              <Route path='getData' element={<ShowData/>} />
             </Routes>
           </div>
         </div>

@@ -13,11 +13,12 @@ import {
   createTheme,
   ThemeProvider,
   Autocomplete,
+  Box,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Country, State } from "country-state-city";
-import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { MobileDatePicker } from "@mui/x-date-pickers";
 import axios from "axios";
 
 const DemographicInformation = (props, ref) => {
@@ -46,8 +47,8 @@ const DemographicInformation = (props, ref) => {
   const [genderClicked, setGenderClicked] = React.useState(false);
 
   useImperativeHandle(ref, () => ({
-    postAboutStudent
-  }))
+    postAboutStudent,
+  }));
 
   const postAboutStudent = () => {
     const AboutStudent = {
@@ -65,14 +66,14 @@ const DemographicInformation = (props, ref) => {
       Gender: gender,
     };
 
+    console.log(AboutStudent);
+
     axios
       .post(
         "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
         AboutStudent
       )
       .then((resp) => console.log(resp));
-
-    console.log(AboutStudent);
   };
 
   const handleFirstName = (event) => {
@@ -166,7 +167,7 @@ const DemographicInformation = (props, ref) => {
   });
 
   return (
-    <div>
+    <Box component="form" noValidate autoComplete="off">
       <ThemeProvider theme={theme}>
         <MDBCard>
           <MDBCardBody className="px-4">
@@ -202,7 +203,7 @@ const DemographicInformation = (props, ref) => {
             <MDBRow>
               <MDBCol md="12">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
+                  <MobileDatePicker
                     label="Date of Birth"
                     value={dob}
                     onChange={(newValue) => {
@@ -247,7 +248,6 @@ const DemographicInformation = (props, ref) => {
               <MDBCol md="7" style={{ display: "none" }} id="citenship_status">
                 <Autocomplete
                   id="country-list"
-                  freeSolo
                   options={Country.getAllCountries()}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) => {
@@ -259,10 +259,7 @@ const DemographicInformation = (props, ref) => {
                   filterSelectedOptions
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Country"
-                    />
+                    <TextField {...params} label="Country" />
                   )}
                 />
               </MDBCol>
@@ -296,7 +293,6 @@ const DemographicInformation = (props, ref) => {
               <MDBCol md="5">
                 <Autocomplete
                   id="student-address-line1"
-                  freeSolo
                   options={State.getStatesOfCountry(country)}
                   getOptionLabel={(option) =>
                     option.name === "Entire US" ? "" : option.name
@@ -308,7 +304,13 @@ const DemographicInformation = (props, ref) => {
                   filterSelectedOptions
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
-                    <TextField {...params} required label="State" />
+                    <TextField 
+                    {...params} 
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password',
+                    }}
+                    required label="State" />
                   )}
                 />
               </MDBCol>
@@ -395,8 +397,8 @@ const DemographicInformation = (props, ref) => {
           </MDBCardBody>
         </MDBCard>
       </ThemeProvider>
-    </div>
+    </Box>
   );
-}
+};
 
 export default forwardRef(DemographicInformation);

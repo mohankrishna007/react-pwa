@@ -50,6 +50,8 @@ const AcademicProfile = (props, ref) => {
       "ActCompostite": actComposite,
     };
 
+    console.log(AcademicProfile)
+
     axios.post('https://collegeportfoliobackendnode.azurewebsites.net/student/academics', AcademicProfile)
     .then((resp) => console.log(resp))
   };

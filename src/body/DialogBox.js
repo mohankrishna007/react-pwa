@@ -43,12 +43,11 @@ const parent = [
   "What are some of your student's preferences?" 
 ]
 
-export default function DialogBox() {
+export default function DialogBox(props) {
 
   const ChildRef = React.useRef();
   const theme = useTheme();
 
-  const uuid = require('uuid');
   const [activeStep, setActiveStep] = React.useState(0);
   const[who, setWho] = React.useState(null);
   const[haveError, setHaveError] = React.useState(true);
@@ -92,9 +91,7 @@ export default function DialogBox() {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const newId = uuid.v4();
+  }; 
 
   return (
     <div>
@@ -147,13 +144,13 @@ export default function DialogBox() {
                   </MDBCard>
                 </div>
               ) : activeStep === 1 ? (
-                <DemographicInformation ref={ChildRef} handleError={handleHaveError} UserId={newId}/>
+                <DemographicInformation ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
               ) : activeStep === 2 ? (
-                <AcademicProfile ref={ChildRef} handleError={handleHaveError} UserId={newId}/>
+                <AcademicProfile ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
               ) : activeStep === 3 ? (
-                <FinancialInformation ref={ChildRef} handleError={handleHaveError} UserId={newId}/>
+                <FinancialInformation ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
               ) : activeStep === 4 ? (
-                <PreferenceMotivation ref={ChildRef} handleError={handleHaveError} UserId={newId}/>
+                <PreferenceMotivation ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
               ) : (
                 gotoDashBoard()
               )}

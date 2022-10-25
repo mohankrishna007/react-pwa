@@ -148,14 +148,14 @@ const PreferenceMotivation = (props, ref) => {
       AdmissibilityScore: admissibilityScore,
     };
 
+    console.log(PreferenceMotivation);
+
     axios
       .post(
         "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
         PreferenceMotivation
       )
       .then((resp) => console.log(resp));
-
-    console.log(PreferenceMotivation);
   };
 
   const handleReligiousAffliations = (event) => {
@@ -658,7 +658,7 @@ const PreferenceMotivation = (props, ref) => {
 
             <Snackbar open={scoreError & scoreClicked} autoHideDuration={6000}>
               <Alert severity="error" sx={{ width: "100%" }}>
-                Sum of Percentages Need to be 100
+                Sum of Percentages should be 100%
               </Alert>
             </Snackbar>
           </MDBCardBody>

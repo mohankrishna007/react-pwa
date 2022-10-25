@@ -44,6 +44,8 @@ const FinancialInformation = (props, ref) => {
       "MonthlyContribution": monthlyContributions
     }
 
+    console.log(Financial)
+
     axios.post('https://collegeportfoliobackendnode.azurewebsites.net/student/financial', Financial)
     .then((resp) => console.log(resp))
   }
