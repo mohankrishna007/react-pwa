@@ -111,7 +111,7 @@ export default function DialogBox(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{who === 1?student[activeStep]:parent[activeStep]}</DialogTitle>
+        <DialogTitle>{(who==='1')?student[activeStep]:parent[activeStep]}</DialogTitle>
         <DialogContent>
           <div>
             <Box sx={{ maxWidth: "100%", flexGrow: 1 }}>

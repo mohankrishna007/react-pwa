@@ -40,7 +40,6 @@ const DemographicInformation = (props, ref) => {
   const [dobClicked, setDobClicked] = React.useState(false);
   const [residencyStatusClicked, setResidencyStatusClicked] =
     React.useState(false);
-  const [streetAddressClicked, setStreetAddressClicked] = React.useState(false);
   const [cityClicked, setCityClicked] = React.useState(false);
   const [zipCodeClicked, setZipCodeClicked] = React.useState(false);
   const [ethenicOriginClicked, setEthenicOriginClicked] = React.useState(false);
@@ -99,7 +98,6 @@ const DemographicInformation = (props, ref) => {
 
   const handleStreetAdress = (event) => {
     setStreetAddress(event.target.value);
-    setStreetAddressClicked(true);
   };
 
   const handleCity = (event) => {
@@ -267,7 +265,6 @@ const DemographicInformation = (props, ref) => {
             <MDBRow>
               <MDBCol md="12">
                 <TextField
-                  error={(streetAddress.length === 0) & streetAddressClicked}
                   id="student-address-line1"
                   label="Residential Street Address"
                   value={streetAddress}
