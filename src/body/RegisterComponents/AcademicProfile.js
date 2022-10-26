@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle } from "react";
 import { MDBRow, MDBCol, MDBCard, MDBCardBody } from "mdb-react-ui-kit";
 import {
   FormControl,
@@ -17,10 +17,11 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
+import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import axios from "axios";
 import NameofHighSchool from "./NameofHighSchool";
 import RegisterTheme from "../../Themes/RegisterTheme";
+import dayjs from "dayjs";
 
 const AcademicProfile = (props, ref) => {
   useImperativeHandle(ref, () => ({
@@ -49,7 +50,7 @@ const AcademicProfile = (props, ref) => {
       ActCompostite: actComposite,
     };
 
-    console.log(AcademicProfile);
+    localStorage.setItem("academic_profile", JSON.stringify(AcademicProfile));
 
     axios
       .post(
@@ -71,11 +72,11 @@ const AcademicProfile = (props, ref) => {
   const [totalGpa, setTotalGpa] = React.useState("");
   const [haveIB, setHaveIB] = React.useState("");
   const [ibScore, setIBscore] = React.useState("");
-  const [psatMath, setPsatMath] = React.useState(0);
-  const [psatReading, setpsatReading] = React.useState(0);
-  const [satMath, setSatMath] = React.useState(0);
-  const [satReading, setSatReading] = React.useState(0);
-  const [actComposite, setActComposite] = React.useState(0);
+  const [psatMath, setPsatMath] = React.useState("");
+  const [psatReading, setpsatReading] = React.useState("");
+  const [satMath, setSatMath] = React.useState("");
+  const [satReading, setSatReading] = React.useState("");
+  const [actComposite, setActComposite] = React.useState("");
 
   const [value, setValue] = React.useState("1");
   const handleChange = (event, newValue) => {
@@ -98,16 +99,11 @@ const AcademicProfile = (props, ref) => {
 
   const handleEnrolAs = (event) => {
     setEnrolAs(event.target.value);
-    if (event.target.value === 1) {
-      document.getElementById("transfer_as").style.display = "none";
-      settransferAs(0);
-    } else {
-      document.getElementById("transfer_as").style.display = "block";
-    }
   };
 
   const type_of_degreechange = (event) => {
     setTypeOfDegree(event.target.value);
+    settransferAs("");
   };
 
   const handleTransferAs = (event) => {
@@ -156,26 +152,22 @@ const AcademicProfile = (props, ref) => {
     setActComposite(event.target.value);
   };
 
-  function updateSeasons() {
+  const updateSeasons = useCallback(() => {
     var seasonsTemp = [];
-    var month = highSchoolGraduation.$d.getMonth();
-    var year = highSchoolGraduation.$d.getFullYear();
+    var month = new Date(highSchoolGraduation).getMonth();
+    var year = new Date(highSchoolGraduation).getFullYear();
     let i = 1;
 
     if (month < 7) {
       seasonsTemp.push("Fall " + year);
     }
-
     for (; i <= 5; i++) {
       seasonsTemp.push("Spring " + (year + i));
       seasonsTemp.push("Fall " + (year + i));
     }
     setSeasons(seasonsTemp);
-  }
-
-  function getSeasons() {
-    return seasons;
-  }
+  },[highSchoolGraduation])
+  
 
   const studentPercentileoptions = [
     { title: "Top 10%", value: "1" },
@@ -189,12 +181,6 @@ const AcademicProfile = (props, ref) => {
     { title: "Certificate", value: "1" },
     { title: "Associate's Degree", value: "2" },
     { title: "Bachelor's Degree", value: "3" },
-  ];
-
-  const transferasOptions = [
-    { title: "Sophmore", value: "1" },
-    { title: "Junior", value: "2" },
-    { title: "Senior", value: "3" },
   ];
 
   React.useEffect(() => {
@@ -212,7 +198,47 @@ const AcademicProfile = (props, ref) => {
     } else {
       props.handleError(false);
     }
-  });
+
+    var restored = localStorage.getItem("academic_profile");
+
+
+    if (restored != null) {
+
+      console.log(restored)
+
+      var data = JSON.parse(restored);
+      sethighSchoolGraduation(data.HighSchoolGraduation);
+      setEnrolIn(data.LookingtoEnrollIn);
+      setEnrolAs(data.IncomingStatus);
+      setTypeOfDegree(data.TypeOfDegree);
+      settransferAs(data.TransferAs);
+      setStudentPercentile(data.StudentClassRank);
+      setGpaType(data.GpaType);
+      setScoredGpa(data.ScoredGpa);
+      setTotalGpa(data.TotalGpa);
+      setHaveIB(data.IB);
+      setIBscore(data.IBScore);
+      setpsatReading(data.PsatReading);
+      setPsatMath(data.psatMath);
+      setSatMath(data.SatMath);
+      setSatReading(data.SatReading);
+      setActComposite(data.ActCompostite);
+
+      localStorage.removeItem('academic_profile')
+    }
+    updateSeasons();
+  }, [
+    enrolAs.length,
+    enrolIn.length,
+    gpaType.length,
+    highSchoolGraduation,
+    nameOfSchool.length,
+    scoredGpa.length,
+    totalGpa.length,
+    typeofDegree.length,
+    updateSeasons,
+    props,
+  ]);
 
   return (
     <div>
@@ -227,16 +253,10 @@ const AcademicProfile = (props, ref) => {
             <MDBRow>
               <MDBCol md="6">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <MobileDatePicker
+                  <DesktopDatePicker
                     views={["year", "month"]}
-                    minDate={new Date()}
-                    maxDate={
-                      new Date(
-                        new Date().getFullYear() + 7,
-                        new Date().getMonth(),
-                        new Date().getDate()
-                      )
-                    }
+                    minDate={dayjs(new Date())}
+                    maxDate={new Date(new Date().getFullYear() + 7, 12, 0)}
                     label="High School Graduation"
                     value={highSchoolGraduation}
                     onChange={(newValue) => {
@@ -247,14 +267,13 @@ const AcademicProfile = (props, ref) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        error={
-                          (highSchoolGraduation === null) &
-                          highSchoolGraduationClicked
-                            ? true
-                            : false
-                        }
                         required
                         fullWidth
+                        helperText={
+                          highSchoolGraduationClicked
+                            ? params?.inputProps?.placeholder
+                            : ""
+                        }
                         sx={{ mb: 2 }}
                       />
                     )}
@@ -270,12 +289,11 @@ const AcademicProfile = (props, ref) => {
                     labelId="looking-to-enroll-in"
                     value={enrolIn}
                     required
-                    onFocus={updateSeasons}
                     label="Looking to enrol in"
                     sx={{ mb: 2 }}
                     onChange={handleEnrolIn}
                   >
-                    {getSeasons().map((option) => (
+                    {seasons.map((option) => (
                       <MenuItem key={option} value={option}>
                         {option}
                       </MenuItem>
@@ -332,51 +350,29 @@ const AcademicProfile = (props, ref) => {
               </MDBCol>
             </MDBRow>
             <MDBRow>
-              <MDBCol md="6" id="transfer_as" style={{ display: "none" }}>
-                {[typeofDegree].forEach((res) =>
-                  res === 3 ? (
-                    <div>
-                      <FormControl fullWidth>
-                        <InputLabel id="transfer-year-select-label" required>
-                          Transfer as
-                        </InputLabel>
-                        <Select
-                          labelId="transfer-as-select-label"
-                          id="transfer-as-select"
-                          value={tranferAs}
-                          onChange={handleTransferAs}
-                          label="Transfer as"
-                          sx={{ mb: 2 }}
-                        >
-                          {transferasOptions.map((options) => (
-                            <MenuItem key={options.value} value={options.value}>
-                              {options.title}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </div>
-                  ) : (
-                    <div>
-                      <FormControl fullWidth>
-                        <InputLabel id="transfer-at-select-label">
-                          Transfer as
-                        </InputLabel>
-                        <Select
-                          labelId="tr-select-label"
-                          label="Transfer as"
-                          value={tranferAs}
-                          onChange={handleTransferAs}
-                          sx={{ mb: 2 }}
-                        >
-                          <MenuItem key={3} value={3}>
-                            Senior
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </div>
-                  )
-                )}
+              <MDBCol
+                md="6"
+                style={
+                  enrolAs === 2 ? { display: "block" } : { display: "none" }
+                }
+              >
+                <FormControl fullWidth>
+                  <InputLabel id="transfer-year-select-label" required>
+                    Transfer as
+                  </InputLabel>
+                  <Select
+                    labelId="transfer-as-select-label"
+                    id="transfer-as-select"
+                    value={tranferAs}
+                    onChange={handleTransferAs}
+                    label="Transfer as"
+                    sx={{ mb: 2 }}
+                  >
+                    <MenuItem key={'1'} value={'1'} disabled={(typeofDegree==='1'||typeofDegree==='2')?true: false}>Sophmore</MenuItem>
+                    <MenuItem key={'2'} value={'2'} disabled={(typeofDegree==='1'||typeofDegree==='2')?true: false}>Junior</MenuItem>
+                    <MenuItem key={'3'} value={'3'}>Senior</MenuItem>
+                  </Select>
+                </FormControl>
               </MDBCol>
               <MDBCol md={enrolAs === 2 ? "6" : "12"}>
                 <FormControl fullWidth>
@@ -424,7 +420,7 @@ const AcademicProfile = (props, ref) => {
                   error={
                     (scoredGpa.length === 0) & scoredGpaClicked ? true : false
                   }
-                  label="scored GPA"
+                  label="Actual GPA"
                   variant="standard"
                   value={scoredGpa}
                   onChange={handleScoreGpa}

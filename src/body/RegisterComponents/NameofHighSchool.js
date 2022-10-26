@@ -125,9 +125,11 @@ const StyledPopper = styled(Popper)({
 });
 
 export default function NameofHighSchool(props) {
+
   return (
     <div>
       <Autocomplete
+        freeSolo
         id="schools-highschools"
         options={Schools.HIGHSCHOOL}
         disableListWrap
@@ -143,7 +145,6 @@ export default function NameofHighSchool(props) {
           <div style={{fontSize: '0.6em'}}>{option.CITY}{" "}{option.STATE}{" "}{option.ZIP}{" - "}{option.TYPE}</div>
         </div>]}
         filterSelectedOptions
-        noOptionsText={"Add School Now"}
         sx={{ mb: 2 }}
         renderInput={(params) => (
           <TextField

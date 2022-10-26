@@ -18,7 +18,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Country, State } from "country-state-city";
-import { MobileDatePicker } from "@mui/x-date-pickers";
+import { DesktopDatePicker } from "@mui/x-date-pickers";
 import axios from "axios";
 import RegisterTheme from "../../Themes/RegisterTheme";
 
@@ -36,6 +36,7 @@ const DemographicInformation = (props, ref) => {
   const [ethenicOrigin, setEthenicOrigin] = React.useState("");
   const [gender, setGender] = React.useState("");
 
+  const [dobError, setDobError] = React.useState(false);
   const [firstNameClicked, setFirstNameClicked] = React.useState(false);
   const [lastNameClicked, setLastNameClicked] = React.useState(false);
   const [dobClicked, setDobClicked] = React.useState(false);
@@ -55,18 +56,19 @@ const DemographicInformation = (props, ref) => {
       userId: props.UserId,
       FirstName: firstName,
       LastName: lastName,
-      Dob: dob.$d,
+      Dob: dob,
       ResidentialStatus: residencyStatus,
       Country: country,
       StreetAddress: streetAddress,
       City: city,
       State: stateName,
+      StateISO: state,
       Zipcode: zipCode,
       EthenicOrigin: ethenicOrigin,
       Gender: gender,
     };
 
-    console.log(AboutStudent);
+    localStorage.setItem("about_student", JSON.stringify(AboutStudent));
 
     axios
       .post(
@@ -88,12 +90,6 @@ const DemographicInformation = (props, ref) => {
 
   const handleResidencyStatus = (event) => {
     setResidencyStatus(event.target.value);
-    if (event.target.value === 2) {
-      document.getElementById("citenship_status").style.display = "block";
-    } else {
-      document.getElementById("citenship_status").style.display = "none";
-      setCountry("US");
-    }
     setResidencyStatusClicked(true);
   };
 
@@ -137,6 +133,7 @@ const DemographicInformation = (props, ref) => {
       firstName.length === 0 ||
       lastName.length === 0 ||
       dob === null ||
+      dobError === true ||
       residencyStatus.length === 0 ||
       city.length === 0 ||
       state.length === 0 ||
@@ -148,9 +145,39 @@ const DemographicInformation = (props, ref) => {
     } else {
       props.handleError(false);
     }
-  });
 
-  
+    var restored = localStorage.getItem("about_student");
+
+    if(restored != null){
+      var data = JSON.parse(restored);
+      setFirstName(data.FirstName);
+      setLastName(data.LastName);
+      setDob(data.Dob);
+      setResidencyStatus(data.ResidentialStatus);
+      setCountry(data.Country);
+      setStreetAddress(data.StreetAddress);
+      setCity(data.City);
+      setState(data.StateISO);
+      setStateName(data.State);
+      setZipCode(data.Zipcode);
+      setEthenicOrigin(data.EthenicOrigin);
+      setGender(data.Gender);
+
+      localStorage.removeItem("about_student");
+    }
+  }, [
+    firstName.length,
+    lastName.length,
+    dob,
+    dobError,
+    residencyStatus.length,
+    city.length,
+    state.length,
+    zipCode.length,
+    ethenicOrigin.length,
+    gender.length,
+    props,
+  ]);
 
   return (
     <Box component="form" noValidate autoComplete="off">
@@ -160,7 +187,9 @@ const DemographicInformation = (props, ref) => {
             <MDBRow>
               <MDBCol md="6">
                 <TextField
-                  error={((firstName.length === 0) & firstNameClicked)?true: false}
+                  error={
+                    (firstName.length === 0) & firstNameClicked ? true : false
+                  }
                   id="student-first-name"
                   label="Student's First Name"
                   value={firstName}
@@ -174,7 +203,9 @@ const DemographicInformation = (props, ref) => {
               </MDBCol>
               <MDBCol md="6">
                 <TextField
-                  error={((lastName.length === 0) & lastNameClicked)?true: false}
+                  error={
+                    (lastName.length === 0) & lastNameClicked ? true : false
+                  }
                   id="student-last-name"
                   label="Student's Last Name"
                   value={lastName}
@@ -189,22 +220,18 @@ const DemographicInformation = (props, ref) => {
             <MDBRow>
               <MDBCol md="12">
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <MobileDatePicker
+                  <DesktopDatePicker
                     label="Date of Birth"
                     value={dob}
                     onChange={(newValue) => {
                       setDob(newValue);
-                      setDobClicked(true);
+                      setDobClicked(true)
                     }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        error={((dob === null) & dobClicked)?true: false}
-                        required
-                        fullWidth
-                        sx={{ mb: 2 }}
-                      />
-                    )}
+                    onError={(err)=> (err === null)?setDobError(false): setDobError(true)}
+                    renderInput={(params) => <TextField {...params} 
+                    required fullWidth
+                    helperText={(dobClicked)?params?.inputProps?.placeholder: ""}
+                    sx={{mb: 2}}/>}
                   />
                 </LocalizationProvider>
               </MDBCol>
@@ -216,7 +243,11 @@ const DemographicInformation = (props, ref) => {
                     Residency Status
                   </InputLabel>
                   <Select
-                    error={((residencyStatus === null) & residencyStatusClicked)?true: false}
+                    error={
+                      (residencyStatus === null) & residencyStatusClicked
+                        ? true
+                        : false
+                    }
                     labelId="residency-status-select-label"
                     id="resideny-status-select"
                     label="residency Status"
@@ -231,8 +262,9 @@ const DemographicInformation = (props, ref) => {
                   </Select>
                 </FormControl>
               </MDBCol>
-              <MDBCol md="7" style={{ display: "none" }} id="citenship_status">
+              <MDBCol md="7" style={residencyStatus===2?{display: 'block'}: {display: 'none'}}>
                 <Autocomplete
+                  value={Country.getAllCountries().find((option) => option.isoCode === country)}
                   options={Country.getAllCountries()}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) => {
@@ -244,7 +276,12 @@ const DemographicInformation = (props, ref) => {
                   filterSelectedOptions
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
-                    <TextField {...params} label="Country" />
+                    <TextField {...params}
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: "new-password",
+                    }}
+                    label="Country" />
                   )}
                 />
               </MDBCol>
@@ -265,7 +302,7 @@ const DemographicInformation = (props, ref) => {
             <MDBRow>
               <MDBCol md="4">
                 <TextField
-                  error={((city.length === 0) & cityClicked)?true: false}
+                  error={(city.length === 0) & cityClicked ? true : false}
                   value={city}
                   onChange={handleCity}
                   label="City"
@@ -275,12 +312,10 @@ const DemographicInformation = (props, ref) => {
                 />
               </MDBCol>
               <MDBCol md="5">
-                <Autocomplete
-                  id="student-address-line1"
+              <Autocomplete
+                  value={((State.getStatesOfCountry(country).find((option) => option.isoCode === state))||null)}
                   options={State.getStatesOfCountry(country)}
-                  getOptionLabel={(option) =>
-                    (option.name === "Entire US")?"" :option.name
-                  }
+                  getOptionLabel={(option) => option.name}
                   onChange={(event, value) => {
                     setState(value.isoCode);
                     setStateName(value.name);
@@ -288,19 +323,18 @@ const DemographicInformation = (props, ref) => {
                   filterSelectedOptions
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
-                    <TextField 
-                    {...params} 
+                    <TextField {...params}
                     inputProps={{
                       ...params.inputProps,
-                      autoComplete: 'new-password',
+                      autoComplete: "new-password",
                     }}
-                    required label="State" />
+                    label="State" />
                   )}
                 />
               </MDBCol>
               <MDBCol md="3">
                 <TextField
-                  error={((zipCode.length === 0) & zipCodeClicked)?true: false}
+                  error={(zipCode.length === 0) & zipCodeClicked ? true : false}
                   label={residencyStatus === 2 ? "Postal Code" : "Zip Code"}
                   value={zipCode}
                   onChange={handleZipCode}
@@ -319,7 +353,11 @@ const DemographicInformation = (props, ref) => {
                     Student's Ethinic Origin
                   </InputLabel>
                   <Select
-                    error={((ethenicOrigin.length === 0) & ethenicOriginClicked)?true: false}
+                    error={
+                      (ethenicOrigin.length === 0) & ethenicOriginClicked
+                        ? true
+                        : false
+                    }
                     labelId="student-ethinic-origin-label"
                     value={ethenicOrigin}
                     label="StudentsEthinicOrigin"
@@ -328,7 +366,9 @@ const DemographicInformation = (props, ref) => {
                     sx={{ mb: 2 }}
                   >
                     {ethincOriginOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>{option.title}</MenuItem>
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.title}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -340,7 +380,7 @@ const DemographicInformation = (props, ref) => {
                   <FormLabel
                     id="gender-label"
                     required
-                    error={((gender.length === 0) & genderClicked)?true: false}
+                    error={(gender.length === 0) & genderClicked ? true : false}
                   >
                     Gender
                   </FormLabel>
@@ -353,17 +393,17 @@ const DemographicInformation = (props, ref) => {
                     sx={{ mb: 2 }}
                   >
                     <FormControlLabel
-                      value="female"
+                      value="Female"
                       control={<Radio />}
                       label="Female"
                     />
                     <FormControlLabel
-                      value="male"
+                      value="Male"
                       control={<Radio />}
                       label="Male"
                     />
                     <FormControlLabel
-                      value="Not binary"
+                      value="Not Binary"
                       control={<Radio />}
                       label="Not Binary"
                     />

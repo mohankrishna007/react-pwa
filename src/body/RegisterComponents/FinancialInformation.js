@@ -13,8 +13,8 @@ import axios from "axios";
 import RegisterTheme from "../../Themes/RegisterTheme";
 
 const FinancialInformation = (props, ref) => {
-  const [appplyingFinancialAid, setApplyingFinancialAid] = useState("");
-  const [meritScholarShipImp, setmeritScholarShipImp] = useState("");
+  const [appplyingFinancialAid, setApplyingFinancialAid] = useState(false);
+  const [meritScholarShipImp, setmeritScholarShipImp] = useState(false);
   const [whoPayForCollege, setWhoPayForCollege] = useState("");
   const [studentExpectedIncome, setStudentExpectedIncome] = useState("");
   const [grossFamilyAnnualIncome, setGrossFamilyAnnualIncome] = useState("");
@@ -39,7 +39,7 @@ const FinancialInformation = (props, ref) => {
       MonthlyContribution: monthlyContributions,
     };
 
-    console.log(Financial);
+    localStorage.setItem("financial_info", JSON.stringify(Financial));
 
     axios
       .post(
@@ -131,7 +131,23 @@ const FinancialInformation = (props, ref) => {
 
   React.useEffect(() => {
     props.handleError(false);
-  });
+
+    var restored = localStorage.getItem('financial_info');
+
+    if(restored != null){
+      var data = JSON.parse(restored);
+      setApplyingFinancialAid(data.ApplyingFinancialAid);
+      setmeritScholarShipImp(data.MeritScholarShip);
+      setWhoPayForCollege(data.WhoWillPayForCollege);
+      setStudentExpectedIncome(data.StudentExpectedIncome);
+      setGrossFamilyAnnualIncome(data.GrossFamilyAnnualIncome);
+      setTotalNetWorth(data.TotalFamilyNetWorth);
+      setAmountSaved(data.AmountSaved);
+      setMonthlyContributions(data.MonthlyContribution);
+
+      localStorage.removeItem('financial_info');
+    }
+  }, [props]);
 
   return (
     <div>
@@ -144,6 +160,7 @@ const FinancialInformation = (props, ref) => {
                   <p>
                     Do you plan to apply for Financial Aid?
                     <Switch
+                      checked={appplyingFinancialAid}
                       onChange={(event) =>
                         setApplyingFinancialAid(event.target.checked)
                       }
@@ -158,6 +175,7 @@ const FinancialInformation = (props, ref) => {
                   <p>
                     Do you plan to apply for merit based scholarships?
                     <Switch
+                      checked={meritScholarShipImp}
                       onChange={(event) =>
                         setmeritScholarShipImp(event.target.checked)
                       }
