@@ -51,7 +51,6 @@ export default function DialogBox(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [who, setWho] = React.useState(null);
   const [haveError, setHaveError] = React.useState(true);
-  const [uploaded, setUploaded] = React.useState(false);
 
   const handleHaveError = (val) => {
     setHaveError(val);
@@ -60,7 +59,6 @@ export default function DialogBox(props) {
   const navigate = useNavigate();
 
   const gotoDashBoard = () => {
-    if (!uploaded) {
       const about = JSON.parse(localStorage.getItem("about_student"));
       const academics = localStorage.getItem("academic_profile");
       const finance = localStorage.getItem("financial_info");
@@ -94,9 +92,6 @@ export default function DialogBox(props) {
         )
         .then((resp) => console.log(resp));
 
-
-      setUploaded(true)
-    }
     navigate("/dashboard", {
       state: {
         id: props.UserId,
@@ -138,6 +133,27 @@ export default function DialogBox(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  React.useState(() => {
+
+    var schools = localStorage.getItem('schoolsData');
+    if(schools == null){
+      localStorage.setItem('schoolsData', JSON.stringify([]))
+    }
+    axios
+    .get("https://collegeportfoliobackendnode.azurewebsites.net/student/highschools")
+    .then((resp) => localStorage.setItem('schoolsData', JSON.stringify(resp.data)));
+
+    var streams = localStorage.getItem('streamsData');
+    if(streams == null){
+      localStorage.setItem('streamsData', JSON.stringify([]))
+    }
+    axios
+    .get("https://collegeportfoliobackendnode.azurewebsites.net/student/streams")
+    .then((resp) => localStorage.setItem('streamsData', JSON.stringify(resp.data)));
+
+
+  }, open)
 
   return (
     <div>

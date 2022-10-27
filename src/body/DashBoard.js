@@ -28,16 +28,16 @@ function DashBoard() {
       ) : (
         <div>
           <h1>Hey Hello , {about.FirstName} {about.LastName}</h1>
-          <h2>CollegePortFolio Welcomes You !!</h2> <br/>
+          <h2>Collegeportfolio Welcomes You !!</h2> <br/>
           <h4>You Data is here : </h4>
           <p>{JSON.stringify(about)}</p><br/>
           <p>{academics}</p> <br/>
           <p>{finance}</p><br/>
           <p>{preference}</p>
 
-          <h4> Sent data to DB</h4>
+          <h4>See What Stored in DB</h4>
           <p>
-            <span onClick={getStudentData}>Click Here to download data</span>
+            <span onClick={getStudentData} style={{cursor: 'pointer'}}>Click Here to download data</span>
           </p>
         </div>
       )}

@@ -8,8 +8,18 @@ import Popper from "@mui/material/Popper";
 import { useTheme, styled } from "@mui/material/styles";
 import { VariableSizeList } from "react-window";
 import Typography from "@mui/material/Typography";
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Snackbar,
+} from "@mui/material";
+import { MDBCard, MDBCardBody, MDBCol, MDBRow } from "mdb-react-ui-kit";
+import axios from "axios";
 
-import Schools from "./Assets/Schools.json"
 const LISTBOX_PADDING = 8; // px
 
 function renderRow(props) {
@@ -125,33 +135,171 @@ const StyledPopper = styled(Popper)({
 });
 
 export default function NameofHighSchool(props) {
+  const [schools, setSchools] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [snack, setSnack] = React.useState(false);
+
+  const [schoolName, setSchoolName] = React.useState("");
+  const [schoolCity, setSchoolCity] = React.useState("");
+  const [schoolState, setSchoolState] = React.useState("");
+  const [schoolZipcode, setSchoolZipcode] = React.useState("");
+  const [schoolType, setSchoolType] = React.useState("");
+
+  const handleLoadSchools = () => {
+    var schools = JSON.parse(localStorage.getItem("schoolsData"));
+    setSchools(schools);
+  };
+
+  const handleAddSchool = () => {
+    setSnack(true);
+
+    var school = {NAME: schoolName, CITY: schoolCity, STATE: schoolState, ZIP: schoolZipcode, TYPE: schoolType};
+    var updatedSchools = [
+      ...schools,
+      school
+    ]
+
+    localStorage.setItem('schoolsData', JSON.stringify(updatedSchools));
+    handleAddingSchoolDatabase(school);
+
+    handleClose();
+  };
+
+  const handleAddingSchoolDatabase = (school) => {
+    axios
+        .post(
+          "https://collegeportfoliobackendnode.azurewebsites.net/student/addSchool",
+          school
+        )
+        .then((resp) => console.log(resp));
+
+    setSchoolName("");
+    setSchoolCity("");
+    setSchoolState("");
+    setSchoolZipcode("");
+    setSchoolType("");
+  }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add your school details</DialogTitle>
+        <DialogContent>
+          <MDBCard>
+            <MDBCardBody>
+              <MDBRow>
+                <MDBCol md="12">
+                  <TextField
+                    autoFocus
+                    value={schoolName}
+                    onChange={(e)=>setSchoolName(e.target.value)}
+                    margin="dense"
+                    fullWidth
+                    variant="standard"
+                    label="School Name"
+                  />
+                </MDBCol>
+              </MDBRow>
+              <MDBRow>
+                <MDBCol md="6">
+                  <TextField
+                    autoFocus
+                    value={schoolCity}
+                    onChange={(e)=>setSchoolCity(e.target.value)}
+                    margin="dense"
+                    fullWidth
+                    variant="standard"
+                    label="City"
+                  />
+                </MDBCol>
+                <MDBCol md="6">
+                  <TextField
+                    autoFocus
+                    value={schoolState}
+                    onChange={(e)=>setSchoolState(e.target.value)}
+                    margin="dense"
+                    fullWidth
+                    variant="standard"
+                    label="State"
+                  />
+                </MDBCol>
+              </MDBRow>
+              <MDBRow>
+                <MDBCol md="6">
+                  <TextField
+                    value={schoolZipcode}
+                    onChange={(e)=>setSchoolZipcode(e.target.value)}
+                    autoFocus
+                    margin="dense"
+                    fullWidth
+                    variant="standard"
+                    label="Zipcode"
+                  />
+                </MDBCol>
+                <MDBCol md="6">
+                  <TextField
+                    autoFocus
+                    value={schoolType}
+                    onChange={(e)=>setSchoolType(e.target.value)}
+                    margin="dense"
+                    fullWidth
+                    variant="standard"
+                    label="School Type"
+                  />
+                </MDBCol>
+              </MDBRow>
+            </MDBCardBody>
+          </MDBCard>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleAddSchool} disabled={schoolName.length === 0?true:false}>Add</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar open={snack} autoHideDuration={2000} onClose={()=>setSnack(false)}>
+        <Alert onClose={()=>setSnack(false)} severity="success" sx={{ width: '100%' }}>
+          Thank you for your Response
+        </Alert>
+      </Snackbar>
+
       <Autocomplete
-        freeSolo
+        disabled={open}
         id="schools-highschools"
-        options={Schools.HIGHSCHOOL}
+        options={schools}
         disableListWrap
+        onFocus={handleLoadSchools}
         PopperComponent={StyledPopper}
         ListboxComponent={ListboxComponent}
         getOptionLabel={(option) => option.NAME}
         onChange={(event, value) => {
           props.NameOfSchool(value.NAME);
         }}
-        renderOption={(props, option) => [props,
-        <div>
-          {option.NAME}
-          <div style={{fontSize: '0.6em'}}>{option.CITY}{" "}{option.STATE}{" "}{option.ZIP}{" - "}{option.TYPE}</div>
-        </div>]}
+        noOptionsText={<p onClick={handleClickOpen} style={{cursor: 'pointer'}}>Add school now</p>}
+        renderOption={(props, option) => [
+          props,
+          <div>
+            {option.NAME}
+            <div style={{ fontSize: "0.6em" }}>
+              {option.CITY} {option.STATE} {option.ZIP}
+              {" - "}
+              {option.TYPE}
+            </div>
+          </div>,
+        ]}
         filterSelectedOptions
         sx={{ mb: 2 }}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            required
-            label="Name of High School"
-          />)}
+          <TextField {...params} required label="Name of High School" />
+        )}
       />
     </div>
   );

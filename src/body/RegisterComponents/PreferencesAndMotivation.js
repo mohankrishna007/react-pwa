@@ -24,7 +24,6 @@ import {
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import PercentIcon from "@mui/icons-material/Percent";
-import FOS from "./Assets/fos.json";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import RegisterTheme from "../../Themes/RegisterTheme";
@@ -103,6 +102,7 @@ const PreferenceMotivation = (props, ref) => {
   const [admissibilityScore, setAdmissibilityScore] = useState(0);
   const [scoreError, setScoreError] = useState(false);
   const [scoreClicked, setScoreClicked] = useState(false);
+  const [streams, setStreams] = useState([]);
 
   useImperativeHandle(ref, () => ({
     postPreference,
@@ -245,6 +245,11 @@ const PreferenceMotivation = (props, ref) => {
     setScoreClicked(true);
   };
 
+  const handleLoadStreams = () => {
+    var streams = JSON.parse(localStorage.getItem("streamsData"));
+    setStreams(streams);
+  }
+
   const collegePreferenceOptions = [
     { title: "Public", value: 1 },
     { title: "Private Non-Profit", value: 2 },
@@ -349,11 +354,12 @@ const PreferenceMotivation = (props, ref) => {
             <MDBRow>
               <MDBCol md="12">
                 <Autocomplete
+                  onFocus={handleLoadStreams}
                   id="field-of-study"
-                  options={FOS.Fields}
-                  getOptionLabel={(option) => option.FOS}
+                  options={streams}
+                  getOptionLabel={(option) => option.NAME}
                   filterSelectedOptions
-                  onChange={(event, value) => setFieldOfStudy(value.FOS)}
+                  onChange={(event, value) => setFieldOfStudy(value.NAME)}
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
                     <TextField {...params} required label="Field of Study" />
