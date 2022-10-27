@@ -16,14 +16,26 @@ function DashBoard() {
     });
   }
 
+  const about = JSON.parse(localStorage.getItem('about_student'))
+  const academics = localStorage.getItem('academic_profile')
+  const finance = localStorage.getItem('financial_info')
+  const preference = localStorage.getItem('preference_motivation')
+
   return (
     <div>
-      {state === null ? (
+      {state === null|about == null ? (
         <h2>Something went wrong</h2>
       ) : (
         <div>
-          <h1>Hey Hello ,</h1>
+          <h1>Hey Hello , {about.FirstName} {about.LastName}</h1>
           <h2>CollegePortFolio Welcomes You !!</h2> <br/>
+          <h4>You Data is here : </h4>
+          <p>{JSON.stringify(about)}</p><br/>
+          <p>{academics}</p> <br/>
+          <p>{finance}</p><br/>
+          <p>{preference}</p>
+
+          <h4> Sent data to DB</h4>
           <p>
             <span onClick={getStudentData}>Click Here to download data</span>
           </p>

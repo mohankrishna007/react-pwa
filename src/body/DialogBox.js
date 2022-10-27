@@ -22,6 +22,7 @@ import DemographicInformation from "./RegisterComponents/DemographicInformation"
 import AcademicProfile from "./RegisterComponents/AcademicProfile";
 import FinancialInformation from "./RegisterComponents/FinancialInformation";
 import PreferenceMotivation from "./RegisterComponents/PreferencesAndMotivation";
+import axios from "axios";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,61 +33,101 @@ const student = [
   "Tell us about yourself",
   "Tell us about your academic profile",
   "How do you plan to finance college?",
-  "What are some of your preferences?"
-]
+  "What are some of your preferences?",
+];
 
 const parent = [
   "",
   "Tell us about your student",
   "Tell us about your student's academic profile",
   "How do you plan to finance college?",
-  "What are some of your student's preferences?" 
-]
+  "What are some of your student's preferences?",
+];
 
 export default function DialogBox(props) {
-
   const ChildRef = React.useRef();
   const theme = useTheme();
 
   const [activeStep, setActiveStep] = React.useState(0);
-  const[who, setWho] = React.useState(null);
-  const[haveError, setHaveError] = React.useState(true);
+  const [who, setWho] = React.useState(null);
+  const [haveError, setHaveError] = React.useState(true);
+  const [uploaded, setUploaded] = React.useState(false);
 
   const handleHaveError = (val) => {
     setHaveError(val);
-  }
+  };
 
   const navigate = useNavigate();
-  const gotoDashBoard = () => navigate("/dashboard", {
-    state: {
-      id: props.UserId,
-      filled: true,
+
+  const gotoDashBoard = () => {
+    if (!uploaded) {
+      const about = JSON.parse(localStorage.getItem("about_student"));
+      const academics = localStorage.getItem("academic_profile");
+      const finance = localStorage.getItem("financial_info");
+      const preference = localStorage.getItem("preference_motivation");
+
+      axios
+        .post(
+          "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
+          about
+        )
+        .then((resp) => console.log(resp));
+
+      axios
+        .post(
+          "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
+          JSON.parse(academics)
+        )
+        .then((resp) => console.log(resp));
+
+      axios
+        .post(
+          "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
+          JSON.parse(finance)
+        )
+        .then((resp) => console.log(resp));
+
+      axios
+        .post(
+          "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
+          JSON.parse(preference)
+        )
+        .then((resp) => console.log(resp));
+
+
+      setUploaded(true)
     }
-  });
+    navigate("/dashboard", {
+      state: {
+        id: props.UserId,
+        filled: true,
+      },
+    });
+  };
 
   const handleNext = () => {
-    if(activeStep === 1){
+    if (activeStep === 1) {
       ChildRef.current.postAboutStudent();
-    } else if(activeStep === 2){
+    } else if (activeStep === 2) {
       ChildRef.current.postAcademicProfile();
-    } else if(activeStep === 3){
+    } else if (activeStep === 3) {
       ChildRef.current.postFinancial();
-    } else if(activeStep === 4){
+    } else if (activeStep === 4) {
       ChildRef.current.postPreference();
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setHaveError(true)
+    setHaveError(true);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    setHaveError(false)
+    setHaveError(false);
   };
 
   const handleWho = (event) => {
-    setWho(event.target.value)
+    setWho(event.target.value);
     handleHaveError(false);
-  }
+  };
 
   const [open, setOpen] = React.useState(true);
 
@@ -96,7 +137,7 @@ export default function DialogBox(props) {
 
   const handleClose = () => {
     setOpen(false);
-  }; 
+  };
 
   return (
     <div>
@@ -111,7 +152,9 @@ export default function DialogBox(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{(who==='1')?student[activeStep]:parent[activeStep]}</DialogTitle>
+        <DialogTitle>
+          {who === "1" ? student[activeStep] : parent[activeStep]}
+        </DialogTitle>
         <DialogContent>
           <div>
             <Box sx={{ maxWidth: "100%", flexGrow: 1 }}>
@@ -149,15 +192,33 @@ export default function DialogBox(props) {
                   </MDBCard>
                 </div>
               ) : activeStep === 1 ? (
-                <DemographicInformation ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
+                <DemographicInformation
+                  ref={ChildRef}
+                  handleError={handleHaveError}
+                  UserId={props.UserId}
+                />
               ) : activeStep === 2 ? (
-                <AcademicProfile ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
+                <AcademicProfile
+                  ref={ChildRef}
+                  handleError={handleHaveError}
+                  UserId={props.UserId}
+                />
               ) : activeStep === 3 ? (
-                <FinancialInformation ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
+                <FinancialInformation
+                  ref={ChildRef}
+                  handleError={handleHaveError}
+                  UserId={props.UserId}
+                />
               ) : activeStep === 4 ? (
-                <PreferenceMotivation ref={ChildRef} handleError={handleHaveError} UserId={props.UserId}/>
-              ) : (
+                <PreferenceMotivation
+                  ref={ChildRef}
+                  handleError={handleHaveError}
+                  UserId={props.UserId}
+                />
+              ) : activeStep === 5 ? (
                 gotoDashBoard()
+              ) : (
+                console.log("Dialog Closed")
               )}
             </Box>
             <MobileStepper
@@ -167,7 +228,12 @@ export default function DialogBox(props) {
               activeStep={activeStep}
               sx={{ maxWidth: "100%", flexGrow: 1 }}
               nextButton={
-                <Button type="submit" size="small" onClick={handleNext} disabled={haveError}>
+                <Button
+                  type="submit"
+                  size="small"
+                  onClick={handleNext}
+                  disabled={haveError}
+                >
                   {activeStep < 4 ? "Next" : "Submit"}
                   {theme.direction === "rtl" ? (
                     <KeyboardArrowLeft />

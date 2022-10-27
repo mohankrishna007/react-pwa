@@ -18,7 +18,6 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import axios from "axios";
 import NameofHighSchool from "./NameofHighSchool";
 import RegisterTheme from "../../Themes/RegisterTheme";
 import dayjs from "dayjs";
@@ -49,15 +48,7 @@ const AcademicProfile = (props, ref) => {
       SatReading: satReading,
       ActCompostite: actComposite,
     };
-
     localStorage.setItem("academic_profile", JSON.stringify(AcademicProfile));
-
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
-        AcademicProfile
-      )
-      .then((resp) => console.log(resp));
   };
 
   const [nameOfSchool, setNameOfSchool] = React.useState("");
@@ -91,6 +82,8 @@ const AcademicProfile = (props, ref) => {
 
   const handleNameOfSchool = (value) => {
     setNameOfSchool(value);
+
+    console.log(value)
   };
 
   const handleEnrolIn = (event) => {
@@ -184,6 +177,7 @@ const AcademicProfile = (props, ref) => {
   ];
 
   React.useEffect(() => {
+    
     if (
       nameOfSchool.length === 0 ||
       highSchoolGraduation === null ||
@@ -200,7 +194,6 @@ const AcademicProfile = (props, ref) => {
     }
 
     var restored = localStorage.getItem("academic_profile");
-
 
     if (restored != null) {
 
@@ -231,8 +224,8 @@ const AcademicProfile = (props, ref) => {
     enrolAs.length,
     enrolIn.length,
     gpaType.length,
-    highSchoolGraduation,
     nameOfSchool.length,
+    highSchoolGraduation,
     scoredGpa.length,
     totalGpa.length,
     typeofDegree.length,
@@ -247,7 +240,7 @@ const AcademicProfile = (props, ref) => {
           <MDBCardBody className="px-4">
             <MDBRow>
               <MDBCol md="12">
-                <NameofHighSchool NameOfSchool={handleNameOfSchool} />
+                <NameofHighSchool NameOfSchool={handleNameOfSchool}/>
               </MDBCol>
             </MDBRow>
             <MDBRow>

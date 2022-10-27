@@ -25,7 +25,6 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import PercentIcon from "@mui/icons-material/Percent";
 import FOS from "./Assets/fos.json";
-import axios from "axios";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import RegisterTheme from "../../Themes/RegisterTheme";
@@ -95,37 +94,9 @@ const PreferenceMotivation = (props, ref) => {
   const [regiliousAffliations, setReligiousAffliations] = useState("");
   const [specializedMission, setSpecializedMission] = useState("");
   const [location, setLocation] = useState([]);
-  const [schoolSize, setSchoolSize] = useState([
-    { title: "Small", value: 1, checked:false},
-    { title: "Medium", value: 2, checked:false},
-    { title: "Large", value: 3, checked:false},
-  ]);
-  const [urbanicity, setUrbanicity] = useState([
-    { title: "City", value: 1, checked: false },
-    { title: "Suburban", value: 2, checked: false },
-    { title: "Town", value: 3, checked: false },
-    { title: "Rural", value: 4, checked: false },
-  ]);
-  const [reasonsToAttendCollege, setReasonsToAttendCollege] = useState([
-    {
-      title: "Career prospects",
-      value: 1,
-      info: "Finding a good job upon graduation measured by income and advancement potential",
-      checked: false,
-    },
-    {
-      title: "Kinship",
-      value: 2,
-      info: "Making friends and developing life long bonds",
-      checked: false,
-    },
-    {
-      title: "Pursue Grad School",
-      value: 3,
-      info: "Leveraging one's undergraduate degree to pursue graduate school",
-      checked: false,
-    },
-  ]);
+  const [schoolSize, setSchoolSize] = useState({});
+  const [urbanicity, setUrbanicity] = useState({});
+  const [reasonsToAttendCollege, setReasonsToAttendCollege] = useState({});
   const [keyConsiderations, setKeyConsiderations] = useState({});
   const [affinityScore, setAffinityScore] = useState(0);
   const [affordabilityScore, setAffordalibityScore] = useState(0);
@@ -171,26 +142,16 @@ const PreferenceMotivation = (props, ref) => {
       ReligiousAffliation: regiliousAffliations,
       SpecializedMission: specializedMission,
       Location: location,
-      SchoolSize: schoolSize,
-      Urbanicity: urbanicity,
-      ReasonsToAttendCollege: reasonsToAttendCollege,
+      SchoolSize: selectedSchoolSize,
+      Urbanicity: selectedUrbanicity,
+      ReasonsToAttendCollege: selectedReasonstoAttend,
       KeyConsiderations: selectedKeyConsiderations,
       AffinityScore: affinityScore,
       AffordabilityScore: affordabilityScore,
       AdmissibilityScore: admissibilityScore,
     };
 
-    localStorage.setItem(
-      "preference_motivation",
-      JSON.stringify(PreferenceMotivation)
-    );
-
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
-        PreferenceMotivation
-      )
-      .then((resp) => console.log(resp));
+    localStorage.setItem('preference_motivation', JSON.stringify(PreferenceMotivation));
   };
 
   const handleReligiousAffliations = (event) => {
@@ -205,30 +166,30 @@ const PreferenceMotivation = (props, ref) => {
     var val = event.target.value;
     var checked = event.target.checked;
 
-    var index = schoolSize.findIndex((obj => obj.value === val));
-    var newOption = [...schoolSize];
-    newOption[index].checked = checked;
-    setSchoolSize(newOption);
+    setSchoolSize((type) => ({
+      ...type,
+      [val]: checked,
+    }));
   };
 
   const handleUrbanicity = (event) => {
     var val = event.target.value;
     var checked = event.target.checked;
 
-    var index = urbanicity.findIndex((obj => obj.value === val));
-    var newOption = [...urbanicity];
-    newOption[index].checked = checked;
-    setUrbanicity(newOption);
+    setUrbanicity((type) => ({
+      ...type,
+      [val]: checked,
+    }));
   };
 
   const handleReasonsToAttendCollege = (event) => {
     var val = event.target.value;
     var checked = event.target.checked;
 
-    var index = reasonsToAttendCollege.findIndex((obj => obj.value === val));
-    var newOption = [...reasonsToAttendCollege];
-    newOption[index].checked = checked;
-    setReasonsToAttendCollege(newOption);
+    setReasonsToAttendCollege((type) => ({
+      ...type,
+      [val]: checked,
+    }));
   };
 
   const handleKeyConsiderations = (event) => {
@@ -309,6 +270,37 @@ const PreferenceMotivation = (props, ref) => {
     { title: "Historically Black College", value: 6 },
   ];
 
+  const schoolSizesOption = [
+    { title: "Small", value: 1 },
+    { title: "Medium", value: 2 },
+    { title: "Large", value: 3 },
+  ];
+
+  const urbanicityOption = [
+    { title: "City", value: 1 },
+    { title: "Suburban", value: 2 },
+    { title: "Town", value: 3 },
+    { title: "Rural", value: 4 },
+  ];
+
+  const reasonsToAttendCollegeOptions = [
+    {
+      title: "Career prospects",
+      value: 1,
+      info: "Finding a good job upon graduation measured by income and advancement potential",
+    },
+    {
+      title: "Kinship",
+      value: 2,
+      info: "Making friends and developing life long bonds",
+    },
+    {
+      title: "Pursue Grad School",
+      value: 3,
+      info: "Leveraging one's undergraduate degree to pursue graduate school",
+    },
+  ];
+
   React.useEffect(() => {
     if (collegeType == null || fieldOfStudy == null || scoreError) {
       props.handleError(true);
@@ -329,22 +321,6 @@ const PreferenceMotivation = (props, ref) => {
       setAdmissibilityScore(admm1);
       validate();
     }
-
-    var restored = localStorage.getItem("preference_motivation");
-
-    if (restored != null) {
-      var data = JSON.parse(restored);
-      setFieldOfStudy(data.FieldOfStudy);
-      setReligiousAffliations(data.ReligiousAffliation);
-      setSpecializedMission(data.SpecializedMission);
-      setSchoolSize(data.SchoolSize);
-      setUrbanicity(data.Urbanicity);
-      setReasonsToAttendCollege(data.ReasonsToAttendCollege);
-
-      localStorage.removeItem("preference_motivation");
-    }
-
-    console.log(localStorage.getItem("preference_motivation"));
   }, [collegeType, fieldOfStudy, scoreError, keyConsiderations, props]);
 
   return (
@@ -359,9 +335,8 @@ const PreferenceMotivation = (props, ref) => {
                   options={collegePreferenceOptions}
                   getOptionLabel={(option) => option.title}
                   onChange={(event, value) => {
-                    handleCollegeType(value)
-                 }}
-                  value={collegeType}
+                    handleCollegeType(value);
+                  }}
                   required
                   filterSelectedOptions
                   sx={{ mb: 2 }}
@@ -378,10 +353,7 @@ const PreferenceMotivation = (props, ref) => {
                   options={FOS.Fields}
                   getOptionLabel={(option) => option.FOS}
                   filterSelectedOptions
-                  value={fieldOfStudy}
-                  onChange={(event, value) => {
-                    setFieldOfStudy(value);
-                  }}
+                  onChange={(event, value) => setFieldOfStudy(value.FOS)}
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
                     <TextField {...params} required label="Field of Study" />
@@ -475,11 +447,10 @@ const PreferenceMotivation = (props, ref) => {
                 <FormControl component="fieldset" sx={{ mb: 2, mt: 2 }}>
                   <FormLabel component="legend">School Size</FormLabel>
                   <FormGroup aria-label="position" row>
-                    {schoolSize.map((option) => (
+                    {schoolSizesOption.map((option) => (
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={option.checked}
                             value={option.value}
                             onChange={handleSchoolSize}
                           />
@@ -498,11 +469,10 @@ const PreferenceMotivation = (props, ref) => {
               <MDBCol md="12">
                 <FormLabel component="legend">Urbanicity</FormLabel>
                 <FormGroup aria-label="position" row>
-                  {urbanicity.map((option) => (
+                  {urbanicityOption.map((option) => (
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={option.checked}
                           value={option.value}
                           onChange={handleUrbanicity}
                         />
@@ -524,12 +494,11 @@ const PreferenceMotivation = (props, ref) => {
                 </FormLabel>
                 <FormGroup aria-label="position">
                   <br />
-                  {reasonsToAttendCollege.map((option) => (
+                  {reasonsToAttendCollegeOptions.map((option) => (
                     <Grid container direction="row" key={option.value}>
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={option.checked}
                             value={option.value}
                             onChange={handleReasonsToAttendCollege}
                           />

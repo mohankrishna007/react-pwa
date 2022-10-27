@@ -19,7 +19,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Country, State } from "country-state-city";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
-import axios from "axios";
 import RegisterTheme from "../../Themes/RegisterTheme";
 
 const DemographicInformation = (props, ref) => {
@@ -69,13 +68,6 @@ const DemographicInformation = (props, ref) => {
     };
 
     localStorage.setItem("about_student", JSON.stringify(AboutStudent));
-
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
-        AboutStudent
-      )
-      .then((resp) => console.log(resp));
   };
 
   const handleFirstName = (event) => {
@@ -314,7 +306,7 @@ const DemographicInformation = (props, ref) => {
               <MDBCol md="5">
               <Autocomplete
                   value={((State.getStatesOfCountry(country).find((option) => option.isoCode === state))||null)}
-                  options={State.getStatesOfCountry(country)}
+                  options={residencyStatus===2?State.getStatesOfCountry(country):State.getStatesOfCountry("US")}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) => {
                     setState(value.isoCode);

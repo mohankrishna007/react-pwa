@@ -9,7 +9,6 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material";
-import axios from "axios";
 import RegisterTheme from "../../Themes/RegisterTheme";
 
 const FinancialInformation = (props, ref) => {
@@ -40,13 +39,6 @@ const FinancialInformation = (props, ref) => {
     };
 
     localStorage.setItem("financial_info", JSON.stringify(Financial));
-
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
-        Financial
-      )
-      .then((resp) => console.log(resp));
   };
 
   const handlewhoPayForCollege = (event) => {
