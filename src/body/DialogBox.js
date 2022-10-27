@@ -101,6 +101,9 @@ export default function DialogBox(props) {
   };
 
   const handleNext = () => {
+    if(activeStep === 0){
+      localStorage.setItem('whoData', who);
+    }
     if (activeStep === 1) {
       ChildRef.current.postAboutStudent();
     } else if (activeStep === 2) {
@@ -134,7 +137,7 @@ export default function DialogBox(props) {
     setOpen(false);
   };
 
-  React.useState(() => {
+  React.useEffect(() => {
 
     var schools = localStorage.getItem('schoolsData');
     if(schools == null){
@@ -152,7 +155,11 @@ export default function DialogBox(props) {
     .get("https://collegeportfoliobackendnode.azurewebsites.net/student/streams")
     .then((resp) => localStorage.setItem('streamsData', JSON.stringify(resp.data)));
 
-
+    var restored = localStorage.getItem('whoData');
+    if(restored != null){
+      setWho(restored);
+      handleHaveError(false);
+    }
   }, open)
 
   return (

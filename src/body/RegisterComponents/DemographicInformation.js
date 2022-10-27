@@ -83,6 +83,8 @@ const DemographicInformation = (props, ref) => {
   const handleResidencyStatus = (event) => {
     setResidencyStatus(event.target.value);
     setResidencyStatusClicked(true);
+
+    clearAddress();
   };
 
   const handleStreetAdress = (event) => {
@@ -106,6 +108,13 @@ const DemographicInformation = (props, ref) => {
   const handleGender = (event) => {
     setGender(event.target.value);
     setGenderClicked(true);
+  };
+
+  const clearAddress = () => {
+    setCity("");
+    setStreetAddress("");
+    setState("");
+    setZipCode("");
   };
 
   const ethincOriginOptions = [
@@ -140,7 +149,7 @@ const DemographicInformation = (props, ref) => {
 
     var restored = localStorage.getItem("about_student");
 
-    if(restored != null){
+    if (restored != null) {
       var data = JSON.parse(restored);
       setFirstName(data.FirstName);
       setLastName(data.LastName);
@@ -217,13 +226,22 @@ const DemographicInformation = (props, ref) => {
                     value={dob}
                     onChange={(newValue) => {
                       setDob(newValue);
-                      setDobClicked(true)
+                      setDobClicked(true);
                     }}
-                    onError={(err)=> (err === null)?setDobError(false): setDobError(true)}
-                    renderInput={(params) => <TextField {...params} 
-                    required fullWidth
-                    helperText={(dobClicked)?params?.inputProps?.placeholder: ""}
-                    sx={{mb: 2}}/>}
+                    onError={(err) =>
+                      err === null ? setDobError(false) : setDobError(true)
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        required
+                        fullWidth
+                        helperText={
+                          dobClicked ? params?.inputProps?.placeholder : ""
+                        }
+                        sx={{ mb: 2 }}
+                      />
+                    )}
                   />
                 </LocalizationProvider>
               </MDBCol>
@@ -254,26 +272,35 @@ const DemographicInformation = (props, ref) => {
                   </Select>
                 </FormControl>
               </MDBCol>
-              <MDBCol md="7" style={residencyStatus===2?{display: 'block'}: {display: 'none'}}>
+              <MDBCol
+                md="7"
+                style={
+                  residencyStatus === 2
+                    ? { display: "block" }
+                    : { display: "none" }
+                }
+              >
                 <Autocomplete
-                  value={Country.getAllCountries().find((option) => option.isoCode === country)}
+                  value={Country.getAllCountries().find(
+                    (option) => option.isoCode === country
+                  )}
                   options={Country.getAllCountries()}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) => {
                     setCountry(value.isoCode);
-                    setCityClicked(true);
-                    setCity("");
-                    setStreetAddress("");
+                    clearAddress();
                   }}
                   filterSelectedOptions
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
-                    <TextField {...params}
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: "new-password",
-                    }}
-                    label="Country" />
+                    <TextField
+                      {...params}
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "new-password",
+                      }}
+                      label="Country"
+                    />
                   )}
                 />
               </MDBCol>
@@ -304,9 +331,17 @@ const DemographicInformation = (props, ref) => {
                 />
               </MDBCol>
               <MDBCol md="5">
-              <Autocomplete
-                  value={((State.getStatesOfCountry(country).find((option) => option.isoCode === state))||null)}
-                  options={residencyStatus===2?State.getStatesOfCountry(country):State.getStatesOfCountry("US")}
+                <Autocomplete
+                  value={
+                    State.getStatesOfCountry(country).find(
+                      (option) => option.isoCode === state
+                    ) || null
+                  }
+                  options={
+                    residencyStatus === 2
+                      ? State.getStatesOfCountry(country)
+                      : State.getStatesOfCountry("US")
+                  }
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) => {
                     setState(value.isoCode);
@@ -315,12 +350,14 @@ const DemographicInformation = (props, ref) => {
                   filterSelectedOptions
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
-                    <TextField {...params}
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: "new-password",
-                    }}
-                    label="State" />
+                    <TextField
+                      {...params}
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "new-password",
+                      }}
+                      label="State"
+                    />
                   )}
                 />
               </MDBCol>

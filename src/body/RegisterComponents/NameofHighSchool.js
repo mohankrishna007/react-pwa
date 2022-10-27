@@ -15,6 +15,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Snackbar,
 } from "@mui/material";
 import { MDBCard, MDBCardBody, MDBCol, MDBRow } from "mdb-react-ui-kit";
@@ -135,6 +139,7 @@ const StyledPopper = styled(Popper)({
 });
 
 export default function NameofHighSchool(props) {
+  const [defaultSchool, setdefaultSchool] = React.useState(null);
   const [schools, setSchools] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [snack, setSnack] = React.useState(false);
@@ -154,6 +159,10 @@ export default function NameofHighSchool(props) {
     setSnack(true);
 
     var school = {NAME: schoolName, CITY: schoolCity, STATE: schoolState, ZIP: schoolZipcode, TYPE: schoolType};
+
+    console.log(school);
+    
+    setdefaultSchool(school);
     var updatedSchools = [
       ...schools,
       school
@@ -177,7 +186,6 @@ export default function NameofHighSchool(props) {
     setSchoolCity("");
     setSchoolState("");
     setSchoolZipcode("");
-    setSchoolType("");
   }
 
   const handleClickOpen = () => {
@@ -245,15 +253,21 @@ export default function NameofHighSchool(props) {
                   />
                 </MDBCol>
                 <MDBCol md="6">
-                  <TextField
-                    autoFocus
-                    value={schoolType}
-                    onChange={(e)=>setSchoolType(e.target.value)}
-                    margin="dense"
-                    fullWidth
+                <FormControl>
+                  <InputLabel id="school-type" required>
+                    School Type
+                  </InputLabel>
+                  <Select
                     variant="standard"
-                    label="School Type"
-                  />
+                    labelId="school-type"
+                    value={schoolType}
+                    placeholder="School Type"
+                    onChange={(event) => setSchoolType(event.target.value)}
+                  >
+                    <MenuItem key={"private"} value={"Private"}>Private</MenuItem>
+                    <MenuItem key={"public"} value={"Public"}>Public</MenuItem>
+                  </Select>
+                </FormControl>
                 </MDBCol>
               </MDBRow>
             </MDBCardBody>
