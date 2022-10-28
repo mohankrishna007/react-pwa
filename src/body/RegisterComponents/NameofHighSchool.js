@@ -139,7 +139,6 @@ const StyledPopper = styled(Popper)({
 });
 
 export default function NameofHighSchool(props) {
-  const [defaultSchool, setdefaultSchool] = React.useState(null);
   const [schools, setSchools] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [snack, setSnack] = React.useState(false);
@@ -158,17 +157,16 @@ export default function NameofHighSchool(props) {
   const handleAddSchool = () => {
     setSnack(true);
 
-    var school = {NAME: schoolName, CITY: schoolCity, STATE: schoolState, ZIP: schoolZipcode, TYPE: schoolType};
+    var school = {
+      NAME: schoolName,
+      CITY: schoolCity,
+      STATE: schoolState,
+      ZIP: schoolZipcode,
+      TYPE: schoolType,
+    };
+    var updatedSchools = [...schools, school];
 
-    console.log(school);
-    
-    setdefaultSchool(school);
-    var updatedSchools = [
-      ...schools,
-      school
-    ]
-
-    localStorage.setItem('schoolsData', JSON.stringify(updatedSchools));
+    localStorage.setItem("schoolsData", JSON.stringify(updatedSchools));
     handleAddingSchoolDatabase(school);
 
     handleClose();
@@ -176,17 +174,17 @@ export default function NameofHighSchool(props) {
 
   const handleAddingSchoolDatabase = (school) => {
     axios
-        .post(
-          "https://collegeportfoliobackendnode.azurewebsites.net/student/addSchool",
-          school
-        )
-        .then((resp) => console.log(resp));
+      .post(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/addSchool",
+        school
+      )
+      .then((resp) => console.log(resp));
 
     setSchoolName("");
     setSchoolCity("");
     setSchoolState("");
     setSchoolZipcode("");
-  }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -195,7 +193,7 @@ export default function NameofHighSchool(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
+  
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
@@ -208,7 +206,7 @@ export default function NameofHighSchool(props) {
                   <TextField
                     autoFocus
                     value={schoolName}
-                    onChange={(e)=>setSchoolName(e.target.value)}
+                    onChange={(e) => setSchoolName(e.target.value)}
                     margin="dense"
                     fullWidth
                     variant="standard"
@@ -221,7 +219,7 @@ export default function NameofHighSchool(props) {
                   <TextField
                     autoFocus
                     value={schoolCity}
-                    onChange={(e)=>setSchoolCity(e.target.value)}
+                    onChange={(e) => setSchoolCity(e.target.value)}
                     margin="dense"
                     fullWidth
                     variant="standard"
@@ -232,7 +230,7 @@ export default function NameofHighSchool(props) {
                   <TextField
                     autoFocus
                     value={schoolState}
-                    onChange={(e)=>setSchoolState(e.target.value)}
+                    onChange={(e) => setSchoolState(e.target.value)}
                     margin="dense"
                     fullWidth
                     variant="standard"
@@ -244,7 +242,7 @@ export default function NameofHighSchool(props) {
                 <MDBCol md="6">
                   <TextField
                     value={schoolZipcode}
-                    onChange={(e)=>setSchoolZipcode(e.target.value)}
+                    onChange={(e) => setSchoolZipcode(e.target.value)}
                     autoFocus
                     margin="dense"
                     fullWidth
@@ -253,21 +251,25 @@ export default function NameofHighSchool(props) {
                   />
                 </MDBCol>
                 <MDBCol md="6">
-                <FormControl>
-                  <InputLabel id="school-type" required>
-                    School Type
-                  </InputLabel>
-                  <Select
-                    variant="standard"
-                    labelId="school-type"
-                    value={schoolType}
-                    placeholder="School Type"
-                    onChange={(event) => setSchoolType(event.target.value)}
-                  >
-                    <MenuItem key={"private"} value={"Private"}>Private</MenuItem>
-                    <MenuItem key={"public"} value={"Public"}>Public</MenuItem>
-                  </Select>
-                </FormControl>
+                  <FormControl fullWidth sx={{ mt: 1 }}>
+                    <InputLabel id="school-type">School Type</InputLabel>
+                    <Select
+                      variant="standard"
+                      labelId="school-type"
+                      label="School Type"
+                      value={schoolType}
+                      placeholder="School Type"
+                      onChange={(event) => setSchoolType(event.target.value)}
+                      fullWidth
+                    >
+                      <MenuItem key={"private"} value={"Private"}>
+                        Private
+                      </MenuItem>
+                      <MenuItem key={"public"} value={"Public"}>
+                        Public
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
                 </MDBCol>
               </MDBRow>
             </MDBCardBody>
@@ -275,12 +277,25 @@ export default function NameofHighSchool(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddSchool} disabled={schoolName.length === 0?true:false}>Add</Button>
+          <Button
+            onClick={handleAddSchool}
+            disabled={schoolName.length === 0 ? true : false}
+          >
+            Add
+          </Button>
         </DialogActions>
       </Dialog>
 
-      <Snackbar open={snack} autoHideDuration={2000} onClose={()=>setSnack(false)}>
-        <Alert onClose={()=>setSnack(false)} severity="success" sx={{ width: '100%' }}>
+      <Snackbar
+        open={snack}
+        autoHideDuration={2000}
+        onClose={() => setSnack(false)}
+      >
+        <Alert
+          onClose={() => setSnack(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
           Thank you for your Response
         </Alert>
       </Snackbar>
@@ -290,14 +305,19 @@ export default function NameofHighSchool(props) {
         id="schools-highschools"
         options={schools}
         disableListWrap
+        value={props.nameOfSchool}
         onFocus={handleLoadSchools}
         PopperComponent={StyledPopper}
         ListboxComponent={ListboxComponent}
         getOptionLabel={(option) => option.NAME}
         onChange={(event, value) => {
-          props.NameOfSchool(value.NAME);
+          props.NameOfSchool(value);
         }}
-        noOptionsText={<p onClick={handleClickOpen} style={{cursor: 'pointer'}}>Add school now</p>}
+        noOptionsText={
+          <p onClick={handleClickOpen} style={{ cursor: "pointer" }}>
+            Add school now
+          </p>
+        }
         renderOption={(props, option) => [
           props,
           <div>

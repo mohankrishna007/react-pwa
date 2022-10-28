@@ -332,7 +332,7 @@ const PreferenceMotivation = (props, ref) => {
     <div>
       <ThemeProvider theme={responsiveFontSizes(createTheme(RegisterTheme))}>
         <MDBCard>
-          <MDBCardBody className="px-4">
+          <MDBCardBody className="px-4 CardBody">
             <MDBRow>
               <MDBCol md="12">
                 <Autocomplete

@@ -20,7 +20,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import NameofHighSchool from "./NameofHighSchool";
 import RegisterTheme from "../../Themes/RegisterTheme";
-import dayjs from "dayjs";
 
 const AcademicProfile = (props, ref) => {
   useImperativeHandle(ref, () => ({
@@ -82,8 +81,6 @@ const AcademicProfile = (props, ref) => {
 
   const handleNameOfSchool = (value) => {
     setNameOfSchool(value);
-
-    console.log(value)
   };
 
   const handleEnrolIn = (event) => {
@@ -147,8 +144,15 @@ const AcademicProfile = (props, ref) => {
 
   const updateSeasons = useCallback(() => {
     var seasonsTemp = [];
-    var month = new Date(highSchoolGraduation).getMonth();
-    var year = new Date(highSchoolGraduation).getFullYear();
+    var curr_year = new Date();
+    var grad_year = new Date(highSchoolGraduation);
+
+    if(grad_year < curr_year){
+      grad_year = curr_year;
+    }
+
+    var month = grad_year.getMonth();
+    var year = grad_year.getFullYear();
     let i = 1;
 
     if (month < 7) {
@@ -177,7 +181,6 @@ const AcademicProfile = (props, ref) => {
   ];
 
   React.useEffect(() => {
-    
     if (
       nameOfSchool.length === 0 ||
       highSchoolGraduation === null ||
@@ -197,9 +200,8 @@ const AcademicProfile = (props, ref) => {
 
     if (restored != null) {
 
-      console.log(restored)
-
       var data = JSON.parse(restored);
+      setNameOfSchool(data.NameofHighSchool)
       sethighSchoolGraduation(data.HighSchoolGraduation);
       setEnrolIn(data.LookingtoEnrollIn);
       setEnrolAs(data.IncomingStatus);
@@ -237,10 +239,10 @@ const AcademicProfile = (props, ref) => {
     <div>
       <ThemeProvider theme={createTheme(RegisterTheme)}>
         <MDBCard>
-          <MDBCardBody className="px-4">
+          <MDBCardBody className="px-4 CardBody">
             <MDBRow>
               <MDBCol md="12">
-                <NameofHighSchool NameOfSchool={handleNameOfSchool}/>
+                <NameofHighSchool NameOfSchool={handleNameOfSchool} nameOfSchool={nameOfSchool}/>
               </MDBCol>
             </MDBRow>
             <MDBRow>
@@ -248,7 +250,6 @@ const AcademicProfile = (props, ref) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DesktopDatePicker
                     views={["year", "month"]}
-                    minDate={dayjs(new Date())}
                     maxDate={new Date(new Date().getFullYear() + 7, 12, 0)}
                     label="High School Graduation"
                     value={highSchoolGraduation}
@@ -450,9 +451,8 @@ const AcademicProfile = (props, ref) => {
                   </p>
                 </FormControl>
               </MDBCol>
-              <MDBCol md="4">
+              <MDBCol md="4" style={haveIB?{display: 'block'}: {display: 'none'}}>
                 <TextField
-                  id="predicted-ib-score"
                   error={ibScore > 45 || ibScore < 0 ? true : false}
                   helperText={"Out of 45"}
                   type="number"

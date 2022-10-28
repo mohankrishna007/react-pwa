@@ -22,7 +22,7 @@ return (
 		</IconButton>
 		<Typography variant="h6"
 			component="div" sx={{ flexGrow: 1 }}>
-			CollegePortfolio
+			Collegeportfolio
 		</Typography>
 			<Link to="/register" className="btn btn-primary" style={{marginRight: '20px'}}>Register</Link>
 		</Toolbar>

@@ -10,6 +10,7 @@ import {
   Radio,
   RadioGroup,
   FormLabel,
+  Typography,
 } from "@mui/material";
 
 import Dialog from "@mui/material/Dialog";
@@ -23,13 +24,14 @@ import AcademicProfile from "./RegisterComponents/AcademicProfile";
 import FinancialInformation from "./RegisterComponents/FinancialInformation";
 import PreferenceMotivation from "./RegisterComponents/PreferencesAndMotivation";
 import axios from "axios";
+import '../styles/body/DialogBox.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const student = [
-  "",
+  "Who is this?",
   "Tell us about yourself",
   "Tell us about your academic profile",
   "How do you plan to finance college?",
@@ -37,7 +39,7 @@ const student = [
 ];
 
 const parent = [
-  "",
+  "Who is this?",
   "Tell us about your student",
   "Tell us about your student's academic profile",
   "How do you plan to finance college?",
@@ -46,6 +48,7 @@ const parent = [
 
 export default function DialogBox(props) {
   const ChildRef = React.useRef();
+
   const theme = useTheme();
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -60,9 +63,10 @@ export default function DialogBox(props) {
 
   const gotoDashBoard = () => {
       const about = JSON.parse(localStorage.getItem("about_student"));
-      const academics = localStorage.getItem("academic_profile");
-      const finance = localStorage.getItem("financial_info");
-      const preference = localStorage.getItem("preference_motivation");
+      const academics = JSON.parse(localStorage.getItem("academic_profile"));
+      const finance = JSON.parse(localStorage.getItem("financial_info"));
+      const preference = JSON.parse(localStorage.getItem("preference_motivation"));
+      academics.NameofHighSchool = academics.NameofHighSchool.NAME;
 
       axios
         .post(
@@ -74,21 +78,21 @@ export default function DialogBox(props) {
       axios
         .post(
           "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
-          JSON.parse(academics)
+          academics
         )
         .then((resp) => console.log(resp));
 
       axios
         .post(
           "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
-          JSON.parse(finance)
+          finance
         )
         .then((resp) => console.log(resp));
 
       axios
         .post(
           "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
-          JSON.parse(preference)
+          preference
         )
         .then((resp) => console.log(resp));
 
@@ -115,11 +119,13 @@ export default function DialogBox(props) {
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setHaveError(true);
+    scrollToTop();
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     setHaveError(false);
+    scrollToTop();
   };
 
   const handleWho = (event) => {
@@ -160,10 +166,15 @@ export default function DialogBox(props) {
       setWho(restored);
       handleHaveError(false);
     }
-  }, open)
+  }, [open])
+
+
+  const scrollToTop = () => {
+    document.getElementById("dialog-content").scrollTop = 0;
+  }
 
   return (
-    <div>
+    <div id="body-dialog">
       {/* <Button variant="outlined" onClick={handleClickOpen}>
         Slide in alert dialog
       </Button> */}
@@ -175,16 +186,17 @@ export default function DialogBox(props) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>
-          {who === "1" ? student[activeStep] : parent[activeStep]}
+        <DialogTitle className="dialog-title">
+          <Typography>{who === "1" ? student[activeStep] : parent[activeStep]}</Typography>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent id="dialog-content">
           <div>
+            <br/>
             <Box sx={{ maxWidth: "100%", flexGrow: 1 }}>
               {activeStep === 0 ? (
                 <div>
                   <MDBCard>
-                    <MDBCardBody>
+                    <MDBCardBody className="CardBody">
                       <MDBRow>
                         <FormLabel
                           id="demo-row-radio-buttons-group-label"
@@ -238,14 +250,10 @@ export default function DialogBox(props) {
                   handleError={handleHaveError}
                   UserId={props.UserId}
                 />
-              ) : activeStep === 5 ? (
-                gotoDashBoard()
-              ) : (
-                console.log("Dialog Closed")
-              )}
+              ) : (gotoDashBoard())}
             </Box>
             <MobileStepper
-              variant="dots"
+              variant="progress"
               steps={5}
               position="static"
               activeStep={activeStep}

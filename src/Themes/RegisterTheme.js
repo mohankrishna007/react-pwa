@@ -1,4 +1,19 @@
 const RegisterTheme = {
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
+  
     components: {
       MuiFormLabel: {
         styleOverrides: {
@@ -14,13 +29,13 @@ const RegisterTheme = {
     palette: {
         primary: {
           // light: will be calculated from palette.primary.main,
-          main: '#87ceeb',
+          main: '#3794C2',
           // dark: will be calculated from palette.primary.main,
           // contrastText: will be calculated to contrast with palette.primary.main
         },
         secondary: {
-          light: '#0066ff',
-          main: '#0044ff',
+          light: '#E27D60',
+          main: '#85DCB0',
           // dark: will be calculated from palette.secondary.main,
           contrastText: '#ffcc00',
         },

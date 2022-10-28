@@ -145,7 +145,7 @@ const FinancialInformation = (props, ref) => {
     <div>
       <ThemeProvider theme={createTheme(RegisterTheme)}>
         <MDBCard>
-          <MDBCardBody className="px-4">
+          <MDBCardBody className="px-4 CardBody">
             <MDBRow>
               <MDBCol md="12">
                 <FormControl fullWidth required>
@@ -202,7 +202,7 @@ const FinancialInformation = (props, ref) => {
               <MDBCol md="12">
                 <FormControl fullWidth>
                   <InputLabel id="student-expected-annual-income-label">
-                    Student's expected annual income
+                    Student's expected annual income during college
                   </InputLabel>
                   <Select
                     labelId="student-expected-annual-income-label"
@@ -224,7 +224,7 @@ const FinancialInformation = (props, ref) => {
               <MDBCol md="12">
                 <FormControl fullWidth>
                   <InputLabel id="gross-family-annual-household-income-label">
-                    Gross family's annual household income from all sources
+                    Family's gross annual household income from all sources
                   </InputLabel>
                   <Select
                     labelId="gross-family-annual-household-income-label"
