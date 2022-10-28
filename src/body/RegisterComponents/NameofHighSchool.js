@@ -193,7 +193,7 @@ export default function NameofHighSchool(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
@@ -305,13 +305,12 @@ export default function NameofHighSchool(props) {
         id="schools-highschools"
         options={schools}
         disableListWrap
-        value={props.nameOfSchool}
         onFocus={handleLoadSchools}
         PopperComponent={StyledPopper}
         ListboxComponent={ListboxComponent}
         getOptionLabel={(option) => option.NAME}
         onChange={(event, value) => {
-          props.NameOfSchool(value);
+          props.NameOfSchool(value.NAME);
         }}
         noOptionsText={
           <p onClick={handleClickOpen} style={{ cursor: "pointer" }}>

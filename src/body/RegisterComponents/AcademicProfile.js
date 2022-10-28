@@ -201,7 +201,6 @@ const AcademicProfile = (props, ref) => {
     if (restored != null) {
 
       var data = JSON.parse(restored);
-      setNameOfSchool(data.NameofHighSchool)
       sethighSchoolGraduation(data.HighSchoolGraduation);
       setEnrolIn(data.LookingtoEnrollIn);
       setEnrolAs(data.IncomingStatus);
@@ -242,7 +241,7 @@ const AcademicProfile = (props, ref) => {
           <MDBCardBody className="px-4 CardBody">
             <MDBRow>
               <MDBCol md="12">
-                <NameofHighSchool NameOfSchool={handleNameOfSchool} nameOfSchool={nameOfSchool}/>
+                <NameofHighSchool NameOfSchool={handleNameOfSchool}/>
               </MDBCol>
             </MDBRow>
             <MDBRow>

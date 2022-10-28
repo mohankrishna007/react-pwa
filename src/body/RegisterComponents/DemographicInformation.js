@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { MDBRow, MDBCol, MDBCard, MDBCardBody } from "mdb-react-ui-kit";
 import {
   FormControl,
@@ -128,6 +128,23 @@ const DemographicInformation = (props, ref) => {
     { title: "American Indian/Alaska Native", value: 8 },
     { title: "Native Hawaiian/Pacific Islander", value: 9 },
   ];
+
+  const getCountries =  () => {
+    var countries = Country.getAllCountries().filter((country) => 
+    country.name != 'Puerto Rico' &
+    country.name != 'Guam' &
+    country.name != 'Northern Mariana Islands' &
+    country.name != 'American Samoa' &
+    country.name != 'United States');
+
+    return countries;
+
+  };
+
+  const getStates = (countryCode) => {
+    var states = [{name: 'Not Applicable', isoCode: 'NAL', countryCode: 'NAL', latitude: '0', longitude: '0'}].concat(State.getStatesOfCountry(countryCode))
+    return states;
+  }
 
   React.useEffect(() => {
     if (
@@ -282,10 +299,10 @@ const DemographicInformation = (props, ref) => {
                   }
                 >
                   <Autocomplete
-                    value={Country.getAllCountries().find(
+                    value={(getCountries().find(
                       (option) => option.isoCode === country
-                    )}
-                    options={Country.getAllCountries()}
+                    ))||null}
+                    options={getCountries()}
                     getOptionLabel={(option) => option.name}
                     onChange={(event, value) => {
                       setCountry(value.isoCode);
@@ -334,14 +351,14 @@ const DemographicInformation = (props, ref) => {
                 <MDBCol md="5">
                   <Autocomplete
                     value={
-                      State.getStatesOfCountry(country).find(
+                      getStates(country).find(
                         (option) => option.isoCode === state
                       ) || null
                     }
                     options={
                       residencyStatus === 2
-                        ? State.getStatesOfCountry(country)
-                        : State.getStatesOfCountry("US")
+                        ? getStates(country)
+                        : getStates("US")
                     }
                     getOptionLabel={(option) => option.name}
                     onChange={(event, value) => {

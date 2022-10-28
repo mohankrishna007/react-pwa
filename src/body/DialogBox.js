@@ -66,7 +66,6 @@ export default function DialogBox(props) {
       const academics = JSON.parse(localStorage.getItem("academic_profile"));
       const finance = JSON.parse(localStorage.getItem("financial_info"));
       const preference = JSON.parse(localStorage.getItem("preference_motivation"));
-      academics.NameofHighSchool = academics.NameofHighSchool.NAME;
 
       axios
         .post(
