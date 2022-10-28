@@ -142,7 +142,11 @@ const DemographicInformation = (props, ref) => {
   };
 
   const getStates = (countryCode) => {
-    var states = [{name: 'Not Applicable', isoCode: 'NAL', countryCode: 'NAL', latitude: '0', longitude: '0'}].concat(State.getStatesOfCountry(countryCode))
+    var states = State.getStatesOfCountry(countryCode);
+    if(states.length == 0){
+      states.push({name: 'Not Applicable', isoCode: 'NAL', countryCode: 'NAL', latitude: '0', longitude: '0'});
+    }
+   
     return states;
   }
 
