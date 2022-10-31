@@ -246,7 +246,7 @@ const PreferenceMotivation = (props, ref) => {
   };
 
   const handleLoadStreams = () => {
-    var streams = JSON.parse(localStorage.getItem("streamsData"));
+    var streams = JSON.parse(props.getStreams());
     setStreams(streams);
   }
 

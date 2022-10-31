@@ -56,6 +56,7 @@ export default function DialogBox(props) {
   const [haveError, setHaveError] = React.useState(true);
 
   const [schools, setSchools] = React.useState([]);
+  const [streams, setStreams] = React.useState([]);
 
   const handleHaveError = (val) => {
     setHaveError(val);
@@ -148,19 +149,19 @@ export default function DialogBox(props) {
     return schools;
   }
 
+  const getStreams = () => {
+    return streams;
+  }
+
   React.useEffect(() => {
 
     axios
     .get("https://collegeportfoliobackendnode.azurewebsites.net/student/highschools")
     .then((resp) => setSchools(JSON.stringify(resp.data)));
 
-    var streams = localStorage.getItem('streamsData');
-    if(streams == null){
-      localStorage.setItem('streamsData', JSON.stringify([]))
-    }
     axios
     .get("https://collegeportfoliobackendnode.azurewebsites.net/student/streams")
-    .then((resp) => localStorage.setItem('streamsData', JSON.stringify(resp.data)));
+    .then((resp) => setStreams(JSON.stringify(resp.data)));
 
     var restored = localStorage.getItem('whoData');
     if(restored != null){
@@ -251,6 +252,7 @@ export default function DialogBox(props) {
                   ref={ChildRef}
                   handleError={handleHaveError}
                   UserId={props.UserId}
+                  getStreams={getStreams}
                 />
               ) : (gotoDashBoard())}
             </Box>
