@@ -234,6 +234,10 @@ const AcademicProfile = (props, ref) => {
     props,
   ]);
 
+  const handleSchoolsData = () => {
+    return props.getSchools();
+  }
+
   return (
     <div>
       <ThemeProvider theme={createTheme(RegisterTheme)}>
@@ -241,7 +245,7 @@ const AcademicProfile = (props, ref) => {
           <MDBCardBody className="px-4 CardBody">
             <MDBRow>
               <MDBCol md="12">
-                <NameofHighSchool NameOfSchool={handleNameOfSchool}/>
+                <NameofHighSchool NameOfSchool={handleNameOfSchool} schools={handleSchoolsData}/>
               </MDBCol>
             </MDBRow>
             <MDBRow>

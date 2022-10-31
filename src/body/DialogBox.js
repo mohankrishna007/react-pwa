@@ -55,6 +55,8 @@ export default function DialogBox(props) {
   const [who, setWho] = React.useState(null);
   const [haveError, setHaveError] = React.useState(true);
 
+  const [schools, setSchools] = React.useState([]);
+
   const handleHaveError = (val) => {
     setHaveError(val);
   };
@@ -142,15 +144,15 @@ export default function DialogBox(props) {
     setOpen(false);
   };
 
+  const getSchools = () => {
+    return schools;
+  }
+
   React.useEffect(() => {
 
-    var schools = localStorage.getItem('schoolsData');
-    if(schools == null){
-      localStorage.setItem('schoolsData', JSON.stringify([]))
-    }
     axios
     .get("https://collegeportfoliobackendnode.azurewebsites.net/student/highschools")
-    .then((resp) => localStorage.setItem('schoolsData', JSON.stringify(resp.data)));
+    .then((resp) => setSchools(JSON.stringify(resp.data)));
 
     var streams = localStorage.getItem('streamsData');
     if(streams == null){
@@ -236,6 +238,7 @@ export default function DialogBox(props) {
                   ref={ChildRef}
                   handleError={handleHaveError}
                   UserId={props.UserId}
+                  getSchools={getSchools}
                 />
               ) : activeStep === 3 ? (
                 <FinancialInformation

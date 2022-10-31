@@ -8,6 +8,8 @@ function DashBoard() {
   const { state } = useLocation();
 
   const getStudentData = () =>{
+    localStorage.clear();
+    
     axios.get('https://collegeportfoliobackendnode.azurewebsites.net/student/getStudent/'+String(state.id))
     .then((resp) => {
         for (let obj in resp.data){

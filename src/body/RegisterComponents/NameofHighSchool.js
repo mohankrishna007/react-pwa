@@ -75,7 +75,7 @@ const ListboxComponent = React.forwardRef(function ListboxComponent(
   const itemData = [];
   children.forEach((item) => {
     itemData.push(item);
-    itemData.push(...(item.children || []));
+    itemData.push(...(item.children || []))
   });
 
   const theme = useTheme();
@@ -138,8 +138,10 @@ const StyledPopper = styled(Popper)({
   },
 });
 
+var schoolsData = [];
+
+
 export default function NameofHighSchool(props) {
-  const [schools, setSchools] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [snack, setSnack] = React.useState(false);
 
@@ -148,11 +150,6 @@ export default function NameofHighSchool(props) {
   const [schoolState, setSchoolState] = React.useState("");
   const [schoolZipcode, setSchoolZipcode] = React.useState("");
   const [schoolType, setSchoolType] = React.useState("");
-
-  const handleLoadSchools = () => {
-    var schools = JSON.parse(localStorage.getItem("schoolsData"));
-    setSchools(schools);
-  };
 
   const handleAddSchool = () => {
     setSnack(true);
@@ -164,13 +161,20 @@ export default function NameofHighSchool(props) {
       ZIP: schoolZipcode,
       TYPE: schoolType,
     };
-    var updatedSchools = [...schools, school];
 
-    localStorage.setItem("schoolsData", JSON.stringify(updatedSchools));
+    var updatedSchools = [...schoolsData, school];
+
     handleAddingSchoolDatabase(school);
+    schoolsData = updatedSchools;
+
+    console.log(schoolsData);
 
     handleClose();
   };
+
+  React.useState(() => {
+    schoolsData = JSON.parse(props.schools())
+  })
 
   const handleAddingSchoolDatabase = (school) => {
     axios
@@ -193,6 +197,7 @@ export default function NameofHighSchool(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
 
   return (
     <div>
@@ -303,9 +308,8 @@ export default function NameofHighSchool(props) {
       <Autocomplete
         disabled={open}
         id="schools-highschools"
-        options={schools}
+        options={schoolsData}
         disableListWrap
-        onFocus={handleLoadSchools}
         PopperComponent={StyledPopper}
         ListboxComponent={ListboxComponent}
         getOptionLabel={(option) => option.NAME}

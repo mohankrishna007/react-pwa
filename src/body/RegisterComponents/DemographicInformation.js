@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { MDBRow, MDBCol, MDBCard, MDBCardBody } from "mdb-react-ui-kit";
 import {
   FormControl,
@@ -118,24 +118,24 @@ const DemographicInformation = (props, ref) => {
   };
 
   const ethincOriginOptions = [
-    { title: "Caucassian", value: 1 },
-    { title: "African American", value: 2 },
-    { title: "Hispanic", value: 3 },
-    { title: "Two Or More Races", value: 4 },
-    { title: "Unknown", value: 5 },
-    { title: "Non Resident Alien/International", value: 6 },
-    { title: "Asian", value: 7 },
-    { title: "American Indian/Alaska Native", value: 8 },
-    { title: "Native Hawaiian/Pacific Islander", value: 9 },
+    { title: "African American", value: 1 },
+    { title: "American Indian/Alaska Native", value: 2 },
+    { title: "Asian", value: 3 },
+    { title: "Caucasian", value: 4 },
+    { title: "Hispanic", value: 5 },
+    { title: "Native Hawaiian/Pacific Islander", value: 6 },
+    { title: "Two Or More Races", value: 7 },
+    { title: "Unknown", value: 8 },
+    { title: "Prefer not to state", value: 9 },
   ];
 
   const getCountries =  () => {
     var countries = Country.getAllCountries().filter((country) => 
-    country.name != 'Puerto Rico' &
-    country.name != 'Guam' &
-    country.name != 'Northern Mariana Islands' &
-    country.name != 'American Samoa' &
-    country.name != 'United States');
+    country.name !== 'Puerto Rico' &
+    country.name !== 'Guam' &
+    country.name !== 'Northern Mariana Islands' &
+    country.name !== 'American Samoa' &
+    country.name !== 'United States');
 
     return countries;
 
@@ -143,7 +143,7 @@ const DemographicInformation = (props, ref) => {
 
   const getStates = (countryCode) => {
     var states = State.getStatesOfCountry(countryCode);
-    if(states.length == 0){
+    if(states.length === 0){
       states.push({name: 'Not Applicable', isoCode: 'NAL', countryCode: 'NAL', latitude: '0', longitude: '0'});
     }
    
