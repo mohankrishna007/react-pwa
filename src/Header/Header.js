@@ -32,8 +32,8 @@ return (
 			Collegeportfolio
 		</Typography>
 			{
-			user?<Link onClick={handleLogout}  className="btn btn-primary" style={{marginRight: '20px'}}>Profile</Link>:
-			<Link to="/register" className="btn btn-primary" style={{marginRight: '20px'}}>Logout</Link>
+			user?<Link onClick={handleLogout}  className="btn btn-primary" style={{marginRight: '20px'}}>Logout</Link>:
+			<Link to="/register" className="btn btn-primary" style={{marginRight: '20px'}}>Register</Link>
 			}
 		</Toolbar>
 	</AppBar>
