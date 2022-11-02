@@ -173,7 +173,8 @@ export default function NameofHighSchool(props) {
   };
 
   React.useState(() => {
-    schoolsData = JSON.parse(props.schools())
+    var data = props.schools();
+    String(data).length!==0?schoolsData=JSON.parse(data):schoolsData=[];
   })
 
   const handleAddingSchoolDatabase = (school) => {

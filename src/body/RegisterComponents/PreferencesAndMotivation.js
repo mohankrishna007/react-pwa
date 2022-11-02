@@ -151,7 +151,10 @@ const PreferenceMotivation = (props, ref) => {
       AdmissibilityScore: admissibilityScore,
     };
 
-    localStorage.setItem('preference_motivation', JSON.stringify(PreferenceMotivation));
+    localStorage.setItem(
+      "preference_motivation",
+      JSON.stringify(PreferenceMotivation)
+    );
   };
 
   const handleReligiousAffliations = (event) => {
@@ -212,9 +215,7 @@ const PreferenceMotivation = (props, ref) => {
   };
 
   const handleCollegeType = (value) => {
-    var str = [];
-    value.map((ele) => str.push(ele.title));
-    setCollegeType(str);
+    setCollegeType(String(value));
   };
 
   const handleLocation = (value) => {
@@ -248,13 +249,9 @@ const PreferenceMotivation = (props, ref) => {
   const handleLoadStreams = () => {
     var streams = JSON.parse(props.getStreams());
     setStreams(streams);
-  }
+  };
 
-  const collegePreferenceOptions = [
-    { title: "Public", value: 1 },
-    { title: "Private Non-Profit", value: 2 },
-    { title: "Private Profit", value: 3 },
-  ];
+  const collegePreferenceOptions = ["Public", "Private Non-Profit", "Private Profit"];
 
   const religiousAffliationOptions = [
     { title: "None", value: 0 },
@@ -338,15 +335,27 @@ const PreferenceMotivation = (props, ref) => {
                 <Autocomplete
                   multiple
                   options={collegePreferenceOptions}
-                  getOptionLabel={(option) => option.title}
-                  onChange={(event, value) => {
-                    handleCollegeType(value);
-                  }}
-                  required
-                  filterSelectedOptions
-                  sx={{ mb: 2 }}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option}
+                  sx={{mb: 2}}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option}
+                    </li>
+                  )}
+                  onChange={(event, value) => handleCollegeType(value)}
                   renderInput={(params) => (
-                    <TextField {...params} required label="College Type" />
+                    <TextField
+                      {...params}
+                      label="CollegeType"
+                      placeholder="Choose College Type"
+                    />
                   )}
                 />
               </MDBCol>

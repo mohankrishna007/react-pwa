@@ -118,14 +118,17 @@ const DemographicInformation = (props, ref) => {
   };
 
   const ethincOriginOptions = [
-    { title: "African American", value: 1 },
-    { title: "American Indian/Alaska Native", value: 2 },
-    { title: "Asian", value: 3 },
-    { title: "Caucasian", value: 4 },
+    { title: "African or African American", value: 1 },
+    { title: "American Indian or Alaska Native", value: 2 },
+    { title: "Asian or Asian American", value: 3 },
+    { title: "Caucasian / White", value: 4 },
     { title: "Hispanic", value: 5 },
-    { title: "Native Hawaiian/Pacific Islander", value: 6 },
-    { title: "Two Or More Races", value: 7 },
-    { title: "Unknown", value: 8 },
+    { title: "Pacific Islander", value: 6 },
+    { title: "Multi-racial", value: 7 },
+    { title: "Middle Eastern or Middle Eastern American", value: 8 },
+    { title: "Two or more races", value: 9},
+    { title: "Unknown", value: 10},
+    { title: "Other", value: 11},
     { title: "Prefer not to state", value: 9 },
   ];
 
@@ -157,7 +160,6 @@ const DemographicInformation = (props, ref) => {
       dob === null ||
       dobError === true ||
       residencyStatus.length === 0 ||
-      city.length === 0 ||
       state.length === 0 ||
       zipCode.length === 0 ||
       ethenicOrigin.length === 0 ||
@@ -347,7 +349,6 @@ const DemographicInformation = (props, ref) => {
                     value={city}
                     onChange={handleCity}
                     label="City"
-                    required
                     fullWidth
                     sx={{ mb: 2 }}
                   />
