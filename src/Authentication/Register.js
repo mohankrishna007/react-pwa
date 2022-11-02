@@ -42,7 +42,7 @@ const Register = (props, ref) => {
     };
 
     try {
-      var resp = await axios.post("http://localhost:5000/auth/register", data);
+      var resp = await axios.post("https://collegeportfoliobackendnode.azurewebsites.net/auth/register", data);
       console.log(JSON.stringify(resp.data));
       setMessage(resp.data.message);
       setVariant("success")

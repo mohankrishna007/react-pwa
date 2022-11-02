@@ -33,10 +33,11 @@ const Login = () => {
     }
 
     try {
-        var resp = await axios.post("http://localhost:5000/auth/login", credentials);
+        var resp = await axios.post("https://collegeportfoliobackendnode.azurewebsites.net/auth/login", credentials);
 			  localStorage.setItem("token", JSON.stringify(resp.data));
         console.log(JSON.stringify(resp.data));
         navigate("/");
+        window.location.reload();
       } catch (error) {
         if (error.response) {
           setMessage(error.response.data.message);
