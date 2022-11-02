@@ -1,140 +1,214 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { get, isEmpty, set } from "lodash-es";
+import { FormBuilder } from "@jeremyling/react-material-ui-form-builder";
 import {
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBCardTitle,
-  MDBCardFooter,
-} from "mdb-react-ui-kit";
-import {
-  TextField,
-  createTheme,
-  ThemeProvider,
-  Box,
-  Typography,
+  Avatar,
   Button,
+  IconButton,
+  InputAdornment,
   Alert,
+  ThemeProvider,
+  createTheme,
 } from "@mui/material";
-
-import RegisterTheme from "../Themes/RegisterTheme";
-import { Link } from "react-router-dom";
+import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
+import { indigo, red } from "@mui/material/colors";
 import axios from "axios";
+import { useNavigate } from "react-router";
+import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
+import RegisterTheme from "../Themes/RegisterTheme";
 
-const Register = (props, ref) => {
-  const [username, setUserName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+async function validate(refs, form) {
+  for (const [attribute, ref] of Object.entries(refs.current)) {
+    var errors;
+    if (ref.validate) {
+      errors = await ref.validate(get(form, attribute));
+    }
+    if (!isEmpty(errors)) {
+      console.log(errors);
+      return false;
+    }
+  }
+  return true;
+}
 
+export default function Signup() {
   const [message, setMessage] = React.useState("");
-  const [showAlert, setShowAlert] = React.useState(true);
+  const [hideAlert, setHideAlert] = React.useState(true);
   const [variant, setVariant] = React.useState("info");
 
-  const handleSubmit = async () => {
-      setMessage("Please wait, we are creating account for you");
-      setVariant("info")
-      setShowAlert(false);
+  const navigate = useNavigate();
 
-    const data = {
-      username: username,
-      email: email,
-      password: password,
-    };
+  const [form, setForm] = useState({});
+  const [showPassword, setShowPassword] = useState();
+
+  const refs = useRef({});
+
+  const updateForm = (updates) => {
+    const copy = { ...form };
+    for (const [key, value] of Object.entries(updates)) {
+      set(copy, key, value);
+    }
+    setForm(copy);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const ok = await validate(refs, form);
+    if (!ok) {
+      return;
+    }
+    setMessage("Please wait, we are creating account for you");
+    setVariant("info");
+    setHideAlert(false);
 
     try {
-      var resp = await axios.post("https://collegeportfoliobackendnode.azurewebsites.net/auth/register", data);
+      var resp = await axios.post(
+        "https://collegeportfoliobackendnode.azurewebsites.net/auth/register",
+        form
+      );
       console.log(JSON.stringify(resp.data));
       setMessage(resp.data.message);
-      setVariant("success")
-      setShowAlert(false);
+      setVariant("success");
+      setHideAlert(false);
     } catch (error) {
       if (error.response) {
         setMessage(error.response.data.message);
-        setVariant("error")
-        setShowAlert(false);
+        setVariant("error");
+        setHideAlert(false);
+        console.log(JSON.stringify(error.response.data));
       }
     }
   };
 
-  return (
-    <div>
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        style={{ width: "50%", margin: "0  auto" }}
-      >
-        <ThemeProvider theme={createTheme(RegisterTheme)}>
-          <MDBCard>
-            <MDBCardTitle>
-              <Typography style={{ textAlign: "center", margin: "10px" }}>
-                {" "}
-                Create Account{" "}
-              </Typography>
-            </MDBCardTitle>
-            <MDBCardBody className="px-4 CardBody">
-              <MDBRow>
-                <MDBCol md="12">
-                  <TextField
-                    label="Username"
-                    value={username}
-                    type="text"
-                    variant="outlined"
-                    onChange={(e) => setUserName(e.target.value)}
-                    required
-                    fullWidth
-                    sx={{ mb: 2 }}
-                  />
-                </MDBCol>
-              </MDBRow>
-              <MDBRow>
-                <MDBCol md="12">
-                  <TextField
-                    label="Email"
-                    value={email}
-                    type="email"
-                    variant="outlined"
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    fullWidth
-                    sx={{ mb: 2 }}
-                  />
-                </MDBCol>
-              </MDBRow>
-              <MDBRow>
-                <MDBCol md="12">
-                  <TextField
-                    label="Password"
-                    value={password}
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    variant="outlined"
-                    fullWidth
-                    sx={{ mb: 2 }}
-                  />
-                </MDBCol>
-              </MDBRow>
-              <Alert variant="filled" severity={variant} hidden={showAlert}>
-                {message}
-              </Alert>
-            </MDBCardBody>
-            <MDBCardFooter>
-              <Button
-                onClick={handleSubmit}
-                style={{ backgroundColor: "green", color: "white" }}
-                fullWidth
+  const fields = [
+    {
+      component: "custom",
+      customComponent: () => (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Avatar style={{ backgroundColor: red[500], color: "white" }}>
+            <LockOutlined />
+          </Avatar>
+        </div>
+      ),
+    },
+    {
+      component: "display-text",
+      title: "Sign up",
+      titleProps: {
+        style: {
+          fontSize: "20px",
+          fontWeight: "bold",
+        },
+      },
+      titleContainerProps: {
+        style: {
+          justifyContent: "center",
+        },
+      },
+    },
+    {
+      attribute: "username",
+      component: "text-field",
+      label: "UserName",
+      props: {
+        required: true,
+      },
+      validations: {
+        required: true,
+      },
+    },
+    {
+      attribute: "email",
+      component: "text-field",
+      label: "Email",
+      props: {
+        required: true,
+      },
+      validations: {
+        required: true,
+        email: true,
+      },
+    },
+    {
+      attribute: "password",
+      component: "text-field",
+      label: "Password",
+      props: {
+        type: showPassword ? "text" : "password",
+        InputProps: {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                Register{" "}
-              </Button>
-              <p>
-                <Link to="/login">Already signed?</Link>
-              </p>
-            </MDBCardFooter>
-          </MDBCard>
-        </ThemeProvider>
-      </Box>
-    </div>
-  );
-};
+                {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ),
+          style: {
+            paddingRight: 0,
+          },
+        },
+        required: true,
+      },
+      validations: {
+        required: true,
+        min: 8,
+        matches: ["/[a-z]/i", "At least 1 lowercase or uppercase letter"],
+        test: {
+          name: "specialChar",
+          test: (value) =>
+            /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/.test(value),
+          message: "At least 1 number or special character",
+        },
+      },
+    },
+  ];
 
-export default Register;
+  return (
+    <ThemeProvider theme={createTheme(RegisterTheme)}>
+      <MDBCard style={{ maxWidth: "80%", margin: "0 auto" }}>
+        <MDBCardBody className="CardBody">
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{ width: "60%" }}>
+              <form onSubmit={handleSubmit}>
+                <FormBuilder
+                  fields={fields}
+                  form={form}
+                  updateForm={updateForm}
+                  refs={refs}
+                />
+                <Alert severity={variant} hidden={hideAlert}>
+                  {message}
+                </Alert>
+                <br />
+                <Button
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: "8px" }}
+                >
+                  Sign Up
+                </Button>
+              </form>
+              <div>
+                <Button
+                  onClick={() => navigate("/login")}
+                  style={{
+                    textTransform: "initial",
+                    marginTop: "16px",
+                    color: indigo[500],
+                  }}
+                >
+                  Already have an account?
+                </Button>
+              </div>
+            </div>
+          </div>
+        </MDBCardBody>
+      </MDBCard>
+    </ThemeProvider>
+  );
+}

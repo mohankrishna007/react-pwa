@@ -41,8 +41,6 @@ const DemographicInformation = (props, ref) => {
   const [dobClicked, setDobClicked] = React.useState(false);
   const [residencyStatusClicked, setResidencyStatusClicked] =
     React.useState(false);
-  const [cityClicked, setCityClicked] = React.useState(false);
-  const [zipCodeClicked, setZipCodeClicked] = React.useState(false);
   const [ethenicOriginClicked, setEthenicOriginClicked] = React.useState(false);
   const [genderClicked, setGenderClicked] = React.useState(false);
 
@@ -93,12 +91,10 @@ const DemographicInformation = (props, ref) => {
 
   const handleCity = (event) => {
     setCity(event.target.value);
-    setCityClicked(true);
   };
 
   const handleZipCode = (event) => {
     setZipCode(event.target.value);
-    setZipCodeClicked(true);
   };
 
   const handleEthincOrigin = (event) => {
@@ -161,7 +157,6 @@ const DemographicInformation = (props, ref) => {
       dobError === true ||
       residencyStatus.length === 0 ||
       state.length === 0 ||
-      zipCode.length === 0 ||
       ethenicOrigin.length === 0 ||
       gender.length === 0
     ) {
@@ -345,7 +340,6 @@ const DemographicInformation = (props, ref) => {
               <MDBRow>
                 <MDBCol md="4">
                   <TextField
-                    error={(city.length === 0) & cityClicked ? true : false}
                     value={city}
                     onChange={handleCity}
                     label="City"
@@ -387,15 +381,11 @@ const DemographicInformation = (props, ref) => {
                 </MDBCol>
                 <MDBCol md="3">
                   <TextField
-                    error={
-                      (zipCode.length === 0) & zipCodeClicked ? true : false
-                    }
                     label={residencyStatus === 2 ? "Postal Code" : "Zip Code"}
                     value={zipCode}
                     onChange={handleZipCode}
                     variant="outlined"
                     type="number"
-                    required
                     fullWidth
                     sx={{ mb: 2 }}
                   />
