@@ -27,8 +27,10 @@ const AcademicProfile = (props, ref) => {
   }));
 
   const postAcademicProfile = () => {
+    var token = JSON.parse(localStorage.getItem("token"));
+
     const AcademicProfile = {
-      userId: props.UserId,
+      userId: token.data,
       NameofHighSchool: nameOfSchool,
       HighSchoolGraduation: highSchoolGraduation,
       LookingtoEnrollIn: enrolIn,

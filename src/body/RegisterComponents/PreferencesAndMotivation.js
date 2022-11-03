@@ -135,8 +135,9 @@ const PreferenceMotivation = (props, ref) => {
       }
     }
 
+    var token = JSON.parse(localStorage.getItem("token"));
     var PreferenceMotivation = {
-      userId: props.UserId,
+      userId: token.data,
       CollegeType: collegeType,
       FieldOfStudy: fieldOfStudy,
       ReligiousAffliation: regiliousAffliations,

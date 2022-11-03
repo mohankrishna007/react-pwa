@@ -49,8 +49,10 @@ const DemographicInformation = (props, ref) => {
   }));
 
   const postAboutStudent = () => {
+    var token = JSON.parse(localStorage.getItem("token"));
+
     const AboutStudent = {
-      userId: props.UserId,
+      userId: token.data,
       FirstName: firstName,
       LastName: lastName,
       Dob: dob,

@@ -26,8 +26,10 @@ const FinancialInformation = (props, ref) => {
   }));
 
   const postFinancial = () => {
+    var token = JSON.parse(localStorage.getItem("token"));
+
     const Financial = {
-      userId: props.UserId,
+      userId: token.data,
       ApplyingFinancialAid: appplyingFinancialAid,
       MeritScholarShip: meritScholarShipImp,
       WhoWillPayForCollege: whoPayForCollege,
