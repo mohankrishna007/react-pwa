@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/404fb7ae-d397-4691-bc54-9494100d7249/appservices/subscriptions/404fb7ae-d397-4691-bc54-9494100d7249/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/CollegePortfolioWeb",
+    "appService.deploySubpath": "."
+}

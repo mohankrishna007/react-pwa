@@ -1,0 +1,12 @@
+.dialog-title{
+    background-color: skyblue;
+}
+
+.CardBody {
+    background-color: #F6F4F5;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { 
+	-webkit-appearance: none;
+} 
