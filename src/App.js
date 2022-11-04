@@ -25,7 +25,7 @@ class App extends React.Component {
               <Route path='dashboard' element={user?<DashBoard />:<Navigate replace to="/login" />}/>
               <Route path='login' element={<Login />} />
               <Route path='register' element={<Register />} />
-              <Route path='forgetpassword' element={<ForgetPassword />} />
+              <Route path='reset/:id/:token' element={<ForgetPassword />} />
               <Route path="users/:id/verify/:token" element={<EmailVerify />} />
             </Routes>
           </div>

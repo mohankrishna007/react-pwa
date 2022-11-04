@@ -9,6 +9,7 @@ import {
   Alert,
   ThemeProvider,
   createTheme,
+  TextField
 } from "@mui/material";
 import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import { indigo, red } from "@mui/material/colors";
@@ -16,6 +17,11 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
 import RegisterTheme from "../Themes/RegisterTheme";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 async function validate(refs, form) {
   for (const [attribute, ref] of Object.entries(refs.current)) {
@@ -36,10 +42,25 @@ export default function Login() {
   const [hideAlert, setHideAlert] = React.useState(true);
   const [variant, setVariant] = React.useState("info");
 
+  const [userMail, setUserMail] = React.useState("");
+  const [sentMail, setSentMail] = useState(false);
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({});
   const [showPassword, setShowPassword] = useState();
+  const [clickSubmit, setClickSubmit] = React.useState(false);
+
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const refs = useRef({});
 
@@ -51,6 +72,24 @@ export default function Login() {
     setForm(copy);
   };
 
+  const handleResetMail = async () => {
+    if(sentMail){
+      handleClose();
+    }else{
+      try {
+        var data = {
+          email: userMail
+        }
+
+        var resp = await axios.post("https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword", data);
+
+        console.log(resp);
+      } catch (error) {
+      }
+      setSentMail(true);
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const ok = await validate(refs, form);
@@ -58,9 +97,7 @@ export default function Login() {
       return;
     }
 
-    setMessage("Please wait, we are looking your account");
-    setVariant("info");
-    setHideAlert(false);
+    setClickSubmit(true);
 
     try {
       var resp = await axios.post(
@@ -75,6 +112,7 @@ export default function Login() {
       setMessage(error.response.data.message);
       setVariant("info");
       setHideAlert(false);
+      setClickSubmit(false);
     }
     console.log(form);
   };
@@ -191,13 +229,14 @@ export default function Login() {
                   variant="contained"
                   color="primary"
                   style={{ marginTop: "8px" }}
+                  disabled={clickSubmit}
                 >
                   Log In
                 </Button>
               </form>
               <div>
                 <Button
-                  onClick={() => navigate('/forgetpassword')}
+                  onClick={() => handleClickOpen()}
                   style={{
                     textTransform: "initial",
                     marginTop: "16px",
@@ -222,6 +261,33 @@ export default function Login() {
           </div>
         </MDBCardBody>
       </MDBCard>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Reset password</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            An password reset link will be sent to your email address if it matches with our data.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+            value={userMail}
+            onChange={(e) => setUserMail(e.target.value)}
+            variant="standard"
+          />
+          <br/><br/>
+          <Alert severity="success" hidden={!sentMail}>Reset link is sent !!</Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleResetMail}>{(!sentMail)?"Send Mail": "OK"}</Button>
+        </DialogActions>
+      </Dialog>
+
     </ThemeProvider>
   );
 }

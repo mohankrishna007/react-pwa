@@ -31,10 +31,11 @@ async function validate(refs, form) {
   return true;
 }
 
-export default function Signup() {
+export default function Register() {
   const [message, setMessage] = React.useState("");
   const [hideAlert, setHideAlert] = React.useState(true);
   const [variant, setVariant] = React.useState("info");
+  const [clickSubmit, setClickSubmit] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -57,10 +58,8 @@ export default function Signup() {
     if (!ok) {
       return;
     }
-    setMessage("Please wait, we are creating account for you");
-    setVariant("info");
-    setHideAlert(false);
 
+    setClickSubmit(true);
     try {
       var resp = await axios.post(
         "https://collegeportfoliobackendnode.azurewebsites.net/auth/register",
@@ -76,6 +75,7 @@ export default function Signup() {
         setVariant("error");
         setHideAlert(false);
         console.log(JSON.stringify(error.response.data));
+        setClickSubmit(false);
       }
     }
   };
@@ -104,17 +104,6 @@ export default function Signup() {
         style: {
           justifyContent: "center",
         },
-      },
-    },
-    {
-      attribute: "username",
-      component: "text-field",
-      label: "UserName",
-      props: {
-        required: true,
-      },
-      validations: {
-        required: true,
       },
     },
     {
@@ -189,6 +178,7 @@ export default function Signup() {
                   variant="contained"
                   color="primary"
                   style={{ marginTop: "8px" }}
+                  disabled={clickSubmit}
                 >
                   Sign Up
                 </Button>
