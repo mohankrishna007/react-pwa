@@ -50,6 +50,7 @@ export default function Login() {
   const [form, setForm] = useState({});
   const [showPassword, setShowPassword] = useState();
   const [clickSubmit, setClickSubmit] = React.useState(false);
+  const [resetMessage, setResetMessage] = React.useState("");
 
 
   const [open, setOpen] = React.useState(false);
@@ -80,11 +81,17 @@ export default function Login() {
         var data = {
           email: userMail
         }
-
         var resp = await axios.post("https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword", data);
-
+        setResetMessage("Password reset link sent successfully ");
         console.log(resp);
       } catch (error) {
+        setResetMessage("User Not Found");
+        if(error.response.status === 500){
+          setResetMessage("Reset Link sent already")
+        }else{
+          setResetMessage("User Not Found")
+        }
+        console.log(error.response);
       }
       setSentMail(true);
     }
@@ -281,7 +288,7 @@ export default function Login() {
             variant="standard"
           />
           <br/><br/>
-          <Alert severity="success" hidden={!sentMail}>Reset link is sent !!</Alert>
+          <Alert severity="info" hidden={!sentMail}>{resetMessage}</Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
