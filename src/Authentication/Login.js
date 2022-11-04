@@ -105,6 +105,7 @@ export default function Login() {
         form
       );
       localStorage.setItem("token", JSON.stringify(resp.data));
+      localStorage.setItem("remember", JSON.stringify(form.remember))
       console.log(JSON.stringify(resp.data));
       navigate("/");
       window.location.reload();

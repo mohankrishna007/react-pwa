@@ -5,7 +5,6 @@ const uuid = require('uuid');
 const newId = uuid.v4();
 
 class Home extends React.Component{
-
     render(){
         return(
             <div>

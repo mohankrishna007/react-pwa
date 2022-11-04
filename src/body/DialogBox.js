@@ -155,6 +155,8 @@ export default function DialogBox(props) {
 
   React.useEffect(() => {
 
+    console.log(localStorage.getItem('remember'))
+
     axios
     .get("https://collegeportfoliobackendnode.azurewebsites.net/student/highschools")
     .then((resp) => setSchools(JSON.stringify(resp.data)));
