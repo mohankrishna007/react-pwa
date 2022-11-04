@@ -264,10 +264,10 @@ export default function Login() {
       </MDBCard>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Reset password</DialogTitle>
+        <DialogTitle><b>Please Enter Your Email</b></DialogTitle>
         <DialogContent>
           <DialogContentText>
-            An password reset link will be sent to your email address if it matches with our data.
+              Password reset link will be sent to your email address.
           </DialogContentText>
           <TextField
             autoFocus
