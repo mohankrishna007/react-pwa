@@ -13,6 +13,7 @@ import Login from "./Authentication/Login";
 import Register from "./Authentication/Register";
 import EmailVerify from "./Authentication/EmailVerify";
 import ForgetPassword from "./Authentication/ForgetPassword";
+import Affinitty from "./Affinity/Affinity";
 
 class App extends React.Component {
 
@@ -44,6 +45,7 @@ class App extends React.Component {
               />
               <Route path="reset/:id/:token" element={<ForgetPassword />} />
               <Route path="users/:id/verify/:token" element={<EmailVerify />} />
+              <Route path="/affinity" element={<Affinitty />}/>
             </Routes>
           </div>
         </div>

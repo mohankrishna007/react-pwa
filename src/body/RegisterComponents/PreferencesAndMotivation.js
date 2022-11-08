@@ -509,7 +509,6 @@ const PreferenceMotivation = (props, ref) => {
                   Your reasons to attend college
                 </FormLabel>
                 <FormGroup aria-label="position">
-                  <br />
                   {reasonsToAttendCollegeOptions.map((option) => (
                     <Grid container direction="row" key={option.value}>
                       <FormControlLabel
@@ -566,7 +565,7 @@ const PreferenceMotivation = (props, ref) => {
                         </IconButton>
                       </Tooltip>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={1}>
                       <Input
                         error={scoreError & keyConsiderations[1] ? true : false}
                         endAdornment={
@@ -606,7 +605,7 @@ const PreferenceMotivation = (props, ref) => {
                         </IconButton>
                       </Tooltip>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={1}>
                       <Input
                         error={scoreError & keyConsiderations[2] ? true : false}
                         endAdornment={
@@ -646,7 +645,7 @@ const PreferenceMotivation = (props, ref) => {
                         </IconButton>
                       </Tooltip>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={1}>
                       <Input
                         error={scoreError & keyConsiderations[3] ? true : false}
                         endAdornment={

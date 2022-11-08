@@ -13,22 +13,15 @@ import {
   Typography,
 } from "@mui/material";
 
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import { MDBCard, MDBCardBody, MDBRow } from "mdb-react-ui-kit";
+import { MDBCard, MDBCardBody, MDBCardTitle, MDBRow } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router";
 import DemographicInformation from "./RegisterComponents/DemographicInformation";
 import AcademicProfile from "./RegisterComponents/AcademicProfile";
 import FinancialInformation from "./RegisterComponents/FinancialInformation";
 import PreferenceMotivation from "./RegisterComponents/PreferencesAndMotivation";
 import axios from "axios";
-import '../styles/body/DialogBox.css';
+import "../styles/body/DialogBox.css";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const student = [
   "Who is this?",
@@ -58,6 +51,7 @@ export default function DialogBox(props) {
   const [schools, setSchools] = React.useState([]);
   const [streams, setStreams] = React.useState([]);
 
+
   const handleHaveError = (val) => {
     setHaveError(val);
   };
@@ -65,50 +59,48 @@ export default function DialogBox(props) {
   const navigate = useNavigate();
 
   const gotoDashBoard = () => {
-      const about = JSON.parse(localStorage.getItem("about_student"));
-      const academics = JSON.parse(localStorage.getItem("academic_profile"));
-      const finance = JSON.parse(localStorage.getItem("financial_info"));
-      const preference = JSON.parse(localStorage.getItem("preference_motivation"));
+    const about = JSON.parse(localStorage.getItem("about_student"));
+    const academics = JSON.parse(localStorage.getItem("academic_profile"));
+    const finance = JSON.parse(localStorage.getItem("financial_info"));
+    const preference = JSON.parse(
+      localStorage.getItem("preference_motivation")
+    );
 
-      axios
-        .post(
-          "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
-          about
-        )
-        .then((resp) => console.log(resp));
+    axios
+      .post(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
+        about
+      )
+      .then((resp) => console.log(resp));
 
-      axios
-        .post(
-          "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
-          academics
-        )
-        .then((resp) => console.log(resp));
+    axios
+      .post(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
+        academics
+      )
+      .then((resp) => console.log(resp));
 
-      axios
-        .post(
-          "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
-          finance
-        )
-        .then((resp) => console.log(resp));
+    axios
+      .post(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
+        finance
+      )
+      .then((resp) => console.log(resp));
 
-      axios
-        .post(
-          "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
-          preference
-        )
-        .then((resp) => console.log(resp));
+    axios
+      .post(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
+        preference
+      )
+      .then((resp) => console.log(resp));
 
-    navigate("/dashboard", {
-      state: {
-        id: props.UserId,
-        filled: true,
-      },
-    });
+    localStorage.setItem('filled', true);
+    navigate("/dashboard");
   };
 
   const handleNext = () => {
-    if(activeStep === 0){
-      localStorage.setItem('whoData', who);
+    if (activeStep === 0) {
+      localStorage.setItem("whoData", who);
     }
     if (activeStep === 1) {
       ChildRef.current.postAboutStudent();
@@ -135,67 +127,50 @@ export default function DialogBox(props) {
     handleHaveError(false);
   };
 
-  const [open, setOpen] = React.useState(true);
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const getSchools = () => {
     return schools;
-  }
+  };
 
   const getStreams = () => {
     return streams;
-  }
+  };
 
   React.useEffect(() => {
-
-    console.log(localStorage.getItem('remember'))
-
-    axios
-    .get("https://collegeportfoliobackendnode.azurewebsites.net/student/highschools")
-    .then((resp) => setSchools(JSON.stringify(resp.data)));
+    console.log(localStorage.getItem("remember"));
 
     axios
-    .get("https://collegeportfoliobackendnode.azurewebsites.net/student/streams")
-    .then((resp) => setStreams(JSON.stringify(resp.data)));
+      .get(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/highschools"
+      )
+      .then((resp) => setSchools(JSON.stringify(resp.data)));
 
-    var restored = localStorage.getItem('whoData');
-    if(restored != null){
+    axios
+      .get(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/streams"
+      )
+      .then((resp) => setStreams(JSON.stringify(resp.data)));
+
+    var restored = localStorage.getItem("whoData");
+    if (restored != null) {
       setWho(restored);
       handleHaveError(false);
     }
-  }, [open])
-
+  }, []);
 
   const scrollToTop = () => {
     document.getElementById("dialog-content").scrollTop = 0;
-  }
+  };
 
   return (
     <div id="body-dialog">
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Slide in alert dialog
-      </Button> */}
-
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle className="dialog-title">
-          <Typography>{who === "1" ? student[activeStep] : parent[activeStep]}</Typography>
-        </DialogTitle>
-        <DialogContent id="dialog-content">
+      <MDBCard style={{ width: "90%", margin: "0 auto" }}>
+        <MDBCardTitle className="dialog-title">
+          <Typography>
+            {who === "1" ? student[activeStep] : parent[activeStep]}
+          </Typography>
+        </MDBCardTitle>
+        <MDBCardBody>
           <div>
-            <br/>
             <Box sx={{ maxWidth: "100%", flexGrow: 1 }}>
               {activeStep === 0 ? (
                 <div>
@@ -234,30 +209,29 @@ export default function DialogBox(props) {
                 <DemographicInformation
                   ref={ChildRef}
                   handleError={handleHaveError}
-                  UserId={props.UserId}
                 />
               ) : activeStep === 2 ? (
                 <AcademicProfile
                   ref={ChildRef}
                   handleError={handleHaveError}
-                  UserId={props.UserId}
                   getSchools={getSchools}
                 />
               ) : activeStep === 3 ? (
                 <FinancialInformation
                   ref={ChildRef}
                   handleError={handleHaveError}
-                  UserId={props.UserId}
                 />
               ) : activeStep === 4 ? (
                 <PreferenceMotivation
                   ref={ChildRef}
                   handleError={handleHaveError}
-                  UserId={props.UserId}
                   getStreams={getStreams}
                 />
-              ) : (gotoDashBoard())}
+              ) : (
+                gotoDashBoard()
+              )}
             </Box>
+            <br />
             <MobileStepper
               variant="progress"
               steps={5}
@@ -295,8 +269,12 @@ export default function DialogBox(props) {
               }
             />
           </div>
-        </DialogContent>
-      </Dialog>
+          {/* </DialogContent>
+      </Dialog> */}
+        </MDBCardBody>
+      </MDBCard>
+      <br />
+      <br />
     </div>
   );
 }

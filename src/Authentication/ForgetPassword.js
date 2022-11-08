@@ -8,13 +8,15 @@ import {
   InputAdornment,
   ThemeProvider,
   createTheme,
+  Alert,
 } from "@mui/material";
 import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
 import RegisterTheme from "../Themes/RegisterTheme";
+import { Link } from "react-router-dom";
 
 async function validate(refs, form) {
   for (const [attribute, ref] of Object.entries(refs.current)) {
@@ -34,11 +36,14 @@ export default function ForgetPassword() {
 
   const param = useParams();
 
-  const navigate = useNavigate();
-
   const [form, setForm] = useState({});
-  const [showPassword, setShowPassword] = useState();
+  const [showPassword1, setShowPassword1] = useState();
+  const [showPassword2, setShowPassword2] = useState();
   const [clickSubmit, setClickSubmit] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [hideAlert, setHideAlert] = React.useState(true);
+  const [variant, setVariant] = React.useState("info");
+  const [resetted, setResetted] = React.useState(false);
 
   const refs = useRef({});
 
@@ -66,10 +71,15 @@ export default function ForgetPassword() {
       const url = `https://collegeportfoliobackendnode.azurewebsites.net/auth/reset/${param.id}/${param.token}`;
       var resp = await axios.post(url, data);
       console.log(resp)
-      navigate('/login');
-      window.location.reload();
+      setMessage('Password Updated Succesfully')
+      setHideAlert(false);
+      setVariant('success');
+      setResetted(true)
     } catch (error) {
       console.log(error.response)
+      setMessage(error.response.data.message)
+      setHideAlert(false);
+      setVariant('error');
       setClickSubmit(false);
     }
   };
@@ -89,7 +99,25 @@ export default function ForgetPassword() {
       attribute: "password1",
       component: "text-field",
       label: "Enter New Password",
-      type: 'text',
+      props: {
+        type: showPassword1 ? "text" : "password",
+        InputProps: {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword1(!showPassword1)}
+              >
+                {showPassword1 ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          ),
+          style: {
+            paddingRight: 0,
+          },
+        },
+        required: true,
+      },
       validations: {
         required: true,
         min: 8,
@@ -107,15 +135,15 @@ export default function ForgetPassword() {
         component: "text-field",
         label: "Enter New Password Again",
         props: {
-          type: showPassword ? "text" : "password",
+          type: showPassword2 ? "text" : "password",
           InputProps: {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassword2(!showPassword2)}
                 >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword2 ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             ),
@@ -129,12 +157,13 @@ export default function ForgetPassword() {
           required: true,
           min: 8,
           matches: ["/[a-z]/i", "At least 1 lowercase or uppercase letter"],
-          test: {
-            name: "specialChar",
-            test: (value) =>
-              /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/.test(value),
-            message: "At least 1 number or special character",
-          },
+          test:[
+            {
+              name: "Password matching",
+              test: (value) => form.password1.match(value),
+              message: "Passwords does not match",
+            },
+          ]
         },
       },
   ];
@@ -153,6 +182,10 @@ export default function ForgetPassword() {
                   refs={refs}
                 />
                 <br/>
+                <Alert severity={variant} hidden={hideAlert}>
+                  {message}
+                  <span style={resetted?{display: 'block'}: {display: 'none'}}><Link to='/login'>Login</Link></span>
+                </Alert>
                 <Button
                   fullWidth
                   type="submit"

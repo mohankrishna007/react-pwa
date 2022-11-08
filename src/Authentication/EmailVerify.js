@@ -2,8 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router";
-import LinearProgress from '@mui/material/LinearProgress';
-
+import { Link } from "react-router-dom";
 
 function EmailVerify() {
     const param = useParams();
@@ -19,8 +18,6 @@ function EmailVerify() {
 				const url = `https://collegeportfoliobackendnode.azurewebsites.net/auth/users/${param.id}/verify/${param.token}`;
 				const resp =  await axios.post(url, {});
                 console.log(resp)
-                navigate("/");
-                window.location.reload();
                 setData(resp);
 			} catch (error) {
 				setData(error.response);
@@ -33,11 +30,14 @@ function EmailVerify() {
         <div>
             {(data===null)?(
                 <div>
-                    <LinearProgress />
-                    <h1> Please Wait we are activating your Acount...</h1>
+                    <center><p>Activating...</p></center>
                 </div>
             ):(
-                JSON.stringify(data.data)
+               <center> 
+                {data.data.message} 
+                <br/>
+                {(data.status === 201)?(<Link to={'/login'}>Please click here to Login</Link>):("")}
+               </center>
             )}
         </div>
     )

@@ -61,6 +61,9 @@ export default function Login() {
 
   const handleClose = () => {
     setOpen(false);
+    setSentMail(false);
+    setUserMail("");
+    setResetMessage("");
   };
 
   const refs = useRef({});
@@ -82,14 +85,13 @@ export default function Login() {
           email: userMail
         }
         var resp = await axios.post("https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword", data);
-        setResetMessage("Password reset link sent successfully ");
+        setResetMessage("Password reset link sent successfully");
         console.log(resp);
       } catch (error) {
-        setResetMessage("User Not Found");
         if(error.response.status === 500){
           setResetMessage("Reset Link sent already")
         }else{
-          setResetMessage("User Not Found")
+          setResetMessage("Password reset link sent successfully")
         }
         console.log(error.response);
       }
@@ -160,7 +162,11 @@ export default function Login() {
       },
       validations: {
         required: true,
-        email: true,
+        test: {
+          name: "Email",
+          test: (value) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value.trim()),
+          message: "Enter valid email",
+        },
       },
     },
     {
@@ -292,7 +298,7 @@ export default function Login() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleResetMail}>{(!sentMail)?"Send Mail": "OK"}</Button>
+          <Button onClick={handleResetMail}>{(!sentMail)?"Send email": "OK"}</Button>
         </DialogActions>
       </Dialog>
 
