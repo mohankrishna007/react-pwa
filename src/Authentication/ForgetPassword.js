@@ -1,75 +1,63 @@
-import React, { useRef, useState } from "react";
-import { get, isEmpty, set } from "lodash-es";
-import { FormBuilder } from "@jeremyling/react-material-ui-form-builder";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  InputAdornment,
-  ThemeProvider,
-  createTheme,
-  Alert,
-} from "@mui/material";
-import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
-import { red } from "@mui/material/colors";
-import axios from "axios";
-import { useParams } from "react-router";
-import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RegisterTheme from "../Themes/RegisterTheme";
-import { Link } from "react-router-dom";
+import {
+  Alert,
+  FormControl,
+} from "@mui/material";
+import { useNavigate, useParams } from "react-router";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
+import axios from "axios";
+import { ValidationGroup, Validate, AutoDisabler } from "mui-validate";
 
-async function validate(refs, form) {
-  for (const [attribute, ref] of Object.entries(refs.current)) {
-    var errors;
-    if (ref.validate) {
-      errors = await ref.validate(get(form, attribute));
-    }
-    if (!isEmpty(errors)) {
-      console.log(errors);
-      return false;
-    }
-  }
-  return true;
-}
-
-export default function ForgetPassword() {
-
-  const param = useParams();
-
-  const [form, setForm] = useState({});
-  const [showPassword1, setShowPassword1] = useState();
-  const [showPassword2, setShowPassword2] = useState();
-  const [clickSubmit, setClickSubmit] = React.useState(false);
+export default function Register() {
+  const [showPassword1, setShowPassword1] = React.useState(false);
+  const [showPassword2, setShowPassword2] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [hideAlert, setHideAlert] = React.useState(true);
   const [variant, setVariant] = React.useState("info");
   const [resetted, setResetted] = React.useState(false);
 
-  const refs = useRef({});
+  const param = useParams();
+  const navigate = useNavigate();
 
-  const updateForm = (updates) => {
-    const copy = { ...form };
-    for (const [key, value] of Object.entries(updates)) {
-      set(copy, key, value);
-    }
-    setForm(copy);
+  const [clickSubmit, setClickSubmit] = React.useState(false);
+
+  const handleClickShowPassword1 = () => {
+    setShowPassword1(!showPassword1);
+  };
+  const handleClickShowPassword2 = () => {
+    setShowPassword2(!showPassword2);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const ok = await validate(refs, form);
-    if (!ok || !(form.password1 === form.password2)) {
-      return;
-    }
+    const data = new FormData(event.currentTarget);
+
+    var form = {
+      password: data.get("password"),
+    };
 
     setClickSubmit(true);
 
-    var data = {
-      password: form.password1
-    }
      try {
       const url = `https://collegeportfoliobackendnode.azurewebsites.net/auth/reset/${param.id}/${param.token}`;
-      var resp = await axios.post(url, data);
+      var resp = await axios.post(url, form);
       console.log(resp)
       setMessage('Password Updated Succesfully')
       setHideAlert(false);
@@ -84,123 +72,119 @@ export default function ForgetPassword() {
     }
   };
 
-  const fields = [
-    {
-      component: "custom",
-      customComponent: () => (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Avatar style={{ backgroundColor: red[500], color: "white" }}>
-            <LockOutlined />
-          </Avatar>
-        </div>
-      ),
-    },
-    {
-      attribute: "password1",
-      component: "text-field",
-      label: "Enter New Password",
-      props: {
-        type: showPassword1 ? "text" : "password",
-        InputProps: {
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPassword1(!showPassword1)}
-              >
-                {showPassword1 ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-          ),
-          style: {
-            paddingRight: 0,
-          },
-        },
-        required: true,
-      },
-      validations: {
-        required: true,
-        min: 8,
-        matches: ["/[a-z]/i", "At least 1 lowercase or uppercase letter"],
-        test: {
-          name: "specialChar",
-          test: (value) =>
-            /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/.test(value),
-          message: "At least 1 number or special character",
-        },
-      },
-    },
-    {
-        attribute: "password2",
-        component: "text-field",
-        label: "Enter New Password Again",
-        props: {
-          type: showPassword2 ? "text" : "password",
-          InputProps: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword2(!showPassword2)}
-                >
-                  {showPassword2 ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            ),
-            style: {
-              paddingRight: 0,
-            },
-          },
-          required: true,
-        },
-        validations: {
-          required: true,
-          min: 8,
-          matches: ["/[a-z]/i", "At least 1 lowercase or uppercase letter"],
-          test:[
-            {
-              name: "Password matching",
-              test: (value) => form.password1.match(value),
-              message: "Passwords does not match",
-            },
-          ]
-        },
-      },
-  ];
-
   return (
     <ThemeProvider theme={createTheme(RegisterTheme)}>
-      <MDBCard style={{ width: "80%", margin: "0 auto" }}>
-        <MDBCardBody className="CardBody">
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <div style={{ width: "60%" }}>
-              <form onSubmit={handleSubmit}>
-                <FormBuilder
-                  fields={fields}
-                  form={form}
-                  updateForm={updateForm}
-                  refs={refs}
-                />
-                <br/>
-                <Alert severity={variant} hidden={hideAlert}>
-                  {message}
-                  <span style={resetted?{display: 'block'}: {display: 'none'}}><Link to='/login'>Login</Link></span>
-                </Alert>
+      <Container component="main">
+        <Box
+          sx={{
+            marginTop: 3,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Reset Passowrd
+          </Typography>
+          <ValidationGroup>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              <Validate
+                name="password"
+                required={[true, "Password is required"]}
+                regex={[
+                  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+                  "Enter strong password",
+                ]}
+              >
+                <FormControl variant="outlined" fullWidth sx={{ mt: 2 }}>
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Password
+                  </InputLabel>
+                  <OutlinedInput
+                    name="password1"
+                    id="password1"
+                    type={showPassword1 ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword1}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword1 ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Password"
+                  />
+                </FormControl>
+              </Validate>
+
+              <Validate
+                name="passoword"
+                required={[true, "Password is required"]}
+                regex={[
+                  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/,
+                  "Enter strong password",
+                ]}
+              >
+                <FormControl variant="outlined" fullWidth sx={{ mt: 2 }}>
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Password
+                  </InputLabel>
+                  <OutlinedInput
+                    name="password"
+                    id="password"
+                    type={showPassword2 ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword2}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword2 ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Password"
+                  />
+                </FormControl>
+              </Validate>
+              <br /><br/>
+              <Alert severity={variant} hidden={hideAlert}>
+                {message}
+                <span
+                  style={resetted ? { display: "block" } : { display: "none" }}
+                  onClick={() => navigate('/login')}
+                >Login
+                </span>
+              </Alert>
+              <AutoDisabler>
                 <Button
-                  fullWidth
                   type="submit"
-                  variant="contained"
-                  color="primary"
-                  style={{ marginTop: "8px" }}
+                  fullWidth
                   disabled={clickSubmit}
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
                 >
-                  Submit
+                  Register
                 </Button>
-              </form>
-            </div>
-          </div>
-        </MDBCardBody>
-      </MDBCard>
+              </AutoDisabler>
+            </Box>
+          </ValidationGroup>
+        </Box>
+      </Container>
     </ThemeProvider>
   );
 }

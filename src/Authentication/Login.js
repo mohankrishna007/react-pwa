@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -12,11 +11,24 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RegisterTheme from "../Themes/RegisterTheme";
-import { MDBCard } from "mdbreact";
-import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import {
+  Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+} from "@mui/material";
 import { useNavigate } from "react-router";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import InputAdornment from "@mui/material/InputAdornment";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
 import axios from "axios";
-
+import { ValidationGroup, Validate, AutoDisabler } from "mui-validate";
 
 export default function Login() {
   const [message, setMessage] = React.useState("");
@@ -28,10 +40,18 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] = React.useState();
   const [clickSubmit, setClickSubmit] = React.useState(false);
   const [resetMessage, setResetMessage] = React.useState("");
 
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const [open, setOpen] = React.useState(false);
 
@@ -47,34 +67,36 @@ export default function Login() {
   };
 
   const handleResetMail = async () => {
-    if(sentMail){
+    if (sentMail) {
       handleClose();
-    }else{
+    } else {
       try {
         var data = {
-          email: userMail
-        }
-        var resp = await axios.post("https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword", data);
+          email: userMail,
+        };
+        var resp = await axios.post(
+          "https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword",
+          data
+        );
         setResetMessage("Password reset link sent successfully");
         console.log(resp);
       } catch (error) {
-        if(error.response.status === 500){
-          setResetMessage("Reset Link sent already")
-        }else{
-          setResetMessage("Password reset link sent successfully")
+        if (error.response.status === 500) {
+          setResetMessage("Reset Link sent already");
+        } else {
+          setResetMessage("Password reset link sent successfully");
         }
         console.log(error.response);
       }
       setSentMail(true);
     }
-  }
-
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    var form={
+    var form = {
       email: data.get("email"),
       password: data.get("password"),
     };
@@ -87,7 +109,6 @@ export default function Login() {
         form
       );
       localStorage.setItem("token", JSON.stringify(resp.data));
-      localStorage.setItem("remember", JSON.stringify(form.remember))
       console.log(JSON.stringify(resp.data));
       navigate("/");
       window.location.reload();
@@ -101,28 +122,35 @@ export default function Login() {
 
   return (
     <ThemeProvider theme={createTheme(RegisterTheme)}>
-      <MDBCard>
-        <MDBCard>
-          <Container component="main" maxWidth="xs">
+      <Container component="main">
+        <Box
+          sx={{
+            marginTop: 3,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <ValidationGroup>
             <Box
-              sx={{
-                marginTop: 8,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
-                Sign in
-              </Typography>
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
+              <Validate
+                name="Email"
+                required={[true, "Email is required"]}
+                regex={[
+                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                  "Invalid Email",
+                ]}
               >
                 <TextField
                   margin="normal"
@@ -135,53 +163,78 @@ export default function Login() {
                   type="email"
                   autoFocus
                 />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
-                />
-                <br/>
-                <Alert severity={variant} hidden={hideAlert}>
-                  {message}
-                </Alert>
-                <br/>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Sign In
-                </Button>
-                <Grid container>
-                  <Grid item xs>
-                     <span onClick={() => handleClickOpen()} style={{cursor: 'pointer'}}>{"Forget Password"}</span>
-                  </Grid>
-                  <Grid item>
-                    <Link to='/login'>{"Don't have an account? Sign Up"}</Link>
-                  </Grid>
+              </Validate>
+              <Validate
+                name="passoword"
+                required={[true, "Password is required"]}
+              >
+                <FormControl variant="outlined" fullWidth sx={{ mt: 2 }}>
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Password
+                  </InputLabel>
+                  <OutlinedInput
+                    name="password"
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Password"
+                  />
+                </FormControl>
+              </Validate>
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <br />
+              <Alert severity={variant} hidden={hideAlert}>
+                {message}
+              </Alert>
+              <AutoDisabler>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                disabled={clickSubmit}
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              </AutoDisabler>
+              <Grid container>
+                <Grid item xs>
+                  <span
+                    onClick={() => handleClickOpen()}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {"Forget Password"}
+                  </span>
                 </Grid>
-              </Box>
+                <Grid item>
+                  <span onClick={() => navigate('/register')} style={{cursor: "pointer", color: 'blue'}}>{"Don't have an Account? Register Here"}</span>
+                </Grid>
+              </Grid>
             </Box>
-          </Container>
-        </MDBCard>
-      </MDBCard>
-
-
+          </ValidationGroup>
+        </Box>
+      </Container>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle><b>Please Enter Your Email</b></DialogTitle>
+        <DialogTitle>
+          <b>Please Enter Your Email</b>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-              Password reset link will be sent to your email address.
+            Password reset link will be sent to your email address.
           </DialogContentText>
           <TextField
             autoFocus
@@ -194,15 +247,19 @@ export default function Login() {
             onChange={(e) => setUserMail(e.target.value)}
             variant="standard"
           />
-          <br/><br/>
-          <Alert severity="info" hidden={!sentMail}>{resetMessage}</Alert>
+          <br />
+          <br />
+          <Alert severity="info" hidden={!sentMail}>
+            {resetMessage}
+          </Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleResetMail}>{(!sentMail)?"Send email": "OK"}</Button>
+          <Button onClick={handleResetMail}>
+            {!sentMail ? "Send email" : "OK"}
+          </Button>
         </DialogActions>
       </Dialog>
-
     </ThemeProvider>
   );
 }

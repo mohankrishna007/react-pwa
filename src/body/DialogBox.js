@@ -39,7 +39,7 @@ const parent = [
   "What are some of your student's preferences?",
 ];
 
-export default function DialogBox(props) {
+export default function DialogBox() {
   const ChildRef = React.useRef();
 
   const theme = useTheme();
