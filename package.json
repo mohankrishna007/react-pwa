@@ -27,18 +27,17 @@
     "mdbreact": "^4.6.1",
     "mui-validate": "^1.0.0",
     "react": "^18.2.0",
-    "react-beautiful-dnd": "13.1.0",
     "react-bootstrap": "^2.5.0",
-    "react-color": "2.19.3",
     "react-dom": "^18.2.0",
-    "react-player": "2.9.0",
     "react-router": "^6.4.1",
     "react-router-dom": "^6.4.1",
     "react-scripts": "^5.0.1",
     "react-window": "^1.8.7",
     "serve": "^14.0.1",
-    "uuid": "^9.0.0",
     "web-vitals": "^2.1.4"
+  },
+  "engines": {
+    "node": "14.x"
   },
   "scripts": {
     "start": "react-scripts start",
