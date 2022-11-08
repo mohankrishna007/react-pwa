@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -13,24 +12,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RegisterTheme from "../Themes/RegisterTheme";
 import { MDBCard } from "mdbreact";
+import { Link } from "react-router-dom";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 export default function Register() {
   const handleSubmit = (event) => {
@@ -106,14 +89,11 @@ export default function Register() {
                     </Link>
                   </Grid>
                   <Grid item>
-                    <Link href="login" variant="body2">
-                      {"Already have an account? Login In"}
-                    </Link>
+                    <Link to='/login'>{'Already have an Account? Login In'}</Link>
                   </Grid>
                 </Grid>
               </Box>
             </Box>
-            <Copyright sx={{ mt: 8, mb: 4 }} />
           </Container>
         </MDBCard>
       </MDBCard>
