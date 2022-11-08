@@ -48,7 +48,7 @@ function Affinitty() {
       .post("https://collegeportfoliobackendnode.azurewebsites.net/college/affinity", req)
       .then((resp) => setData(resp.data));
 
-  }, []);
+  }, [location.state.colleges]);
 
   return (
     <div>

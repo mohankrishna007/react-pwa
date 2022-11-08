@@ -162,11 +162,6 @@ export default function Login() {
       },
       validations: {
         required: true,
-        test: {
-          name: "Email",
-          test: (value) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value.trim()),
-          message: "Enter valid email",
-        },
       },
     },
     {
