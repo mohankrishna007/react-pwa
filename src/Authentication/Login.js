@@ -215,9 +215,9 @@ export default function Login() {
                 <Grid item xs>
                   <span
                     onClick={() => handleClickOpen()}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer",color:'blue'}}
                   >
-                    {"Forget Password"}
+                    {"Forget Password?"}
                   </span>
                 </Grid>
                 <Grid item>
@@ -230,11 +230,11 @@ export default function Login() {
       </Container>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          <b>Please Enter Your Email</b>
+          <b>Please enter your registered email address</b>
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Password reset link will be sent to your email address.
+            If what you entered matches our records, we’ll send you an email soon to reset your password
           </DialogContentText>
           <TextField
             autoFocus

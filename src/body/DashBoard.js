@@ -83,7 +83,7 @@ function DashBoard() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="College preference"
+                      label="Select Colleges"
                       placeholder="Choose Colleges"
                     />
                   )}

@@ -9,7 +9,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RegisterTheme from "../Themes/RegisterTheme";
 import {
   Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormControl,
+  TextField,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router";
 import Visibility from "@mui/icons-material/Visibility";
@@ -28,6 +34,10 @@ export default function Register() {
   const [hideAlert, setHideAlert] = React.useState(true);
   const [variant, setVariant] = React.useState("info");
   const [resetted, setResetted] = React.useState(false);
+  const [userMail, setUserMail] = React.useState("");
+  const [sentMail, setSentMail] = React.useState(false);
+  const [resetMessage, setResetMessage] = React.useState("");
+
 
   const param = useParams();
   const navigate = useNavigate();
@@ -43,6 +53,45 @@ export default function Register() {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSentMail(false);
+    setUserMail("");
+    setResetMessage("");
+  };
+
+  const handleResetMail = async () => {
+    if (sentMail) {
+      handleClose();
+    } else {
+      try {
+        var data = {
+          email: userMail,
+        };
+        var resp = await axios.post(
+          "https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword",
+          data
+        );
+        setResetMessage("Password reset link sent successfully");
+        console.log(resp);
+      } catch (error) {
+        if (error.response.status === 500) {
+          setResetMessage("Reset Link sent already");
+        } else {
+          setResetMessage("Password reset link sent successfully");
+        }
+        console.log(error.response);
+      }
+      setSentMail(true);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -87,7 +136,7 @@ export default function Register() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Reset Passowrd
+            Reset Password
           </Typography>
           <ValidationGroup>
             <Box
@@ -164,11 +213,7 @@ export default function Register() {
               <br /><br/>
               <Alert severity={variant} hidden={hideAlert}>
                 {message}
-                <span
-                  style={resetted ? { display: "block" } : { display: "none" }}
-                  onClick={() => navigate('/login')}
-                >Login
-                </span>
+                {(resetted)?(<Button onClick={() => navigate('/login')}>Login</Button>):(<Button onClick={() => handleClickOpen()}>Resend Link</Button>)}
               </Alert>
               <AutoDisabler>
                 <Button
@@ -178,13 +223,48 @@ export default function Register() {
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Register
+                  Reset
                 </Button>
               </AutoDisabler>
             </Box>
           </ValidationGroup>
         </Box>
       </Container>
+
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          <b>Please enter your registered email address</b>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            If what you entered matches our records, we’ll send you an email soon to reset your password
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+            value={userMail}
+            onChange={(e) => setUserMail(e.target.value)}
+            variant="standard"
+          />
+          <br />
+          <br />
+          <Alert severity="info" hidden={!sentMail}>
+            {resetMessage}
+          </Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleResetMail}>
+            {!sentMail ? "Send email" : "OK"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </ThemeProvider>
   );
 }
