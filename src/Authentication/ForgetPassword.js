@@ -87,7 +87,7 @@ export default function Register() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Reset Passowrd
+            Reset Password
           </Typography>
           <ValidationGroup>
             <Box
@@ -164,11 +164,11 @@ export default function Register() {
               <br /><br/>
               <Alert severity={variant} hidden={hideAlert}>
                 {message}
-                <span
+                <center>
+                <Button
                   style={resetted ? { display: "block" } : { display: "none" }}
-                  onClick={() => navigate('/login')}
-                >Login
-                </span>
+                  onClick={() => navigate('/login')}>Go to Login </Button>
+                </center>
               </Alert>
               <AutoDisabler>
                 <Button

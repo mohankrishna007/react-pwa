@@ -14,6 +14,7 @@ import Register from "./Authentication/Register";
 import EmailVerify from "./Authentication/EmailVerify";
 import ForgetPassword from "./Authentication/ForgetPassword";
 import Affinitty from "./Affinity/Affinity";
+import NearbyAirports from "./NearbyAirports/NearbyAirports";
 
 class App extends React.Component {
 
@@ -46,6 +47,7 @@ class App extends React.Component {
               <Route path="reset/:id/:token" element={<ForgetPassword />} />
               <Route path="users/:id/verify/:token" element={<EmailVerify />} />
               <Route path="/affinity" element={<Affinitty />}/>
+              <Route path="/nearbyairports" element={<NearbyAirports />}/>
             </Routes>
           </div>
         </div>

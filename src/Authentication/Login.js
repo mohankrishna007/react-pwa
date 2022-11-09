@@ -215,9 +215,9 @@ export default function Login() {
                 <Grid item xs>
                   <span
                     onClick={() => handleClickOpen()}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", color: 'blue'}}
                   >
-                    {"Forget Password"}
+                    {"Forget Password? "}
                   </span>
                 </Grid>
                 <Grid item>
