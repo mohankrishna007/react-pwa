@@ -1,10 +1,17 @@
-import { Autocomplete, Checkbox, createTheme, IconButton, TextField, ThemeProvider } from "@material-ui/core";
+import {
+  Autocomplete,
+  Checkbox,
+  createTheme,
+  IconButton,
+  TextField,
+  ThemeProvider,
+} from "@material-ui/core";
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import SearchIcon from "@mui/icons-material/Search";
-import { MDBCard, MDBCardBody, MDBCol } from "mdb-react-ui-kit";
+import { MDBCard, MDBCardBody, MDBCol, MDBRow } from "mdb-react-ui-kit";
 import RegisterTheme from "../Themes/RegisterTheme";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
@@ -33,27 +40,30 @@ function DashBoard() {
 
   const showAffinity = () => {
     var colleges = [];
-    collegeName.map((option) => colleges.push({"unitID": option.UNITID}))
+    collegeName.map((option) => colleges.push({ unitID: option.UNITID }));
 
-    navigate('/affinity', {
-      state:{
-        colleges: colleges
-      }
-    })
-  }
+    navigate("/affinity", {
+      state: {
+        colleges: colleges,
+      },
+    });
+  };
   React.useEffect(() => {
     axios
-      .get("https://collegeportfoliobackendnode.azurewebsites.net/student/colleges")
+      .get(
+        "https://collegeportfoliobackendnode.azurewebsites.net/student/colleges"
+      )
       .then((resp) => setColleges(resp.data));
-  }, [])
+  }, []);
 
   return (
     <div>
       <ThemeProvider theme={createTheme(RegisterTheme)}>
-      <MDBCard style={{ width: "80%", margin: "0 auto" }}>
-        <MDBCardBody className="CardBody">
-          <MDBCol md='8'>
-          <Autocomplete
+        <MDBCard style={{ width: "80%", margin: "0 auto" }}>
+          <MDBCardBody className="CardBody">
+            <MDBRow>
+              <MDBCol md="8">
+                <Autocomplete
                   multiple
                   options={colleges}
                   disableCloseOnSelect
@@ -73,20 +83,21 @@ function DashBoard() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Location preference"
-                      placeholder="Choose States"
+                      label="College preference"
+                      placeholder="Choose Colleges"
                     />
                   )}
                 />
-          </MDBCol>
-          <MDBCol md='2'>
-            <IconButton onClick={() => showAffinity()}>
-              <SearchIcon />
-            </IconButton>
-          </MDBCol>
-        </MDBCardBody>
-      </MDBCard>
-    </ThemeProvider>
+              </MDBCol>
+              <MDBCol md="2">
+                <IconButton onClick={() => showAffinity()}>
+                  <SearchIcon />
+                </IconButton>
+              </MDBCol>
+            </MDBRow>
+          </MDBCardBody>
+        </MDBCard>
+      </ThemeProvider>
     </div>
   );
 }
