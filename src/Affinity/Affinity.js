@@ -69,7 +69,7 @@ function Affinitty() {
                 <StyledTableCell align="center">
                   TRANPORTATION GRADE
                 </StyledTableCell>
-                <StyledTableCell align="center">Overall</StyledTableCell>
+                <StyledTableCell align="center">OVERALL GRADE</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
