@@ -15,6 +15,7 @@ import EmailVerify from "./Authentication/EmailVerify";
 import ForgetPassword from "./Authentication/ForgetPassword";
 import Affinitty from "./Affinity/Affinity";
 import NearbyAirports from "./NearbyAirports/NearbyAirports";
+import Threea from "./Affinity/Threea";
 
 class App extends React.Component {
 
@@ -52,6 +53,7 @@ class App extends React.Component {
                 element={user ? <Affinitty /> :  <Navigate replace to="/" />}
               />
               <Route path="/nearbyairports" element={<NearbyAirports />}/>
+              <Route path="/threea" element={<Threea/>} />
             </Routes>
           </div>
         </div>

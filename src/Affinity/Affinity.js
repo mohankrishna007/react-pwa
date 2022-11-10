@@ -11,6 +11,19 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   BarElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+// } from 'chart.js';
+
+
+
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,6 +44,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
+
 
 function Affinitty() {
   const [data, setData] = useState([]);

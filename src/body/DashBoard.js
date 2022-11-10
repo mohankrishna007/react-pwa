@@ -48,6 +48,20 @@ function DashBoard() {
       },
     });
   };
+
+  
+  const showThreea = () => {
+    var colleges = [];
+    collegeName.map((option) => colleges.push({ unitID: option.UNITID }));
+
+    navigate("/Threea", {
+      state: {
+        colleges: colleges,
+      },
+    });
+  };
+
+  
   React.useEffect(() => {
     axios
       .get(
@@ -83,7 +97,7 @@ function DashBoard() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Select Colleges"
+                      label="Select a College"
                       placeholder="Choose Colleges"
                     />
                   )}
@@ -91,6 +105,40 @@ function DashBoard() {
               </MDBCol>
               <MDBCol md="2">
                 <IconButton onClick={() => showAffinity()}>
+                  <SearchIcon />
+                </IconButton>
+              </MDBCol>
+            </MDBRow>
+            <MDBRow>
+              <MDBCol md="8">
+                <Autocomplete
+                  multiple
+                  options={colleges}
+                  disableCloseOnSelect
+                  getOptionLabel={(option) => option.INSTNM}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={icon}
+                        checkedIcon={checkedIcon}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.INSTNM}
+                    </li>
+                  )}
+                  onChange={(event, value) => setCollegeName(value)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select a College"
+                      placeholder="Choose Colleges"
+                    />
+                  )}
+                />
+              </MDBCol>
+              <MDBCol md="2">
+                <IconButton onClick={() => showThreea()}>
                   <SearchIcon />
                 </IconButton>
               </MDBCol>
