@@ -22,7 +22,7 @@ class App extends React.Component {
     const user = localStorage.getItem("token");
 
     return (
-      <Router basename={process.env.PUBLIC_URL}>
+      <Router>
         <div className="App">
           <Header />
           <br />
