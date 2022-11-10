@@ -18,7 +18,6 @@ import NearbyAirports from "./NearbyAirports/NearbyAirports";
 import Threea from "./Affinity/Threea";
 
 class App extends React.Component {
-
   render() {
     const user = localStorage.getItem("token");
 
@@ -29,9 +28,11 @@ class App extends React.Component {
           <br />
           <div className="content">
             <Routes>
-              <Route path="/"  element={
-                  user ? <Home/> : <Navigate replace to="/login" />
-                } />
+              <Route path="*" element={<Navigate to="/"/>} />
+              <Route
+                path="/"
+                element={user ? <Home /> : <Navigate replace to="/login" />}
+              />
               <Route
                 path="dashboard"
                 element={
@@ -50,10 +51,10 @@ class App extends React.Component {
               <Route path="users/:id/verify/:token" element={<EmailVerify />} />
               <Route
                 path="affinity"
-                element={user ? <Affinitty /> :  <Navigate replace to="/" />}
+                element={user ? <Affinitty /> : <Navigate replace to="/" />}
               />
-              <Route path="nearbyairports" element={<NearbyAirports />}/>
-              <Route path="/threea" element={<Threea/>} />
+              <Route path="nearbyairports" element={<NearbyAirports />} />
+              <Route path="/threea" element={<Threea />} />
             </Routes>
           </div>
         </div>

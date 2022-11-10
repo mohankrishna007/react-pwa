@@ -75,7 +75,7 @@ function DashBoard() {
       <ThemeProvider theme={createTheme(RegisterTheme)}>
         <MDBCard style={{ width: "80%", margin: "0 auto" }}>
           <MDBCardBody className="CardBody">
-            <MDBRow>
+            {/* <MDBRow>
               <MDBCol md="8">
                 <Autocomplete
                   multiple
@@ -108,7 +108,7 @@ function DashBoard() {
                   <SearchIcon />
                 </IconButton>
               </MDBCol>
-            </MDBRow>
+            </MDBRow> */}
             <MDBRow>
               <MDBCol md="8">
                 <Autocomplete
