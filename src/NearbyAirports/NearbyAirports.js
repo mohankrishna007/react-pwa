@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Button } from "react-bootstrap";
 
 
+import Airports from './Nearby.json'
+
 
 
 function NearbyAirports(){
@@ -17,31 +19,38 @@ function NearbyAirports(){
     const handleGetAirports = async () => {
         setClicked(true);
 
+        var result = [];
         var count = 0;
 
-        var resp = await axios.get('http://localhost:5000/college/getcollegelocation');
-        var data = resp.data;
-        var result = [];
+        var data = localStorage.getItem("loc");
+        if(data === null){
+             var resp = await axios.get('https://collegeportfoliobackendnode.azurewebsites.net/college/getcollegelocation');
+            data = resp.data;
+            localStorage.setItem("loc", data);
+        }
 
-        for (let index = 3500; index < data.length; index++) {
+        data = JSON.parse(data)
+
+        for (let index = 0; index < data.length; index++) {
+            ++count;
             const element = data[index];
             var airport = await handleGetAirportByLongLat(element.LATITUDE, element.LONGITUDE);
             var item ={
                 "UNITID": element.UNITID,
                 "Airport": airport
             }
+
             result.push(item);
 
             if(count%500 === 0){
                 fileDownload(JSON.stringify(result), "NearbyAirports"+count+".json");
             }
 
-            ++count;
             setCounter(count)
         }
 
-        fileDownload(JSON.stringify(result), "NearbyAirports.json");
-        console.log(result)
+         fileDownload(JSON.stringify(result), "NearbyAirports.json");
+         console.log(result)
     }
 
     const handleGetAirportByLongLat = async (lat, lon) => {
@@ -49,43 +58,62 @@ function NearbyAirports(){
             lat = 0;
             lon = 0;
         }
-        var url = "https://atlas.microsoft.com/search/poi/category/json?subscription-key=GcktHETY0ASkAYYFSg5WKG29wdpsaffsvruoQvYOUFk&api-version=1.0&query=AIRPORT&limit=1&lat="+lat+"&lon="+lon;
+        var url = "https://atlas.microsoft.com/search/poi/category/json?subscription-key=GcktHETY0ASkAYYFSg5WKG29wdpsaffsvruoQvYOUFk&api-version=1.0&query=AIRPORT&categorySet=7383002,7383003,7383005&radius=241402&lat="+lat+"&lon="+lon;
         var resp = await axios.get(url);
 
-        var Result = {
-            name: "",
-            distance: ""
-        }
-
-        var actualGeo = lat+","+lon;
-        var targetGeo = "";
+        var Airports =[];
 
         if(resp.status === 200){
-            var data = resp.data.results[0];
-            var name = data.poi.name;
-            var airportlat = data.position.lat;
-            var airportlon = data.position.lon;
+            var data = resp.data;
+            data.results.map((opt) => {
+                var Result = {
+                    name: "",
+                    category: "",
+                    local: "",
+                    distance: "",
+                    lat: "",
+                    lon: "",
+                }
 
-            targetGeo = airportlat+","+airportlon;
-            var distance = await handleFindDistance(actualGeo, targetGeo);
-
-            Result.name = name;
-            Result.distance = distance;
+                Result.name = opt.poi.name;
+                Result.category = opt.poi.categorySet[0].id;
+                Result.local = opt.address.localName;
+                Result.distance = opt.dist;
+                Result.lat = opt.position.lat;
+                Result.lon = opt.position.lon;
+                
+                Airports.push(Result)
+            })
         }
 
-        return Result;
+        return Airports;
     }
 
-    const handleFindDistance = async (actualGeo, targetGeo) => {
-        var url = "https://us.atlas.microsoft.com/spatial/greatCircleDistance/json?subscription-key=GcktHETY0ASkAYYFSg5WKG29wdpsaffsvruoQvYOUFk&api-version=1.0&limit=1&query="+actualGeo+":"+targetGeo;
-        var distance = 0;
-        var resp = await axios.get(url);
-        if(resp.status === 200){
-            var data = resp.data.result.distanceInMeters;
-            distance = data;
+    const jsontocsv = () =>{
+
+        var txt = "";
+
+        for(let i =0; i<Airports.length; i++){
+
+            var option = Airports[i];
+
+             option.Airport.map((airport) => {
+                txt += option.UNITID+","
+                txt += airport.name+","
+                txt += airport.category+","
+                txt += airport.distance+","
+                txt += airport.local+","
+                txt += airport.lat+","
+                txt += airport.lon
+
+                txt += "\n";
+             })
         }
 
-        return distance;
+        console.log(txt);
+
+        fileDownload(txt, "Airports.csv");
+
     }
 
     return(
@@ -93,11 +121,13 @@ function NearbyAirports(){
             <h1> Nearby Airports</h1>
             <h2> I can smartly find nearby airports of institutes</h2>
 
-            <Button onClick={handleGetAirports} disabled={clicked}> Wanna see Click Me</Button>
+            {/* <Button onClick={handleGetAirports} disabled={clicked}> Wanna see Click Me</Button>
             <br/><br/>
             {counter} Processing...
 
-            <LinearProgress variant="determinate" value={normalise(counter)} />
+            <LinearProgress variant="determinate" value={normalise(counter)} /> */}
+
+            <Button onClick={jsontocsv}>Convert</Button>
         </div>
     )
 }

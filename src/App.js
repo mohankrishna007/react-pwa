@@ -51,7 +51,7 @@ class App extends React.Component {
                 path="affinity"
                 element={user ? <Affinitty /> :  <Navigate replace to="/" />}
               />
-              <Route path="/nearbyairports" element={<NearbyAirports />}/>
+              <Route path="nearbyairports" element={<NearbyAirports />}/>
             </Routes>
           </div>
         </div>
