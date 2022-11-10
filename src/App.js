@@ -28,8 +28,9 @@ class App extends React.Component {
           <br />
           <div className="content">
             <Routes>
-              {user && <Route path="/" exact element={<Home />} />}
-              <Route path="/" element={<Navigate replace to="/login" />} />
+              <Route path="/"  element={
+                  user ? <Home/> : <Navigate replace to="/login" />
+                } />
               <Route
                 path="dashboard"
                 element={
@@ -46,7 +47,10 @@ class App extends React.Component {
               />
               <Route path="reset/:id/:token" element={<ForgetPassword />} />
               <Route path="users/:id/verify/:token" element={<EmailVerify />} />
-              <Route path="/affinity" element={<Affinitty />}/>
+              <Route
+                path="affinity"
+                element={user ? <Affinitty /> :  <Navigate replace to="/" />}
+              />
               <Route path="/nearbyairports" element={<NearbyAirports />}/>
             </Routes>
           </div>
