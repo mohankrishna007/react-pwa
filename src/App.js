@@ -22,17 +22,14 @@ class App extends React.Component {
     const user = localStorage.getItem("token");
 
     return (
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <div className="App">
           <Header />
           <br />
           <div className="content">
             <Routes>
-              <Route path="*" element={<Navigate to="/"/>} />
-              <Route
-                path="/"
-                element={user ? <Home /> : <Navigate replace to="/login" />}
-              />
+              {user && <Route path="/" exact element={<Home />} />}
+              <Route path="/" element={<Navigate replace to="/login" />} />
               <Route
                 path="dashboard"
                 element={
