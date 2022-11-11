@@ -1,5 +1,5 @@
 import * as React from "react";
-import axios from "axios";
+import { axios } from "axios";
 import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";

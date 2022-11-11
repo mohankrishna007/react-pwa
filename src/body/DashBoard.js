@@ -6,7 +6,7 @@ import {
   TextField,
   ThemeProvider,
 } from "@material-ui/core";
-import axios from "axios";
+import { axios } from "axios";
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
