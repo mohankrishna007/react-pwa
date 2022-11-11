@@ -23,7 +23,7 @@ class App extends React.Component {
     const user = localStorage.getItem("token");
 
     return (
-      <Router basename='https://wonderful-mushroom-0c529801e.2.azurestaticapps.net/'>
+      <Router basename={process.env.PUBLIC_URL}>
         <div className="App">
           <Header />
           <br />
