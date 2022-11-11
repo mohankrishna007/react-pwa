@@ -38,16 +38,16 @@ function DashBoard() {
   //     });
   // };
 
-  const showAffinity = () => {
-    var colleges = [];
-    collegeName.map((option) => colleges.push({ unitID: option.UNITID }));
+  // const showAffinity = () => {
+  //   var colleges = [];
+  //   collegeName.map((option) => colleges.push({ unitID: option.UNITID }));
 
-    navigate("/affinity", {
-      state: {
-        colleges: colleges,
-      },
-    });
-  };
+  //   navigate("/affinity", {
+  //     state: {
+  //       colleges: colleges,
+  //     },
+  //   });
+  // };
 
   
   const showThreea = () => {
