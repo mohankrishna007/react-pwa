@@ -19,7 +19,7 @@ import DemographicInformation from "./RegisterComponents/DemographicInformation"
 import AcademicProfile from "./RegisterComponents/AcademicProfile";
 import FinancialInformation from "./RegisterComponents/FinancialInformation";
 import PreferenceMotivation from "./RegisterComponents/PreferencesAndMotivation";
-import { axios } from "axios";
+import axios from "axios";
 import "../styles/body/DialogBox.css";
 
 
