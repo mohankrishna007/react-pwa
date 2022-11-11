@@ -16,6 +16,7 @@ import ForgetPassword from "./Authentication/ForgetPassword";
 import Affinitty from "./Affinity/Affinity";
 import NearbyAirports from "./NearbyAirports/NearbyAirports";
 import Threea from "./Affinity/Threea";
+import PageNotFound from "./PageNotFound";
 
 class App extends React.Component {
   render() {
@@ -52,6 +53,7 @@ class App extends React.Component {
               />
               <Route path="nearbyairports" element={<NearbyAirports />} />
               <Route path="/threea" element={<Threea />} />
+              <Route path='*' exact={true} element={<PageNotFound />} />
             </Routes>
           </div>
         </div>
