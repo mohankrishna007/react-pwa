@@ -2,7 +2,6 @@ import React from "react";
 import "./App.css";
 import Home from "./Home";
 import {
-  BrowserRouter as Router,
   Navigate,
   Route,
   Routes,
@@ -23,13 +22,12 @@ class App extends React.Component {
     const user = localStorage.getItem("token");
 
     return (
-      <Router basename={process.env.PUBLIC_URL}>
         <div className="App">
           <Header />
           <br />
           <div className="content">
             <Routes>
-              {user && <Route path="/" exact element={<Home />} />}
+              {user && <Route path="/" element={<Home />} />}
               <Route path="/" element={<Navigate replace to="/login" />} />
               <Route
                 path="dashboard"
@@ -57,7 +55,6 @@ class App extends React.Component {
             </Routes>
           </div>
         </div>
-      </Router>
     );
   }
 }
