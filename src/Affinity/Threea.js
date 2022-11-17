@@ -10,11 +10,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Drilldown from 'highcharts/modules/drilldown';
+import { Button } from "bootstrap";
 
 if (!Highcharts.Chart.prototype.addSeriesAsDrilldown) {
     Drilldown(Highcharts);
@@ -26,6 +27,10 @@ const options = {
     },
     title: {
       text: "CollegePortfolio"
+    },
+    yAxis: {
+      yAxis: 0,
+      categories: ['C', 'B-', 'B', 'B+', 'B','A+', 'A']
     },
     series: [
       {
@@ -114,14 +119,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function Threea() {
+  const navigate = useNavigate();
 
   const [data, setData] = useState([]);
   const location = useLocation();
+  var req = null
 
   useEffect(() => {
     var token = JSON.parse(localStorage.getItem("token"));
     var col = location.state.colleges
-    var req = {
+    req = {
       "userid": token.data,
       "colleges":col
     }
@@ -211,9 +218,9 @@ function Threea() {
         >
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
-              <TableRow>
+              <TableRow onClick={() => navigate("/affinity", { state: { colleges: req.colleges}})}>
                 <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
-                <StyledTableCell align="center"> AFFINITY GRADE</StyledTableCell>
+                <StyledTableCell align="center">AFFINITY GRADE</StyledTableCell>
                 <StyledTableCell align="center">ADMISSABILITY GRADE</StyledTableCell>
                 <StyledTableCell align="center">AFFORDABILITY GRADE</StyledTableCell>
                 <StyledTableCell align="center">COMPOSITE OF 3A GRADE</StyledTableCell>

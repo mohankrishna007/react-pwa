@@ -108,6 +108,10 @@ const AcademicProfile = (props, ref) => {
 
   const handleGpaType = (event) => {
     setGpaType(event.target.value);
+
+    if(event.target.value === 2){
+      setTotalGpa("4.0")
+    }
   };
 
   const handleScoreGpa = (event) => {
@@ -427,6 +431,7 @@ const AcademicProfile = (props, ref) => {
                   required
                 />
                 <TextField
+                  disabled={gpaType === 2? true: false}
                   error={
                     ((totalGpa.length === 0) & totalGpaClicked) |
                     (parseInt(scoredGpa) > parseInt(totalGpa))
@@ -438,7 +443,6 @@ const AcademicProfile = (props, ref) => {
                   variant="standard"
                   value={totalGpa}
                   onChange={handleTotalGpa}
-                  helperText={`>=${scoredGpa}`}
                   style={{ width: "45%" }}
                   required
                 />

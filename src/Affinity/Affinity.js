@@ -112,6 +112,52 @@ function Affinitty() {
           </Table>
         </TableContainer>
       </div>
+      <div>
+      <div>
+        <TableContainer
+          component={Paper}
+          style={{ width: "90%", marginLeft: "4%" }}
+        >
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>INSTITUTE NAME</StyledTableCell>
+                <StyledTableCell align="center">
+                  College Chorot
+                </StyledTableCell>
+                <StyledTableCell align="center">Grade Competitiveness</StyledTableCell>
+                <StyledTableCell align="center">Student Testing Competitiveness</StyledTableCell>
+                <StyledTableCell align="center">
+                </StyledTableCell>
+               
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((inst) => (
+                <StyledTableRow key={inst.NAME}>
+                  <StyledTableCell align="center">
+                    {inst.NAME}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {inst.StudentPreference}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {inst.WeatherGrade}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {inst.CrimeGrade}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {inst.TransportGrade}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{inst.Overall}</StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+        </div>
     </div>
   );
 }

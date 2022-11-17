@@ -16,6 +16,7 @@ import Affinitty from "./Affinity/Affinity";
 import NearbyAirports from "./NearbyAirports/NearbyAirports";
 import Threea from "./Affinity/Threea";
 import PageNotFound from "./PageNotFound";
+import ScheduleAppointment from "./body/ScheduleAppointment";
 
 class App extends React.Component {
   render() {
@@ -27,8 +28,7 @@ class App extends React.Component {
           <br />
           <div className="content">
             <Routes>
-              {user && <Route path="/" element={<Home />} />}
-              <Route path="/" element={<Navigate replace to="/login" />} />
+              <Route path="/" element={user? <Home />: <Navigate replace to="/login" />} />
               <Route
                 path="dashboard"
                 element={
@@ -49,9 +49,9 @@ class App extends React.Component {
                 path="affinity"
                 element={user ? <Affinitty /> : <Navigate replace to="/" />}
               />
+              <Route path='schedule' element={<ScheduleAppointment />} />
               <Route path="nearbyairports" element={<NearbyAirports />} />
               <Route path="/threea" element={<Threea />} />
-              <Route path='*' exact={true} element={<PageNotFound />} />
             </Routes>
           </div>
         </div>
