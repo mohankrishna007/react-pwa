@@ -11,6 +11,15 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
+
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
+import Drilldown from 'highcharts/modules/drilldown';
+
+
+if (!Highcharts.Chart.prototype.addSeriesAsDrilldown) {
+    Drilldown(Highcharts);
+}
 // import {
 //   Chart as ChartJS,
 //   CategoryScale,
@@ -20,10 +29,6 @@ import { useLocation } from "react-router";
 //   Tooltip,
 //   Legend,
 // } from 'chart.js';
-
-
-
-
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,7 +50,142 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+var gradeLable = {
+  6: 'A',
+  5: 'A+',
+  4: 'B',
+  3: 'B+',
+  2: 'C',
+  1:'C+'
+};
 
+var scoregrade = {
+   'A':6,
+   'A+':5,
+   'B':4,
+   'B+':3,
+   'C':2,
+  'C+':1
+};
+
+
+const options={
+  chart: {
+      type: 'column'
+  },
+  title: {
+      align: 'left',
+      text: 'DATA GRADE FOR STUDENT'
+  },
+  xAxis: {
+      type: 'category'
+  },
+  yAxis: {
+    title: {
+        useHTML: true,
+        text: 'GRADES',
+        
+    },
+    labels: {
+      formatter: function() {
+          var value = gradeLable[this.value];
+          return value !== 'undefined' ? value : this.value;
+      }
+    }
+  },
+ 
+ 
+  series: [
+      {
+          name: "Score",
+          colorByPoint: true,
+          data: [
+              {
+                  name: "AFFINITY",
+                  y: 6,
+                  drilldown: "affinity"
+              },
+              {
+                  name: "ADIMISSIBILITY",
+                  y: 6,
+                  drilldown: "admissibilty"
+              },
+              {
+                  name: "AFFORDABILITY",
+                  y: 3,
+                  drilldown: "affordability"
+              }
+          ]
+      }
+  ],
+  drilldown: {
+      breadcrumbs: {
+          position: {
+              align: 'right'
+          }
+      },
+      series: [
+          {
+              name: "AFFINITY",
+              id: "affinity",
+              data: [
+                    [
+                      "STUDENT PREFERENCE GRADE",
+                      2
+                  ],
+                  [
+                      "TRANSPORTATION GRADE",
+                      3
+                  ],
+                  [
+                      "WEATHER GRADE",
+                      6
+                  ],
+                  [
+                      "CRIME GRADE",
+                      5
+                  ]
+              ]
+          },
+          {
+              name: "ADMISSIBILITY",
+              id: "admissibility",
+              data: [
+                  [
+                      "STUDENT GRADE COMPETETITVE",
+                      3
+                  ],
+                  [
+                      "STUDENT TESTING COMPETITVE",
+                      6
+                  ],
+                  [
+                      "STUDENT ETHINIC AND ECONOMIC GRADE",
+                      5
+                  ]]
+          },
+          {
+              name: "AFFORDABILITY",
+              id: "affordabiliby",
+              data: [
+                  [
+                      "Data1",
+                      6
+                  ],
+                  [
+                      "Data2",
+                      4
+                  ],
+                  [
+                      "data3",
+                      5
+                  ],
+                  
+              ]
+          },
+      ]
+  }
+};
 
 function Affinitty() {
   const [data, setData] = useState([]);
@@ -53,16 +193,18 @@ function Affinitty() {
 
   useEffect(() => {
     var token = JSON.parse(localStorage.getItem("token"));
-    var col = location.state.colleges
+    var col = location.state.colleges;
     var req = {
-      "userid": token.data,
-      "colleges":col
-    }
+      userid: token.data,
+      colleges: col,
+    };
 
     axios
-      .post("https://collegeportfoliobackendnode.azurewebsites.net/college/affinity", req)
+      .post(
+        "https://collegeportfoliobackendnode.azurewebsites.net/college/affinity",
+        req
+      )
       .then((resp) => setData(resp.data));
-
   }, [location.state.colleges]);
 
   return (
@@ -90,9 +232,7 @@ function Affinitty() {
             <TableBody>
               {data.map((inst) => (
                 <StyledTableRow key={inst.NAME}>
-                  <StyledTableCell align="center">
-                    {inst.NAME}
-                  </StyledTableCell>
+                  <StyledTableCell align="center">{inst.NAME}</StyledTableCell>
                   <StyledTableCell align="center">
                     {inst.StudentPreference}
                   </StyledTableCell>
@@ -105,12 +245,17 @@ function Affinitty() {
                   <StyledTableCell align="center">
                     {inst.TransportGrade}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{inst.Overall}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {inst.Overall}
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+      </div>
+      <div>
+        <HighchartsReact highcharts={Highcharts} options={options} />
       </div>
     </div>
   );

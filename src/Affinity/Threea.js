@@ -11,87 +11,146 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
-
+import { useNavigate } from "react-router";
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Drilldown from 'highcharts/modules/drilldown';
+import { Button } from "@material-ui/core";
 
 if (!Highcharts.Chart.prototype.addSeriesAsDrilldown) {
     Drilldown(Highcharts);
 }
 
-const options = {
-    chart: {
-      type: "column"
-    },
+var gradeLable = {
+  7: 'A',
+  6: 'A-',
+  5: 'B+',
+  4: 'B',
+  3: 'B-',
+  2:'C+',
+  1:'C'
+};
+
+
+const options={
+  chart: {
+      type: 'column'
+  },
+  title: {
+      align: 'left',
+      text: 'DATA GRADE FOR STUDENT'
+  },
+  xAxis: {
+      type: 'category'
+  },
+  yAxis: {
+
     title: {
-      text: "CollegePortfolio"
+        useHTML: true,
+        text: 'GRADES',
+        
     },
-    series: [
-      {
-        name: "DATA GRADES",
-        colorByPoint: true,
-        data: [
-          {
-            name: "AFFINITY",
-            y: 5,
-            drilldown: "affinity"
-          },
-          {
-            name: "ADMISSABILITY",
-            y: 2,
-            drilldown: "admissability"
-          },
-          {
-            name: "AFFORADABILITY",
-            y: 4,
-            drilldown: "afforadability"
-          },
-          {
-            name: "COMPOSITE OF 3",
-            y: 4,
-            drilldown: "afforadability"
-          }
-        ]
+    labels: {
+      formatter: function() {
+          var value = gradeLable[this.value];
+          return value !== 'undefined' ? value : this.value;
       }
-    ],
-    drilldown: {
-      series: [
-        {
-          id: "affinity",
-          data: [["Student Preference", 4], ["Weather Grade", 2], ["Crime Grade", 1], ["Transportation Grade", 2]]
-        },
-        {
-          id: "admissability",
-          data: [
-            {
-              name: "Apples",
-              y: 4,
-              drilldown: "apple_id"
-            },
-            {
-              name: "Oranges",
-              y: 2
-            }
-           
-          ]
-        },
-        {
-          id: "apple_id",
-          data: [
-            {
-              name: "Nested Apples",
-              y: 5
-            }
-          ]
-        },
-        {
-          id: "afforadability",
-          data: [["Data1", 4], ["Data2", 2], ["Data3", 2]]
-        }
-      ]
     }
-  };
+  },
+ 
+ 
+  series: [
+      {
+          name: "Score",
+          colorByPoint: true,
+          data: [
+              {
+                  name: "AFFINITY",
+                  y: 6,
+                  drilldown: "affinity"
+              },
+              {
+                  name: "ADIMISSIBILITY",
+                  y: 6,
+                  drilldown: "admissibilty"
+              },
+              {
+                  name: "AFFORDABILITY",
+                  y: 3,
+                  drilldown: "affordability"
+              }
+          ]
+      }
+  ],
+  drilldown: {
+      breadcrumbs: {
+          position: {
+              align: 'right'
+          }
+      },
+      series: [
+          {
+              name: "AFFINITY",
+              id: "affinity",
+              data: [
+                    [
+                      "STUDENT PREFERENCE GRADE",
+                      2
+                  ],
+                  [
+                      "TRANSPORTATION GRADE",
+                      3
+                  ],
+                  [
+                      "WEATHER GRADE",
+                      6
+                  ],
+                  [
+                      "CRIME GRADE",
+                      5
+                  ]
+              ]
+          },
+          {
+              name: "ADMISSIBILITY",
+              id: "admissibility",
+              data: [
+                  [
+                      "STUDENT GRADE COMPETETITVE",
+                      3
+                  ],
+                  [
+                      "STUDENT TESTING COMPETITVE",
+                      6
+                  ],
+                  [
+                      "STUDENT ETHINIC AND ECONOMIC GRADE",
+                      5
+                  ]]
+          },
+          {
+              name: "AFFORDABILITY",
+              id: "affordabiliby",
+              data: [
+                  [
+                      "Data1",
+                      6
+                  ],
+                  [
+                      "Data2",
+                      4
+                  ],
+                  [
+                      "data3",
+                      5
+                  ],
+                  
+              ]
+          },
+      ]
+  }
+};
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -115,8 +174,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Threea() {
 
+  const navigate = useNavigate();
+  //const [colleges, setColleges] = useState([]);
+  const [collegeName] = useState([]);
+
   const [data, setData] = useState([]);
   const location = useLocation();
+
 
   useEffect(() => {
     var token = JSON.parse(localStorage.getItem("token"));
@@ -200,7 +264,16 @@ function Threea() {
 //         }]
 //     }
 // };
-
+ 
+const showAffinity = () => {
+    var colleges = location.state.colleges;
+    collegeName.map((option) => colleges.push({ unitID: option.UNITID }));
+    navigate("/affinity", {
+      state: {
+        colleges: colleges,
+      },
+    });
+  };
 
   return (
     <div>
@@ -212,11 +285,15 @@ function Threea() {
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
-                <StyledTableCell align="center"> AFFINITY GRADE</StyledTableCell>
+                <StyledTableCell  align="center"> INSTITUTE NAME
+                </StyledTableCell>
+                <StyledTableCell align="center" >
+                <Button style={{color:"white"}} onClick={showAffinity}>
+                   AFFINITY GRADE
+                </Button></StyledTableCell>
                 <StyledTableCell align="center">ADMISSABILITY GRADE</StyledTableCell>
                 <StyledTableCell align="center">AFFORDABILITY GRADE</StyledTableCell>
-                <StyledTableCell align="center">COMPOSITE OF 3A GRADE</StyledTableCell>
+                <StyledTableCell align="center">OVER ALL GRADE</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>

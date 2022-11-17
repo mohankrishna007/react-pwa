@@ -29,11 +29,11 @@ function DashBoard() {
   //   axios
   //     .get(
   //       "https://collegeportfoliobackendnode.azurewebsites.net/student/getStudent/" +
-  //         String(state.id)
+  //         String(colleges.id)
   //     )
   //     .then((resp) => {
   //       for (let obj in resp.data) {
-  //         fileDownload(JSON.stringify(resp.data[obj]), state.id + ".json");
+  //         fileDownload(JSON.stringify(resp.data[obj]), colleges.id + ".json");
   //       }
   //     });
   // };

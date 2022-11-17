@@ -108,6 +108,10 @@ const AcademicProfile = (props, ref) => {
 
   const handleGpaType = (event) => {
     setGpaType(event.target.value);
+
+    if(event.target.value === 2){
+      setTotalGpa("4.0");
+    }
   };
 
   const handleScoreGpa = (event) => {
@@ -174,6 +178,7 @@ const AcademicProfile = (props, ref) => {
     { title: "Top Half", value: "3" },
     { title: "Bottom Half", value: "4" },
     { title: "Bottom Quarter", value: "5" },
+    { title: "Prefer Not to Say", value:""}
   ];
 
   const typeofDegreeoptions = [
@@ -440,6 +445,7 @@ const AcademicProfile = (props, ref) => {
                   onChange={handleTotalGpa}
                   helperText={`>=${scoredGpa}`}
                   style={{ width: "45%" }}
+                  disabled={(gpaType === 2)? true: false}
                   required
                 />
               </MDBCol>
@@ -461,7 +467,7 @@ const AcademicProfile = (props, ref) => {
                   error={ibScore > 45 || ibScore < 0 ? true : false}
                   helperText={"Out of 45"}
                   type="number"
-                  label="Predicted IB Score"
+                  label="Predicted or Final IB Score"
                   value={ibScore}
                   onChange={handleIBscore}
                   variant="standard"
