@@ -25,7 +25,7 @@ const user = localStorage.getItem("token");
 
 const handleLogout = () => {
   localStorage.removeItem("token");
-  window.location.reload();
+  window.location.href = '/';
 }
 
 function Header(props) {
