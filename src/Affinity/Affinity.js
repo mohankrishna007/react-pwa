@@ -187,15 +187,16 @@ const options={
   }
 };
 
+const token = localStorage.getItem("token");
+axios.defaults.headers.common['auth-token'] = token;
+
 function Affinitty() {
   const [data, setData] = useState([]);
   const location = useLocation();
 
   useEffect(() => {
-    var token = JSON.parse(localStorage.getItem("token"));
     var col = location.state.colleges;
     var req = {
-      userid: token.data,
       colleges: col,
     };
 

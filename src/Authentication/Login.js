@@ -108,8 +108,9 @@ export default function Login() {
         "https://collegeportfoliobackendnode.azurewebsites.net/auth/login",
         form
       );
-      localStorage.setItem("token", JSON.stringify(resp.data));
-      console.log(JSON.stringify(resp.data));
+
+      localStorage.setItem("token", resp.data.data);
+      console.log(JSON.stringify(resp.data.data));
       navigate("/");
       window.location.reload();
     } catch (error) {

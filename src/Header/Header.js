@@ -13,27 +13,58 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import '../styles/Header/Header.css'
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LOGO from '../logo.svg';
 import { Image } from "react-bootstrap";
 import IconButton from '@mui/material/IconButton';
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
+const navItems = ['Home', 'About', 'Contact', 'Schedule', 'Register'];
+
+const user = localStorage.getItem("token");
+
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  window.location.reload();
+}
 
 function Header(props) {
   const { window } = props;
+  const navigate = useNavigate();
+
+  
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const user = localStorage.getItem("token");
 
-	const handleLogout = () => {
-		localStorage.removeItem("token");
-		window.location.reload();
-	}
+  React.useState(() => {
+    if(user){
+      navItems[4] = 'Logout';
+    }else{
+      navItems[4] = 'Register';
+    }
+  }, user)
+
+  const handleNavbarOption = (index) => {
+    if(index === 0){
+      navigate("/");
+    }else if(index === 1){
+      alert('About');
+    }else if(index === 2){
+      alert('Contact');
+    }else if(index === 3){
+      navigate('/schedule');
+    }else if(index === 4){
+      if(navItems[4] === 'Register'){
+        navigate('register');
+      }else{
+        handleLogout();
+      }
+    }
+  }
+
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -45,7 +76,7 @@ function Header(props) {
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
+              <ListItemText primary={item}  onClick={() => handleNavbarOption(navItems.indexOf(item))}/>
             </ListItemButton>
           </ListItem>
         ))}
@@ -69,18 +100,14 @@ function Header(props) {
             <MenuIcon />
           </IconButton>
 		  	<Image src={LOGO} width={"20%"} style={{display: { xs: 'none', sm: 'block' } }}></Image>
-			<div style={{flexGrow:1}}></div>
+			  <div style={{flexGrow:1}}></div>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff' }}>
+              <Button key={item} sx={{ color: '#fff' }} onClick={() => handleNavbarOption(navItems.indexOf(item))}>
                 {item}
               </Button>
             ))}
           </Box>
-		    {
-			user?<Link onClick={handleLogout}  className="btn btn-primary" style={{marginRight: '20px'}}>Logout</Link>:
-			<Link to="/register" className="btn btn-primary" style={{marginRight: '20px'}}>Register</Link>
-			}
         </Toolbar>
       </AppBar>
       <Box component="nav">
@@ -107,10 +134,6 @@ function Header(props) {
 }
 
 Header.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window: PropTypes.func,
 };
 

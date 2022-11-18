@@ -27,10 +27,8 @@ const AcademicProfile = (props, ref) => {
   }));
 
   const postAcademicProfile = () => {
-    var token = JSON.parse(localStorage.getItem("token"));
 
     const AcademicProfile = {
-      userId: token.data,
       NameofHighSchool: nameOfSchool,
       HighSchoolGraduation: highSchoolGraduation,
       LookingtoEnrollIn: enrolIn,
@@ -110,11 +108,7 @@ const AcademicProfile = (props, ref) => {
     setGpaType(event.target.value);
 
     if(event.target.value === 2){
-<<<<<<< HEAD
-      setTotalGpa("4.0")
-=======
       setTotalGpa("4.0");
->>>>>>> e65c78b226c145b4e4d82ef2c4b9b5e80303cb5e
     }
   };
 
@@ -449,7 +443,6 @@ const AcademicProfile = (props, ref) => {
                   value={totalGpa}
                   onChange={handleTotalGpa}
                   style={{ width: "45%" }}
-                  disabled={(gpaType === 2)? true: false}
                   required
                 />
               </MDBCol>

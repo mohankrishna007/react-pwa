@@ -172,6 +172,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+const token = localStorage.getItem("token");
+axios.defaults.headers.common['auth-token'] = token;
+
 function Threea() {
   const navigate = useNavigate();
 
@@ -180,16 +183,13 @@ function Threea() {
 
   const [data, setData] = useState([]);
   const location = useLocation();
-  var req = null
-
 
   useEffect(() => {
-    var token = JSON.parse(localStorage.getItem("token"));
-    var col = location.state.colleges
-    req = {
-      "userid": token.data,
-      "colleges":col
-    }
+    var col = location.state.colleges;
+    var req = {
+      colleges: col,
+    };
+
 
     axios
       .post("https://collegeportfoliobackendnode.azurewebsites.net/college/affinity", req)

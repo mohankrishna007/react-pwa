@@ -39,6 +39,9 @@ const parent = [
   "What are some of your student's preferences?",
 ];
 
+const token = localStorage.getItem("token");
+axios.defaults.headers.common['auth-token'] = token;
+
 export default function DialogBox() {
   const ChildRef = React.useRef();
 
@@ -69,7 +72,7 @@ export default function DialogBox() {
     axios
       .post(
         "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
-        about
+        about,
       )
       .then((resp) => console.log(resp));
 
@@ -137,6 +140,8 @@ export default function DialogBox() {
 
   React.useEffect(() => {
     console.log(localStorage.getItem("remember"));
+
+    console.log(token)
 
     axios
       .get(

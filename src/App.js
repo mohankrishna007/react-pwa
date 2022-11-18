@@ -17,6 +17,7 @@ import NearbyAirports from "./NearbyAirports/NearbyAirports";
 import Threea from "./Affinity/Threea";
 import PageNotFound from "./PageNotFound";
 import ScheduleAppointment from "./body/ScheduleAppointment";
+import AccessDenied from './AccessDenied';
 
 class App extends React.Component {
   render() {
@@ -51,7 +52,9 @@ class App extends React.Component {
               />
               <Route path='schedule' element={<ScheduleAppointment />} />
               <Route path="nearbyairports" element={<NearbyAirports />} />
-              <Route path="/threea" element={<Threea />} />
+              <Route path="threea" element={<Threea />} />
+              <Route path="accessdenied" element={<AccessDenied />}/>
+              <Route path="*" element={<PageNotFound />} />
             </Routes>
           </div>
         </div>
