@@ -190,6 +190,7 @@ function Threea() {
       colleges: col,
     };
 
+    console.log(req);
 
     axios
       .post("https://collegeportfoliobackendnode.azurewebsites.net/college/affinity", req)
@@ -274,7 +275,17 @@ const showAffinity = () => {
         colleges: colleges,
       },
     });
-  };
+};
+
+const showAdmissibility = () => {
+  var colleges = location.state.colleges;
+  collegeName.map((option) => colleges.push({ unitID: option.UNITID }));
+  navigate("/admissibility", {
+    state: {
+      colleges: colleges,
+    },
+  });
+};
 
   return (
     <div>
@@ -292,7 +303,10 @@ const showAffinity = () => {
                 <Button style={{color:"white"}} onClick={showAffinity}>
                    AFFINITY GRADE
                 </Button></StyledTableCell>
-                <StyledTableCell align="center">ADMISSABILITY GRADE</StyledTableCell>
+                <StyledTableCell align="center">
+                  <Button style={{color:"white"}} onClick={showAdmissibility}>
+                  ADMISSABILITY GRADE
+                </Button></StyledTableCell>
                 <StyledTableCell align="center">AFFORDABILITY GRADE</StyledTableCell>
                 <StyledTableCell align="center">OVER ALL GRADE</StyledTableCell>
               </TableRow>

@@ -22,11 +22,16 @@ import {
   Alert,
   responsiveFontSizes,
 } from "@mui/material";
+
+import * as Names from '../../Constants/ReactQueryConsts';
+import * as Functions from '../../PrefetchData/DataLoadFunctions';
+
 import InfoIcon from "@mui/icons-material/Info";
 import PercentIcon from "@mui/icons-material/Percent";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import RegisterTheme from "../../Themes/RegisterTheme";
+import { useQuery } from "react-query";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -108,7 +113,12 @@ const PreferenceMotivation = (props, ref) => {
     postPreference,
   }));
 
-  const postPreference = (event) => {
+  useQuery(Names.STREAMS, Functions.fetchStreams, {
+    onSuccess: (data) => {setStreams(data?.data)},
+    onError: () => {console.log("Failed to Load Streams Data")}
+  });
+
+  const postPreference = () => {
     var selectedSchoolSize = [];
     var selectedUrbanicity = [];
     var selectedReasonstoAttend = [];
@@ -245,11 +255,6 @@ const PreferenceMotivation = (props, ref) => {
     setScoreClicked(true);
   };
 
-  const handleLoadStreams = () => {
-    var streams = JSON.parse(props.getStreams());
-    setStreams(streams);
-  };
-
   const collegePreferenceOptions = ["Public", "Private Non-Profit", "Private Profit"];
 
   const religiousAffliationOptions = [
@@ -362,7 +367,6 @@ const PreferenceMotivation = (props, ref) => {
             <MDBRow>
               <MDBCol md="12">
                 <Autocomplete
-                  onFocus={handleLoadStreams}
                   id="field-of-study"
                   options={streams}
                   getOptionLabel={(option) => option.NAME}

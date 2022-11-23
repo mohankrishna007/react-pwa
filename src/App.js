@@ -1,11 +1,11 @@
 import React from "react";
 import "./App.css";
 import Home from "./Home";
-import {
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
+
+import { QueryClientProvider, QueryClient } from "react-query";
+import { ReactQueryDevtools } from 'react-query/devtools'
+
 import Header from "./Header/Header";
 import DashBoard from "./body/DashBoard";
 import Login from "./Authentication/Login";
@@ -15,21 +15,28 @@ import ForgetPassword from "./Authentication/ForgetPassword";
 import Affinitty from "./Affinity/Affinity";
 import NearbyAirports from "./NearbyAirports/NearbyAirports";
 import Threea from "./Affinity/Threea";
-import PageNotFound from "./PageNotFound";
+import PageNotFound from "./Utils/PageNotFound";
 import ScheduleAppointment from "./body/ScheduleAppointment";
-import AccessDenied from './AccessDenied';
+import AccessDenied from "./Utils/AccessDenied";
+import Admissibility from "./Affinity/Admissibility";
 
 class App extends React.Component {
   render() {
     const user = localStorage.getItem("token");
 
+    const queryClient = new QueryClient()
+
     return (
-        <div className="App">
-          <Header />
-          <br />
-          <div className="content">
+      <div className="App">
+        <Header />
+        <br />
+        <div className="content">
+          <QueryClientProvider client={queryClient}>
             <Routes>
-              <Route path="/" element={user? <Home />: <Navigate replace to="/login" />} />
+              <Route
+                path="/"
+                element={user ? <Home /> : <Navigate replace to="/login" />}
+              />
               <Route
                 path="dashboard"
                 element={
@@ -50,14 +57,20 @@ class App extends React.Component {
                 path="affinity"
                 element={user ? <Affinitty /> : <Navigate replace to="/" />}
               />
-              <Route path='schedule' element={<ScheduleAppointment />} />
+              <Route
+                path="admissibility"
+                element={user ? <Admissibility /> : <Navigate replace to="/" />}
+              />
+              <Route path="schedule" element={<ScheduleAppointment />} />
               <Route path="nearbyairports" element={<NearbyAirports />} />
               <Route path="threea" element={<Threea />} />
-              <Route path="accessdenied" element={<AccessDenied />}/>
+              <Route path="accessdenied" element={<AccessDenied />} />
               <Route path="*" element={<PageNotFound />} />
             </Routes>
-          </div>
+            <ReactQueryDevtools initialIsOpen={false} position='bottom-right'/>
+          </QueryClientProvider>
         </div>
+      </div>
     );
   }
 }

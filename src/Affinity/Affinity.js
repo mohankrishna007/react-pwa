@@ -1,5 +1,8 @@
 import { React, useState } from "react";
 
+import * as Names from '../Constants/ReactQueryConsts';
+import * as Functions from '../Queries/HttpRequests';
+
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,16 +12,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-import { useEffect } from "react";
 import { useLocation } from "react-router";
 
-import Highcharts from 'highcharts'
-import HighchartsReact from 'highcharts-react-official'
-import Drilldown from 'highcharts/modules/drilldown';
-
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import Drilldown from "highcharts/modules/drilldown";
+import { useQuery } from "react-query";
 
 if (!Highcharts.Chart.prototype.addSeriesAsDrilldown) {
-    Drilldown(Highcharts);
+  Drilldown(Highcharts);
 }
 // import {
 //   Chart as ChartJS,
@@ -51,162 +53,126 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 var gradeLable = {
-  6: 'A',
-  5: 'A+',
-  4: 'B',
-  3: 'B+',
-  2: 'C',
-  1:'C+'
+  6: "A",
+  5: "A+",
+  4: "B",
+  3: "B+",
+  2: "C",
+  1: "C+",
 };
 
 var scoregrade = {
-   'A':6,
-   'A+':5,
-   'B':4,
-   'B+':3,
-   'C':2,
-  'C+':1
+  A: 6,
+  "A+": 5,
+  B: 4,
+  "B+": 3,
+  C: 2,
+  "C+": 1,
 };
 
-
-const options={
+const options = {
   chart: {
-      type: 'column'
+    type: "column",
   },
   title: {
-      align: 'left',
-      text: 'DATA GRADE FOR STUDENT'
+    align: "left",
+    text: "DATA GRADE FOR STUDENT",
   },
   xAxis: {
-      type: 'category'
+    type: "category",
   },
   yAxis: {
     title: {
-        useHTML: true,
-        text: 'GRADES',
-        
+      useHTML: true,
+      text: "GRADES",
     },
     labels: {
-      formatter: function() {
-          var value = gradeLable[this.value];
-          return value !== 'undefined' ? value : this.value;
-      }
-    }
+      formatter: function () {
+        var value = gradeLable[this.value];
+        return value !== "undefined" ? value : this.value;
+      },
+    },
   },
- 
- 
+
   series: [
-      {
-          name: "Score",
-          colorByPoint: true,
-          data: [
-              {
-                  name: "AFFINITY",
-                  y: 6,
-                  drilldown: "affinity"
-              },
-              {
-                  name: "ADIMISSIBILITY",
-                  y: 6,
-                  drilldown: "admissibilty"
-              },
-              {
-                  name: "AFFORDABILITY",
-                  y: 3,
-                  drilldown: "affordability"
-              }
-          ]
-      }
+    {
+      name: "Score",
+      colorByPoint: true,
+      data: [
+        {
+          name: "AFFINITY",
+          y: 6,
+          drilldown: "affinity",
+        },
+        {
+          name: "ADIMISSIBILITY",
+          y: 6,
+          drilldown: "admissibilty",
+        },
+        {
+          name: "AFFORDABILITY",
+          y: 3,
+          drilldown: "affordability",
+        },
+      ],
+    },
   ],
   drilldown: {
-      breadcrumbs: {
-          position: {
-              align: 'right'
-          }
+    breadcrumbs: {
+      position: {
+        align: "right",
       },
-      series: [
-          {
-              name: "AFFINITY",
-              id: "affinity",
-              data: [
-                    [
-                      "STUDENT PREFERENCE GRADE",
-                      2
-                  ],
-                  [
-                      "TRANSPORTATION GRADE",
-                      3
-                  ],
-                  [
-                      "WEATHER GRADE",
-                      6
-                  ],
-                  [
-                      "CRIME GRADE",
-                      5
-                  ]
-              ]
-          },
-          {
-              name: "ADMISSIBILITY",
-              id: "admissibility",
-              data: [
-                  [
-                      "STUDENT GRADE COMPETETITVE",
-                      3
-                  ],
-                  [
-                      "STUDENT TESTING COMPETITVE",
-                      6
-                  ],
-                  [
-                      "STUDENT ETHINIC AND ECONOMIC GRADE",
-                      5
-                  ]]
-          },
-          {
-              name: "AFFORDABILITY",
-              id: "affordabiliby",
-              data: [
-                  [
-                      "Data1",
-                      6
-                  ],
-                  [
-                      "Data2",
-                      4
-                  ],
-                  [
-                      "data3",
-                      5
-                  ],
-                  
-              ]
-          },
-      ]
-  }
+    },
+    series: [
+      {
+        name: "AFFINITY",
+        id: "affinity",
+        data: [
+          ["STUDENT PREFERENCE GRADE", 2],
+          ["TRANSPORTATION GRADE", 3],
+          ["WEATHER GRADE", 6],
+          ["CRIME GRADE", 5],
+        ],
+      },
+      {
+        name: "ADMISSIBILITY",
+        id: "admissibility",
+        data: [
+          ["STUDENT GRADE COMPETETITVE", 3],
+          ["STUDENT TESTING COMPETITVE", 6],
+          ["STUDENT ETHINIC AND ECONOMIC GRADE", 5],
+        ],
+      },
+      {
+        name: "AFFORDABILITY",
+        id: "affordabiliby",
+        data: [
+          ["Data1", 6],
+          ["Data2", 4],
+          ["data3", 5],
+        ],
+      },
+    ],
+  },
 };
 
 const token = localStorage.getItem("token");
-axios.defaults.headers.common['auth-token'] = token;
+axios.defaults.headers.common["auth-token"] = token;
 
 function Affinitty() {
-  const [data, setData] = useState([]);
   const location = useLocation();
+  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    var col = location.state.colleges;
-    var req = {
-      colleges: col,
-    };
-
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/college/affinity",
-        req
-      )
-      .then((resp) => setData(resp.data));
-  }, [location.state.colleges]);
+  useQuery(
+    Names.Affinity,
+    () => Functions.getAffinityScore(location.state.colleges),
+    {
+      onSuccess: (data) => {
+        setData(data?.data);
+      },
+      onError: (error) => console.log("ERROR: " + error),
+    }
+  );
 
   return (
     <div>
@@ -218,12 +184,12 @@ function Affinitty() {
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>INSTITUTE NAME</StyledTableCell>
+                <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
                 <StyledTableCell align="center">
                   STUDENT PREFRENCE GRADE
                 </StyledTableCell>
                 <StyledTableCell align="center">WEATHER GRADE</StyledTableCell>
-                <StyledTableCell align="center">CRIME GRADE</StyledTableCell>
+                <StyledTableCell align="center">SAFETY GRADE</StyledTableCell>
                 <StyledTableCell align="center">
                   TRANPORTATION GRADE
                 </StyledTableCell>

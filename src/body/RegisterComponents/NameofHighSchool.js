@@ -1,3 +1,8 @@
+
+
+import * as Names from '../../Constants/ReactQueryConsts';
+import * as Functions from '../../PrefetchData/DataLoadFunctions';
+
 import * as React from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -23,6 +28,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { MDBCard, MDBCardBody, MDBCol, MDBRow } from "mdb-react-ui-kit";
+import { useQuery } from "react-query";
 
 const LISTBOX_PADDING = 8; // px
 
@@ -138,18 +144,22 @@ const StyledPopper = styled(Popper)({
   },
 });
 
-var schoolsData = [];
-
 
 export default function NameofHighSchool(props) {
   const [open, setOpen] = React.useState(false);
   const [snack, setSnack] = React.useState(false);
 
+  const [schoolsData, setSchoolsData] = React.useState([]);
   const [schoolName, setSchoolName] = React.useState("");
   const [schoolCity, setSchoolCity] = React.useState("");
   const [schoolState, setSchoolState] = React.useState("");
   const [schoolZipcode, setSchoolZipcode] = React.useState("");
   const [schoolType, setSchoolType] = React.useState("");
+
+  useQuery(Names.HIGH_SCHOOL, Functions.fetchHighSchools, {
+    onSuccess: (data) => {setSchoolsData(data?.data)},
+    onError: () => {console.log("Failed to Load High Schools Data")}
+  });
 
   const handleAddSchool = () => {
     setSnack(true);
@@ -171,11 +181,6 @@ export default function NameofHighSchool(props) {
 
     handleClose();
   };
-
-  React.useState(() => {
-    var data = props.schools();
-    String(data).length!==0?schoolsData=JSON.parse(data):schoolsData=[];
-  })
 
   const handleAddingSchoolDatabase = (school) => {
     axios

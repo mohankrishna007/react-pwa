@@ -13,6 +13,8 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useQueries, useQuery } from "react-query";
+
 import { MDBCard, MDBCardBody, MDBCardTitle, MDBRow } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router";
 import DemographicInformation from "./RegisterComponents/DemographicInformation";
@@ -21,7 +23,7 @@ import FinancialInformation from "./RegisterComponents/FinancialInformation";
 import PreferenceMotivation from "./RegisterComponents/PreferencesAndMotivation";
 import axios from "axios";
 import "../styles/body/DialogBox.css";
-
+import ProfileCompletionGreeting from "./ProfileCompletionGreeting";
 
 const student = [
   "Who is this?",
@@ -40,7 +42,7 @@ const parent = [
 ];
 
 const token = localStorage.getItem("token");
-axios.defaults.headers.common['auth-token'] = token;
+axios.defaults.headers.common["auth-token"] = token;
 
 export default function DialogBox() {
   const ChildRef = React.useRef();
@@ -54,7 +56,6 @@ export default function DialogBox() {
   const [schools, setSchools] = React.useState([]);
   const [streams, setStreams] = React.useState([]);
 
-
   const handleHaveError = (val) => {
     setHaveError(val);
   };
@@ -62,43 +63,44 @@ export default function DialogBox() {
   const navigate = useNavigate();
 
   const gotoDashBoard = () => {
-    const about = JSON.parse(localStorage.getItem("about_student"));
-    const academics = JSON.parse(localStorage.getItem("academic_profile"));
-    const finance = JSON.parse(localStorage.getItem("financial_info"));
-    const preference = JSON.parse(
-      localStorage.getItem("preference_motivation")
-    );
+    // const about = JSON.parse(localStorage.getItem("about_student"));
+    // const academics = JSON.parse(localStorage.getItem("academic_profile"));
+    // const finance = JSON.parse(localStorage.getItem("financial_info"));
+    // const preference = JSON.parse(
+    //   localStorage.getItem("preference_motivation")
+    // );
 
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
-        about,
-      )
-      .then((resp) => console.log(resp));
+    // axios
+    //   .post(
+    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
+    //     about
+    //   )
+    //   .then((resp) => console.log(resp));
 
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
-        academics
-      )
-      .then((resp) => console.log(resp));
+    // axios
+    //   .post(
+    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
+    //     academics
+    //   )
+    //   .then((resp) => console.log(resp));
 
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
-        finance
-      )
-      .then((resp) => console.log(resp));
+    // axios
+    //   .post(
+    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
+    //     finance
+    //   )
+    //   .then((resp) => console.log(resp));
 
-    axios
-      .post(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
-        preference
-      )
-      .then((resp) => console.log(resp));
+    // axios
+    //   .post(
+    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
+    //     preference
+    //   )
+    //   .then((resp) => console.log(resp));
 
-    localStorage.setItem('filled', true);
-    navigate("/dashboard");
+    // localStorage.setItem("filled", true);
+    // navigate("/dashboard");
+
   };
 
   const handleNext = () => {
@@ -140,20 +142,6 @@ export default function DialogBox() {
 
   React.useEffect(() => {
     console.log(localStorage.getItem("remember"));
-
-    console.log(token)
-
-    axios
-      .get(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/highschools"
-      )
-      .then((resp) => setSchools(JSON.stringify(resp.data)));
-
-    axios
-      .get(
-        "https://collegeportfoliobackendnode.azurewebsites.net/student/streams"
-      )
-      .then((resp) => setStreams(JSON.stringify(resp.data)));
 
     var restored = localStorage.getItem("whoData");
     if (restored != null) {
@@ -233,7 +221,7 @@ export default function DialogBox() {
                   getStreams={getStreams}
                 />
               ) : (
-                gotoDashBoard()
+                <ProfileCompletionGreeting />
               )}
             </Box>
             <br />
@@ -243,6 +231,7 @@ export default function DialogBox() {
               position="static"
               activeStep={activeStep}
               sx={{ maxWidth: "100%", flexGrow: 1 }}
+              hidden={activeStep === 5? true: false}
               nextButton={
                 <Button
                   type="submit"
@@ -274,8 +263,6 @@ export default function DialogBox() {
               }
             />
           </div>
-          {/* </DialogContent>
-      </Dialog> */}
         </MDBCardBody>
       </MDBCard>
       <br />
