@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-import Home from "./Home";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import { QueryClientProvider, QueryClient } from "react-query";
@@ -19,23 +18,28 @@ import PageNotFound from "./Utils/PageNotFound";
 import ScheduleAppointment from "./body/ScheduleAppointment";
 import AccessDenied from "./Utils/AccessDenied";
 import Admissibility from "./Affinity/Admissibility";
+import PrefetchDropdownData from './PrefetchData/PrefetchDropdownData';
+import DialogBox from './body/DialogBox'
 
 class App extends React.Component {
   render() {
     const user = localStorage.getItem("token");
+    const profile_filled = localStorage.getItem("profile-filled");
 
     const queryClient = new QueryClient()
-
     return (
       <div className="App">
         <Header />
         <br />
         <div className="content">
           <QueryClientProvider client={queryClient}>
+          <PrefetchDropdownData />
             <Routes>
               <Route
                 path="/"
-                element={user ? <Home /> : <Navigate replace to="/login" />}
+                element={user ? (profile_filled === 'true'?
+                <Navigate replace to="/dashboard"/>: <DialogBox />):
+                <Navigate replace to="/login" />}
               />
               <Route
                 path="dashboard"

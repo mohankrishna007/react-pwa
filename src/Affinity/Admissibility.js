@@ -1,5 +1,5 @@
 import * as Names from '../Constants/ReactQueryConsts';
-import * as Functions from '../Queries/HttpRequests';
+import * as Functions from '../Queries/3AScores';
 
 import { useQuery } from "react-query"
 import { useLocation } from 'react-router';

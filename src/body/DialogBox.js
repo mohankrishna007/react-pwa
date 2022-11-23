@@ -12,11 +12,7 @@ import {
   FormLabel,
   Typography,
 } from "@mui/material";
-
-import { useQueries, useQuery } from "react-query";
-
 import { MDBCard, MDBCardBody, MDBCardTitle, MDBRow } from "mdb-react-ui-kit";
-import { useNavigate } from "react-router";
 import DemographicInformation from "./RegisterComponents/DemographicInformation";
 import AcademicProfile from "./RegisterComponents/AcademicProfile";
 import FinancialInformation from "./RegisterComponents/FinancialInformation";
@@ -53,56 +49,10 @@ export default function DialogBox() {
   const [who, setWho] = React.useState(null);
   const [haveError, setHaveError] = React.useState(true);
 
-  const [schools, setSchools] = React.useState([]);
-  const [streams, setStreams] = React.useState([]);
-
   const handleHaveError = (val) => {
     setHaveError(val);
   };
-
-  const navigate = useNavigate();
-
-  const gotoDashBoard = () => {
-    // const about = JSON.parse(localStorage.getItem("about_student"));
-    // const academics = JSON.parse(localStorage.getItem("academic_profile"));
-    // const finance = JSON.parse(localStorage.getItem("financial_info"));
-    // const preference = JSON.parse(
-    //   localStorage.getItem("preference_motivation")
-    // );
-
-    // axios
-    //   .post(
-    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/about",
-    //     about
-    //   )
-    //   .then((resp) => console.log(resp));
-
-    // axios
-    //   .post(
-    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/academics",
-    //     academics
-    //   )
-    //   .then((resp) => console.log(resp));
-
-    // axios
-    //   .post(
-    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/financial",
-    //     finance
-    //   )
-    //   .then((resp) => console.log(resp));
-
-    // axios
-    //   .post(
-    //     "https://collegeportfoliobackendnode.azurewebsites.net/student/preference",
-    //     preference
-    //   )
-    //   .then((resp) => console.log(resp));
-
-    // localStorage.setItem("filled", true);
-    // navigate("/dashboard");
-
-  };
-
+  
   const handleNext = () => {
     if (activeStep === 0) {
       localStorage.setItem("whoData", who);
@@ -130,14 +80,6 @@ export default function DialogBox() {
   const handleWho = (event) => {
     setWho(event.target.value);
     handleHaveError(false);
-  };
-
-  const getSchools = () => {
-    return schools;
-  };
-
-  const getStreams = () => {
-    return streams;
   };
 
   React.useEffect(() => {
@@ -207,7 +149,6 @@ export default function DialogBox() {
                 <AcademicProfile
                   ref={ChildRef}
                   handleError={handleHaveError}
-                  getSchools={getSchools}
                 />
               ) : activeStep === 3 ? (
                 <FinancialInformation
@@ -218,7 +159,6 @@ export default function DialogBox() {
                 <PreferenceMotivation
                   ref={ChildRef}
                   handleError={handleHaveError}
-                  getStreams={getStreams}
                 />
               ) : (
                 <ProfileCompletionGreeting />

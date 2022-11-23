@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 
 import * as Names from '../Constants/ReactQueryConsts';
-import * as Functions from '../Queries/HttpRequests';
+import * as Functions from '../Queries/3AScores';
 
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -59,15 +59,6 @@ var gradeLable = {
   3: "B+",
   2: "C",
   1: "C+",
-};
-
-var scoregrade = {
-  A: 6,
-  "A+": 5,
-  B: 4,
-  "B+": 3,
-  C: 2,
-  "C+": 1,
 };
 
 const options = {

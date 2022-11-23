@@ -28,7 +28,7 @@ import {
   Snackbar,
 } from "@mui/material";
 import { MDBCard, MDBCardBody, MDBCol, MDBRow } from "mdb-react-ui-kit";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 const LISTBOX_PADDING = 8; // px
 
@@ -144,20 +144,26 @@ const StyledPopper = styled(Popper)({
   },
 });
 
+var schoolsData = [];
 
 export default function NameofHighSchool(props) {
   const [open, setOpen] = React.useState(false);
   const [snack, setSnack] = React.useState(false);
 
-  const [schoolsData, setSchoolsData] = React.useState([]);
   const [schoolName, setSchoolName] = React.useState("");
   const [schoolCity, setSchoolCity] = React.useState("");
   const [schoolState, setSchoolState] = React.useState("");
   const [schoolZipcode, setSchoolZipcode] = React.useState("");
   const [schoolType, setSchoolType] = React.useState("");
 
+  const queryClient = useQueryClient();
+
   useQuery(Names.HIGH_SCHOOL, Functions.fetchHighSchools, {
-    onSuccess: (data) => {setSchoolsData(data?.data)},
+    initialData: () => {
+      const highSchools = queryClient.getQueriesData(Names.HIGH_SCHOOL)?.data
+      return {data: highSchools};
+    },
+    onSuccess: (data) => {schoolsData = (data?.data)},
     onError: () => {console.log("Failed to Load High Schools Data")}
   });
 

@@ -31,7 +31,7 @@ import PercentIcon from "@mui/icons-material/Percent";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import RegisterTheme from "../../Themes/RegisterTheme";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -113,7 +113,13 @@ const PreferenceMotivation = (props, ref) => {
     postPreference,
   }));
 
+  const queryClient = useQueryClient();
+
   useQuery(Names.STREAMS, Functions.fetchStreams, {
+    initialData: () => {
+      const streams = queryClient.getQueriesData(Names.STREAMS)?.data
+      return {data: streams};
+    },
     onSuccess: (data) => {setStreams(data?.data)},
     onError: () => {console.log("Failed to Load Streams Data")}
   });

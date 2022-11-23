@@ -11,7 +11,7 @@ import Popper from "@mui/material/Popper";
 import { useTheme, styled } from "@mui/material/styles";
 import { VariableSizeList } from "react-window";
 import Typography from "@mui/material/Typography";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { IconButton } from "@material-ui/core";
 import { MDBCol, MDBRow } from "mdb-react-ui-kit";
 import SearchIcon from "@mui/icons-material/Search";
@@ -136,8 +136,13 @@ export default function ListofColleges() {
   const [selectedColleges, setSelectedColleges] = React.useState([]);
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useQuery(Names.COLLEGES, Functions.fetchColleges, {
+    initialData: () => {
+      const colleges = queryClient.getQueriesData(Names.COLLEGES)?.data
+      return {data: colleges};
+    },
     onSuccess: (data) => {
       setColleges(data?.data);
     },
@@ -162,7 +167,7 @@ export default function ListofColleges() {
 
   return (
     <MDBRow>
-      <MDBCol md="8">
+      <MDBCol md="10">
         <Autocomplete
           multiple
           options={colleges}
