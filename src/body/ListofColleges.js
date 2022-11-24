@@ -176,7 +176,15 @@ export default function ListofColleges() {
           PopperComponent={StyledPopper}
           ListboxComponent={ListboxComponent}
           getOptionLabel={(option) => option.INSTNM}
-          renderOption={(props, option) => [props, option.INSTNM]}
+          renderOption={(props, option) => [
+            props,
+            <div>
+              {option.INSTNM}
+              <div style={{ fontSize: "0.6em" }}>
+                {option.CITY} {option.STATE_NAME}
+              </div>
+            </div>,
+          ]}
           onChange={(e, value) => handleSelectedColleges(value)}
           filterSelectedOptions
           sx={{ mb: 2 }}

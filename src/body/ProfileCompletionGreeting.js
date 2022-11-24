@@ -3,25 +3,28 @@ import * as Functions from '../Queries/ProfileHttpRequests';
 
 import { useQueries } from "react-query";
 import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux'
 
 function ProfileCompletionGreeting(){
-    const about = JSON.parse(localStorage.getItem("about_student"));
-    const academics = JSON.parse(localStorage.getItem("academic_profile"));
-    const finance = JSON.parse(localStorage.getItem("financial_info"));
-    const preference = JSON.parse(localStorage.getItem("preference_motivation"));
+
+    const profile = useSelector((state) => state.profile);
+
+    const FirstName  = profile.about.FirstName;
+    const LastName  = profile.about.LastName;
 
     useQueries([
-        {queryKey: Names.ABOUT, queryFn: () => Functions.postStudentAbout(about)},
-        {queryKey: Names.ACADEMICS, queryFn: () => Functions.postStudentAcademics(academics)},
-        {queryKey: Names.FINANCE, queryFn: () => Functions.postStudentFinance(finance)},
-        {queryKey: Names.PREFERENCE, queryFn: () => Functions.postStudentPreference(preference)},
+        {queryKey: Names.ABOUT, queryFn: () => Functions.postStudentAbout(profile.about)},
+        {queryKey: Names.ACADEMICS, queryFn: () => Functions.postStudentAcademics(profile.academics)},
+        {queryKey: Names.FINANCE, queryFn: () => Functions.postStudentFinance(profile.finance)},
+        {queryKey: Names.PREFERENCE, queryFn: () => Functions.postStudentPreference(profile.preference)},
+        {queryKey: Names.UPDATEPROFILE, queryFn: Functions.updateProfileCompletetion},
     ])
 
-    localStorage.setItem("profile-filled", true)
+    localStorage.setItem("profile-filled", 1);
 
     return(
         <div>
-            <center> Thanks for filling profile !!</center>
+            <center>Hey {FirstName} {LastName}, Thank you for completing profile.</center>
             <center> <Link to ='dashboard'>Goto DashBoard </Link></center>
         </div>
     )

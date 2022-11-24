@@ -35,8 +35,8 @@ function EmailVerify() {
             ):(
                <center> 
                 {data.data.message} 
-                <br/>
-                {(data.status === 201)?(<Link to={'/login'}>Please click here to Login</Link>):("")}
+                <br/><br/>
+                {(data.status === 201)?(<Link to={'/login'}>Please click here to login</Link>):("")}
                </center>
             )}
         </div>

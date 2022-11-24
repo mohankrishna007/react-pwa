@@ -10,6 +10,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import RegisterTheme from "../../Themes/RegisterTheme";
+import { useSelector } from "react-redux";
 
 const FinancialInformation = (props, ref) => {
   const [appplyingFinancialAid, setApplyingFinancialAid] = useState(false);
@@ -37,8 +38,7 @@ const FinancialInformation = (props, ref) => {
       AmountSaved: amountSaved,
       MonthlyContribution: monthlyContributions,
     };
-
-    localStorage.setItem("financial_info", JSON.stringify(Financial));
+    return Financial;
   };
 
   const handlewhoPayForCollege = (event) => {
@@ -121,25 +121,22 @@ const FinancialInformation = (props, ref) => {
     { title: "Prefer Not to Say", value: 8 },
   ];
 
+  const prevFinance = useSelector((state) => state.profile.finance);
+
   React.useEffect(() => {
     props.handleError(false);
 
-    var restored = localStorage.getItem('financial_info');
-
-    if(restored != null){
-      var data = JSON.parse(restored);
-      setApplyingFinancialAid(data.ApplyingFinancialAid);
-      setmeritScholarShipImp(data.MeritScholarShip);
-      setWhoPayForCollege(data.WhoWillPayForCollege);
-      setStudentExpectedIncome(data.StudentExpectedIncome);
-      setGrossFamilyAnnualIncome(data.GrossFamilyAnnualIncome);
-      setTotalNetWorth(data.TotalFamilyNetWorth);
-      setAmountSaved(data.AmountSaved);
-      setMonthlyContributions(data.MonthlyContribution);
-
-      localStorage.removeItem('financial_info');
+    if(prevFinance != null){
+      setApplyingFinancialAid(prevFinance.ApplyingFinancialAid);
+      setmeritScholarShipImp(prevFinance.MeritScholarShip);
+      setWhoPayForCollege(prevFinance.WhoWillPayForCollege);
+      setStudentExpectedIncome(prevFinance.StudentExpectedIncome);
+      setGrossFamilyAnnualIncome(prevFinance.GrossFamilyAnnualIncome);
+      setTotalNetWorth(prevFinance.TotalFamilyNetWorth);
+      setAmountSaved(prevFinance.AmountSaved);
+      setMonthlyContributions(prevFinance.MonthlyContribution);
     }
-  }, [props]);
+  }, [prevFinance, props]);
 
   return (
     <div>

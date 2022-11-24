@@ -162,6 +162,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+const StyledTableCellOverAll = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
@@ -299,16 +309,19 @@ const showAdmissibility = () => {
               <TableRow>
                 <StyledTableCell  align="center"> INSTITUTE NAME
                 </StyledTableCell>
-                <StyledTableCell align="center" >
-                <Button style={{color:"white"}} onClick={showAffinity}>
-                   AFFINITY GRADE
+                <StyledTableCell align="center">
+                  <Button style={{color:"white"}}>
+                  AFFORDABILITY GRADE
                 </Button></StyledTableCell>
                 <StyledTableCell align="center">
                   <Button style={{color:"white"}} onClick={showAdmissibility}>
                   ADMISSABILITY GRADE
                 </Button></StyledTableCell>
-                <StyledTableCell align="center">AFFORDABILITY GRADE</StyledTableCell>
-                <StyledTableCell align="center">OVER ALL GRADE</StyledTableCell>
+                <StyledTableCell align="center" >
+                <Button style={{color:"white"}} onClick={showAffinity}>
+                   AFFINITY GRADE
+                </Button></StyledTableCell>
+                <StyledTableCellOverAll align="center">OVER ALL GRADE</StyledTableCellOverAll>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -325,20 +338,19 @@ const showAdmissibility = () => {
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {inst.CrimeGrade}
-                  </StyledTableCell>
-                  
-                  <StyledTableCell align="center">{inst.Overall}</StyledTableCell>
+                  </StyledTableCell>     
+                  <StyledTableCellOverAll align="center"><b style={{ color: 'red'}}>{inst.Overall}</b></StyledTableCellOverAll>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <div>
+        {/* <div>
         <HighchartsReact
     highcharts={Highcharts}
     options={options}
   />
-        </div>
+        </div> */}
       </div>
     </div>
   );

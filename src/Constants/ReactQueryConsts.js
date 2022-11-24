@@ -8,6 +8,8 @@ export const ABOUT = 'about';
 export const ACADEMICS = 'academics';
 export const FINANCE = 'finance';
 export const PREFERENCE = 'preference';
+export const UPDATEPROFILE = 'updateprofile';
+export const GETPROFILEDATA = 'profiledata';
 
 //3A Scores
 export const Affinity = 'affinity';

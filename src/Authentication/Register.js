@@ -88,7 +88,7 @@ export default function Register() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign Up
+            Sign up
           </Typography>
           <ValidationGroup>
             <Box
@@ -110,7 +110,7 @@ export default function Register() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Email address"
                   name="email"
                   autoComplete="email"
                   type="email"
@@ -166,7 +166,7 @@ export default function Register() {
               </AutoDisabler>
               <Grid container>
                 <Grid item>
-                  <span onClick={() => navigate('/login')} style={{cursor: "pointer", color: 'blue'}}>{"Already have an Account? Login In"}</span>
+                  <span onClick={() => navigate('/login')} style={{cursor: "pointer", color: 'blue'}}>{"Already have an account? Login"}</span>
                 </Grid>
               </Grid>
             </Box>

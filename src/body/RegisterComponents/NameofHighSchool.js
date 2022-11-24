@@ -183,8 +183,6 @@ export default function NameofHighSchool(props) {
     handleAddingSchoolDatabase(school);
     schoolsData = updatedSchools;
 
-    console.log(schoolsData);
-
     handleClose();
   };
 
@@ -209,7 +207,6 @@ export default function NameofHighSchool(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
 
   return (
     <div>
@@ -328,6 +325,7 @@ export default function NameofHighSchool(props) {
         onChange={(event, value) => {
           props.NameOfSchool(value.NAME);
         }}
+        value={schoolsData.find((school) => school.NAME === props.SelectedSchool) || null}
         noOptionsText={
           <p onClick={handleClickOpen} style={{ cursor: "pointer" }}>
             Add school now

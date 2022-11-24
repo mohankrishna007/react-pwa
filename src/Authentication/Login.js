@@ -78,13 +78,13 @@ export default function Login() {
           "https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword",
           data
         );
-        setResetMessage("Password reset link sent successfully");
+        setResetMessage("Password reset link sent.");
         console.log(resp);
       } catch (error) {
         if (error.response.status === 500) {
-          setResetMessage("Reset Link sent already");
+          setResetMessage("Reset Link sent already.");
         } else {
-          setResetMessage("Password reset link sent successfully");
+          setResetMessage("Password reset link sent.");
         }
         console.log(error.response);
       }
@@ -109,8 +109,9 @@ export default function Login() {
         form
       );
 
-      localStorage.setItem("token", resp.data.data);
-      console.log(JSON.stringify(resp.data.data));
+      localStorage.setItem("token", resp.data.data.token);
+      console.log(resp);
+      localStorage.setItem("profile-filled", resp.data.data.profile);
       navigate("/");
       window.location.reload();
     } catch (error) {
@@ -158,7 +159,7 @@ export default function Login() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Email address"
                   name="email"
                   autoComplete="email"
                   type="email"
@@ -222,7 +223,7 @@ export default function Login() {
                   </span>
                 </Grid>
                 <Grid item>
-                  <span onClick={() => navigate('/register')} style={{cursor: "pointer", color: 'blue'}}>{"Don't have an Account? Register Here"}</span>
+                  <span onClick={() => navigate('/register')} style={{cursor: "pointer", color: 'blue'}}>{"Don't have an account? Register here"}</span>
                 </Grid>
               </Grid>
             </Box>
@@ -235,7 +236,7 @@ export default function Login() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            If what you entered matches our records, we’ll send you an email soon to reset your password
+            If what you entered matches our records, we’ll send you an email soon to reset your password.
           </DialogContentText>
           <TextField
             autoFocus

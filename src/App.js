@@ -18,13 +18,14 @@ import PageNotFound from "./Utils/PageNotFound";
 import ScheduleAppointment from "./body/ScheduleAppointment";
 import AccessDenied from "./Utils/AccessDenied";
 import Admissibility from "./Affinity/Admissibility";
-import PrefetchDropdownData from './PrefetchData/PrefetchDropdownData';
 import DialogBox from './body/DialogBox'
+import AdmissibilityLogs from "./Affinity/AdmissibilityLogs";
+import Profile from "./body/Profile";
 
 class App extends React.Component {
   render() {
     const user = localStorage.getItem("token");
-    const profile_filled = localStorage.getItem("profile-filled");
+    const profile_filled = localStorage.getItem("profile-filled")
 
     const queryClient = new QueryClient()
     return (
@@ -33,11 +34,10 @@ class App extends React.Component {
         <br />
         <div className="content">
           <QueryClientProvider client={queryClient}>
-          <PrefetchDropdownData />
             <Routes>
               <Route
                 path="/"
-                element={user ? (profile_filled === 'true'?
+                element={user ? (String(profile_filled) === '1'?
                 <Navigate replace to="/dashboard"/>: <DialogBox />):
                 <Navigate replace to="/login" />}
               />
@@ -64,6 +64,14 @@ class App extends React.Component {
               <Route
                 path="admissibility"
                 element={user ? <Admissibility /> : <Navigate replace to="/" />}
+              />
+              <Route
+                path="admissibilitylogs"
+                element={user ? <AdmissibilityLogs /> : <Navigate replace to="/" />}
+              />
+              <Route
+                path="profile"
+                element={user ? <Profile /> : <Navigate replace to="/" />}
               />
               <Route path="schedule" element={<ScheduleAppointment />} />
               <Route path="nearbyairports" element={<NearbyAirports />} />

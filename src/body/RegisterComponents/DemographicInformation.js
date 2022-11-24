@@ -20,6 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Country, State } from "country-state-city";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import RegisterTheme from "../../Themes/RegisterTheme";
+import { useSelector } from "react-redux";
 
 const DemographicInformation = (props, ref) => {
   const [firstName, setFirstName] = React.useState("");
@@ -49,7 +50,6 @@ const DemographicInformation = (props, ref) => {
   }));
 
   const postAboutStudent = () => {
-
     const AboutStudent = {
       FirstName: firstName,
       LastName: lastName,
@@ -64,8 +64,7 @@ const DemographicInformation = (props, ref) => {
       EthenicOrigin: ethenicOrigin,
       Gender: gender,
     };
-
-    localStorage.setItem("about_student", JSON.stringify(AboutStudent));
+    return AboutStudent;
   };
 
   const handleFirstName = (event) => {
@@ -149,6 +148,25 @@ const DemographicInformation = (props, ref) => {
     return states;
   }
 
+  const prevAbout = useSelector((state) => state.profile.about);
+
+  React.useEffect(() => {
+    if(prevAbout != null){
+      setFirstName(prevAbout.FirstName);
+      setLastName(prevAbout.LastName);
+      setDob(prevAbout.Dob);
+      setResidencyStatus(prevAbout.ResidentialStatus);
+      setCountry(prevAbout.Country);
+      setStreetAddress(prevAbout.StreetAddress);
+      setCity(prevAbout.City);
+      setState(prevAbout.StateISO);
+      setStateName(prevAbout.State);
+      setZipCode(prevAbout.Zipcode);
+      setEthenicOrigin(prevAbout.EthenicOrigin);
+      setGender(prevAbout.Gender);
+    }
+  },[prevAbout])
+
   React.useEffect(() => {
     if (
       firstName.length === 0 ||
@@ -156,33 +174,12 @@ const DemographicInformation = (props, ref) => {
       dob === null ||
       dobError === true ||
       residencyStatus.length === 0 ||
-      state.length === 0 ||
       ethenicOrigin.length === 0 ||
       gender.length === 0
     ) {
       props.handleError(true);
     } else {
       props.handleError(false);
-    }
-
-    var restored = localStorage.getItem("about_student");
-
-    if (restored != null) {
-      var data = JSON.parse(restored);
-      setFirstName(data.FirstName);
-      setLastName(data.LastName);
-      setDob(data.Dob);
-      setResidencyStatus(data.ResidentialStatus);
-      setCountry(data.Country);
-      setStreetAddress(data.StreetAddress);
-      setCity(data.City);
-      setState(data.StateISO);
-      setStateName(data.State);
-      setZipCode(data.Zipcode);
-      setEthenicOrigin(data.EthenicOrigin);
-      setGender(data.Gender);
-
-      localStorage.removeItem("about_student");
     }
   }, [
     firstName.length,
@@ -351,7 +348,7 @@ const DemographicInformation = (props, ref) => {
                   <Autocomplete
                     value={
                       getStates(country).find(
-                        (option) => option.isoCode === state
+                        (option) => option.name === stateName
                       ) || null
                     }
                     options={
@@ -361,7 +358,6 @@ const DemographicInformation = (props, ref) => {
                     }
                     getOptionLabel={(option) => option.name}
                     onChange={(event, value) => {
-                      setState(value.isoCode);
                       setStateName(value.name);
                     }}
                     filterSelectedOptions

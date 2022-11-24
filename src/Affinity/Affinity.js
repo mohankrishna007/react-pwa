@@ -42,6 +42,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
+const StyledTableCellOverAll = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
@@ -184,7 +194,7 @@ function Affinitty() {
                 <StyledTableCell align="center">
                   TRANPORTATION GRADE
                 </StyledTableCell>
-                <StyledTableCell align="center">OVERALL GRADE</StyledTableCell>
+                <StyledTableCellOverAll align="center">OVERALL GRADE</StyledTableCellOverAll>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -203,18 +213,16 @@ function Affinitty() {
                   <StyledTableCell align="center">
                     {inst.TransportGrade}
                   </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {inst.Overall}
-                  </StyledTableCell>
+                  <StyledTableCellOverAll align="center"><b style={{ color: 'red'}}>{inst.Overall}</b></StyledTableCellOverAll>
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </div>
-      <div>
+      {/* <div>
         <HighchartsReact highcharts={Highcharts} options={options} />
-      </div>
+      </div> */}
     </div>
   );
 }

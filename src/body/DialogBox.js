@@ -12,6 +12,8 @@ import {
   FormLabel,
   Typography,
 } from "@mui/material";
+import { actions } from "../store/ProfileSlice";
+import { useDispatch } from "react-redux";
 import { MDBCard, MDBCardBody, MDBCardTitle, MDBRow } from "mdb-react-ui-kit";
 import DemographicInformation from "./RegisterComponents/DemographicInformation";
 import AcademicProfile from "./RegisterComponents/AcademicProfile";
@@ -19,6 +21,7 @@ import FinancialInformation from "./RegisterComponents/FinancialInformation";
 import PreferenceMotivation from "./RegisterComponents/PreferencesAndMotivation";
 import axios from "axios";
 import "../styles/body/DialogBox.css";
+import PrefetchDropdownData from '../PrefetchData/PrefetchDropdownData';
 import ProfileCompletionGreeting from "./ProfileCompletionGreeting";
 
 const student = [
@@ -42,6 +45,7 @@ axios.defaults.headers.common["auth-token"] = token;
 
 export default function DialogBox() {
   const ChildRef = React.useRef();
+  const dispatch = useDispatch();
 
   const theme = useTheme();
 
@@ -58,13 +62,17 @@ export default function DialogBox() {
       localStorage.setItem("whoData", who);
     }
     if (activeStep === 1) {
-      ChildRef.current.postAboutStudent();
+     const about =  ChildRef.current.postAboutStudent();
+     dispatch(actions.addAboutData(about))
     } else if (activeStep === 2) {
-      ChildRef.current.postAcademicProfile();
+     const academics =  ChildRef.current.postAcademicProfile();
+     dispatch(actions.addAcademicsData(academics))
     } else if (activeStep === 3) {
-      ChildRef.current.postFinancial();
+     const financial =  ChildRef.current.postFinancial();
+     dispatch(actions.addFinanceData(financial));
     } else if (activeStep === 4) {
-      ChildRef.current.postPreference();
+     const preference = ChildRef.current.postPreference();
+     dispatch(actions.addPreferenceData(preference))
     }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setHaveError(true);
@@ -98,6 +106,7 @@ export default function DialogBox() {
 
   return (
     <div id="body-dialog">
+      <PrefetchDropdownData />
       <MDBCard style={{ width: "90%", margin: "0 auto" }}>
         <MDBCardTitle className="dialog-title">
           <Typography>

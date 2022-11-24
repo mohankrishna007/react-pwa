@@ -20,6 +20,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import NameofHighSchool from "./NameofHighSchool";
 import RegisterTheme from "../../Themes/RegisterTheme";
+import { useSelector } from "react-redux";
 
 const AcademicProfile = (props, ref) => {
   useImperativeHandle(ref, () => ({
@@ -41,13 +42,13 @@ const AcademicProfile = (props, ref) => {
       TotalGpa: totalGpa,
       IB: haveIB,
       IBScore: ibScore,
-      PSatMath: psatMath,
+      PsatMath: psatMath,
       PsatReading: psatReading,
       SatMath: satMath,
       SatReading: satReading,
       ActCompostite: actComposite,
     };
-    localStorage.setItem("academic_profile", JSON.stringify(AcademicProfile));
+    return AcademicProfile;
   };
 
   const [nameOfSchool, setNameOfSchool] = React.useState("");
@@ -185,6 +186,30 @@ const AcademicProfile = (props, ref) => {
     { title: "Bachelor's Degree", value: "3" },
   ];
 
+  const prevAcademics = useSelector((state) => state.profile.academics);
+
+  React.useEffect(() => {
+    if(prevAcademics != null){
+      setNameOfSchool(prevAcademics.NameofHighSchool);
+      sethighSchoolGraduation(prevAcademics.HighSchoolGraduation);
+      setEnrolIn(prevAcademics.LookingtoEnrollIn);
+      setEnrolAs(prevAcademics.IncomingStatus);
+      setTypeOfDegree(prevAcademics.TypeOfDegree);
+      settransferAs(prevAcademics.TransferAs);
+      setStudentPercentile(prevAcademics.StudentClassRank);
+      setGpaType(prevAcademics.GpaType);
+      setScoredGpa(prevAcademics.ScoredGpa);
+      setTotalGpa(prevAcademics.TotalGpa);
+      setHaveIB(prevAcademics.IB);
+      setIBscore(prevAcademics.IBScore);
+      setpsatReading(prevAcademics.PsatReading);
+      setPsatMath(prevAcademics.PsatMath);
+      setSatMath(prevAcademics.SatMath);
+      setSatReading(prevAcademics.SatReading);
+      setActComposite(prevAcademics.ActCompostite);
+    }
+  }, [prevAcademics]);
+
   React.useEffect(() => {
     if (
       nameOfSchool.length === 0 ||
@@ -200,31 +225,6 @@ const AcademicProfile = (props, ref) => {
     } else {
       props.handleError(false);
     }
-
-    var restored = localStorage.getItem("academic_profile");
-
-    if (restored != null) {
-
-      var data = JSON.parse(restored);
-      sethighSchoolGraduation(data.HighSchoolGraduation);
-      setEnrolIn(data.LookingtoEnrollIn);
-      setEnrolAs(data.IncomingStatus);
-      setTypeOfDegree(data.TypeOfDegree);
-      settransferAs(data.TransferAs);
-      setStudentPercentile(data.StudentClassRank);
-      setGpaType(data.GpaType);
-      setScoredGpa(data.ScoredGpa);
-      setTotalGpa(data.TotalGpa);
-      setHaveIB(data.IB);
-      setIBscore(data.IBScore);
-      setpsatReading(data.PsatReading);
-      setPsatMath(data.psatMath);
-      setSatMath(data.SatMath);
-      setSatReading(data.SatReading);
-      setActComposite(data.ActCompostite);
-
-      localStorage.removeItem('academic_profile')
-    }
     updateSeasons();
   }, [
     enrolAs.length,
@@ -239,10 +239,6 @@ const AcademicProfile = (props, ref) => {
     props,
   ]);
 
-  const handleSchoolsData = () => {
-    return props.getSchools();
-  }
-
   return (
     <div>
       <ThemeProvider theme={createTheme(RegisterTheme)}>
@@ -250,7 +246,7 @@ const AcademicProfile = (props, ref) => {
           <MDBCardBody className="px-4 CardBody">
             <MDBRow>
               <MDBCol md="12">
-                <NameofHighSchool NameOfSchool={handleNameOfSchool} schools={handleSchoolsData}/>
+                <NameofHighSchool NameOfSchool={handleNameOfSchool} SelectedSchool={nameOfSchool}/>
               </MDBCol>
             </MDBRow>
             <MDBRow>

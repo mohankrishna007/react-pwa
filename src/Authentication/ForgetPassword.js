@@ -80,13 +80,13 @@ export default function Register() {
           "https://collegeportfoliobackendnode.azurewebsites.net/auth/resetpassword",
           data
         );
-        setResetMessage("Password reset link sent successfully");
+        setResetMessage("Password reset link sent.");
         console.log(resp);
       } catch (error) {
         if (error.response.status === 500) {
-          setResetMessage("Reset Link sent already");
+          setResetMessage("Reset Link sent already.");
         } else {
-          setResetMessage("Password reset link sent successfully");
+          setResetMessage("Password reset link sent.");
         }
         console.log(error.response);
       }
@@ -108,7 +108,7 @@ export default function Register() {
       const url = `https://collegeportfoliobackendnode.azurewebsites.net/auth/reset/${param.id}/${param.token}`;
       var resp = await axios.post(url, form);
       console.log(resp)
-      setMessage('Password Updated Succesfully')
+      setMessage('Password updated succesfully')
       setHideAlert(false);
       setVariant('success');
       setResetted(true)
@@ -238,7 +238,7 @@ export default function Register() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            If what you entered matches our records, we’ll send you an email soon to reset your password
+            If what you entered matches our records, we’ll send you an email soon to reset your password.
           </DialogContentText>
           <TextField
             autoFocus

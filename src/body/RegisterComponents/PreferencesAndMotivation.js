@@ -32,6 +32,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import RegisterTheme from "../../Themes/RegisterTheme";
 import { useQuery, useQueryClient } from "react-query";
+import { useSelector } from "react-redux";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -94,7 +95,7 @@ const States = [
 
 const PreferenceMotivation = (props, ref) => {
   const [collegeType, setCollegeType] = useState([]);
-  const [fieldOfStudy, setFieldOfStudy] = useState(null);
+  const [fieldOfStudy, setFieldOfStudy] = useState("");
   const [regiliousAffliations, setReligiousAffliations] = useState("");
   const [specializedMission, setSpecializedMission] = useState("");
   const [location, setLocation] = useState([]);
@@ -166,10 +167,7 @@ const PreferenceMotivation = (props, ref) => {
       AdmissibilityScore: admissibilityScore,
     };
 
-    localStorage.setItem(
-      "preference_motivation",
-      JSON.stringify(PreferenceMotivation)
-    );
+    return PreferenceMotivation;
   };
 
   const handleReligiousAffliations = (event) => {
@@ -313,6 +311,18 @@ const PreferenceMotivation = (props, ref) => {
     },
   ];
 
+  const prevPreference = useSelector((state) => state.profile.preference);
+
+  React.useEffect(() => {
+    if(prevPreference != null){
+      setCollegeType(prevPreference.CollegeType);
+      setFieldOfStudy(prevPreference.FieldOfStudy);
+      setAffinityScore(prevPreference.AffinityScore)
+      setAffordalibityScore(prevPreference.AffordabilityScore);
+      setAdmissibilityScore(prevPreference.AdmissibilityScore);
+    }
+  }, [prevPreference])
+
   React.useEffect(() => {
     if (collegeType == null || fieldOfStudy == null || scoreError) {
       props.handleError(true);
@@ -377,10 +387,11 @@ const PreferenceMotivation = (props, ref) => {
                   options={streams}
                   getOptionLabel={(option) => option.NAME}
                   filterSelectedOptions
+                  value={streams.find((stream) => stream.NAME === String(fieldOfStudy)) || null}
                   onChange={(event, value) => setFieldOfStudy(value.NAME)}
                   sx={{ mb: 2 }}
                   renderInput={(params) => (
-                    <TextField {...params} required label="Field of Study" />
+                    <TextField {...params} required label="Primary Field of Study" />
                   )}
                 />
               </MDBCol>

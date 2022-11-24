@@ -19,12 +19,13 @@ import { Image } from "react-bootstrap";
 import IconButton from '@mui/material/IconButton';
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact', 'Schedule', 'Register'];
+const navItems = ['Home', 'About', 'Schedule','Profile', 'Register'];
 
 const user = localStorage.getItem("token");
 
 const handleLogout = () => {
   localStorage.removeItem("token");
+  localStorage.removeItem('profile-filled')
   window.location.href = '/';
 }
 
@@ -53,9 +54,9 @@ function Header(props) {
     }else if(index === 1){
       alert('About');
     }else if(index === 2){
-      alert('Contact');
-    }else if(index === 3){
       navigate('/schedule');
+    }else if(index === 3){
+      navigate('/profile')
     }else if(index === 4){
       if(navItems[4] === 'Register'){
         navigate('register');
@@ -88,7 +89,7 @@ function Header(props) {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AppBar component="nav">
+      <AppBar component="nav" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <IconButton
             color="inherit"

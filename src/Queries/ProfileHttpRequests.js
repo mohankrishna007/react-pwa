@@ -23,3 +23,11 @@ export const postStudentPreference = (req) => {
     "https://collegeportfoliobackendnode.azurewebsites.net/student/preference", req
     );
 };
+
+export const updateProfileCompletetion = () => {
+  return axios.get("https://collegeportfoliobackendnode.azurewebsites.net/student/updateprofile")
+}
+
+export const getUserProfile = () => {
+  return axios.get("https://collegeportfoliobackendnode.azurewebsites.net/student/getprofile");
+}
