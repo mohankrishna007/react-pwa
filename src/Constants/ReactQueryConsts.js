@@ -15,5 +15,8 @@ export const GETPROFILEDATA = 'profiledata';
 export const Affinity = 'affinity';
 export const Admissibility = 'admissibility';
 
+//Admin
+export const PAVALUES = 'pavalues';
+
 
 

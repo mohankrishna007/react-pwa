@@ -33,6 +33,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import RegisterTheme from "../../Themes/RegisterTheme";
 import { useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
+import { type } from "@testing-library/user-event/dist/type";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -317,9 +318,14 @@ const PreferenceMotivation = (props, ref) => {
     if(prevPreference != null){
       setCollegeType(prevPreference.CollegeType);
       setFieldOfStudy(prevPreference.FieldOfStudy);
+      setReligiousAffliations(prevPreference.ReligiousAffliation);
+      setSpecializedMission(prevPreference.SpecializedMission);
       setAffinityScore(prevPreference.AffinityScore)
       setAffordalibityScore(prevPreference.AffordabilityScore);
       setAdmissibilityScore(prevPreference.AdmissibilityScore);
+
+
+      
     }
   }, [prevPreference])
 

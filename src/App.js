@@ -21,6 +21,7 @@ import Admissibility from "./Affinity/Admissibility";
 import DialogBox from './body/DialogBox'
 import AdmissibilityLogs from "./Affinity/AdmissibilityLogs";
 import Profile from "./body/Profile";
+import PATable from "./Admin/PATable";
 
 class App extends React.Component {
   render() {
@@ -72,6 +73,10 @@ class App extends React.Component {
               <Route
                 path="profile"
                 element={user ? <Profile /> : <Navigate replace to="/" />}
+              />
+              <Route
+                path="patable"
+                element={user ? <PATable /> : <Navigate replace to="/" />}
               />
               <Route path="schedule" element={<ScheduleAppointment />} />
               <Route path="nearbyairports" element={<NearbyAirports />} />
