@@ -19,3 +19,12 @@ export const getAdmissibilityScore = (data) => {
   );
 };
 
+export const getAdmissibilityLogs = (data) => {
+  var req = {
+    colleges : data
+  }
+  return axios.post(
+    "https://collegeportfoliobackendnode.azurewebsites.net/college/admissibilitylogs", req
+  );
+};
+

@@ -14,6 +14,7 @@ export const GETPROFILEDATA = 'profiledata';
 //3A Scores
 export const Affinity = 'affinity';
 export const Admissibility = 'admissibility';
+export const Admissibilitylogs = 'admissibilitylogs';
 
 //Admin
 export const PAVALUES = 'pavalues';

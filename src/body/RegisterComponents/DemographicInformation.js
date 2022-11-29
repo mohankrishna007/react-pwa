@@ -47,6 +47,10 @@ const DemographicInformation = (props, ref) => {
 
   useImperativeHandle(ref, () => ({
     postAboutStudent,
+
+    test(){
+      console.log("TEST ")
+    }
   }));
 
   const postAboutStudent = () => {
@@ -64,6 +68,7 @@ const DemographicInformation = (props, ref) => {
       EthenicOrigin: ethenicOrigin,
       Gender: gender,
     };
+    
     return AboutStudent;
   };
 

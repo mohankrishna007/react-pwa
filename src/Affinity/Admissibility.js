@@ -1,3 +1,6 @@
+import * as Names from '../Constants/ReactQueryConsts';
+import * as Functions from '../Queries/3AScores';
+
 import { Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
 import { styled } from "@mui/material/styles";
@@ -8,10 +11,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useQuery } from "react-query";
+import { useState } from 'react';
 
 function Admissibility() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
 
   const handleLogs = () => {
     navigate("/admissibilitylogs", {
@@ -20,6 +26,17 @@ function Admissibility() {
       },
     });
   };
+
+  useQuery(
+    Names.Admissibility,
+    () => Functions.getAdmissibilityScore(location.state.colleges),
+    {
+      onSuccess: (data) => {
+        setData(data?.data);
+      },
+      onError: (error) => console.log("ERROR: " + error),
+    }
+  );
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -52,36 +69,30 @@ function Admissibility() {
             <TableRow>
               <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
               <StyledTableCell align="center">
-                ADMISSIBILITY 1
+                COLLEGE COHORTS
               </StyledTableCell>
-              <StyledTableCell align="center">ADMISSIBILITY 2</StyledTableCell>
-              <StyledTableCell align="center">ADMISSIBILITY 3</StyledTableCell>
-              <StyledTableCell align="center">
-              ADMISSIBILITY 4
-              </StyledTableCell>
-              <StyledTableCell align="center">ADMISSIBILITY 5</StyledTableCell>
+              <StyledTableCell align="center">STUDENT COMPETETITVE</StyledTableCell>
+              <StyledTableCell align="center">MEAN GRADE</StyledTableCell>
             </TableRow>
           </TableHead>
-          {/* <TableBody>
+          <TableBody>
             {data.map((inst) => (
               <StyledTableRow key={inst.NAME}>
                 <StyledTableCell align="center">{inst.NAME}</StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.StudentPreference}
+                  {inst.CollegeCohorts}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.WeatherGrade}
+                  {inst.OverallCompetitive}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.CrimeGrade}
+                 <b style={{ color: 'blue'}}>
+                  {inst.MeanGrade}
+                  </b>
                 </StyledTableCell>
-                <StyledTableCell align="center">
-                  {inst.TransportGrade}
-                </StyledTableCell>
-                <StyledTableCell align="center">{inst.Overall}</StyledTableCell>
               </StyledTableRow>
             ))}
-          </TableBody> */}
+          </TableBody>
         </Table>
       </TableContainer>
       <Button onClick={handleLogs}> click to show Logs </Button>

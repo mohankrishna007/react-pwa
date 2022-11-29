@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import * as Names from "../Constants/ReactQueryConsts";
 import * as Functions from "../Queries/AdminQueries";
@@ -17,7 +17,6 @@ import EditIcon from "@material-ui/icons/EditOutlined";
 import DoneIcon from "@material-ui/icons/DoneAllTwoTone";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { hover } from "@testing-library/user-event/dist/hover";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,7 +80,7 @@ export default function PATable() {
               element.hyperselective,
               element.ultraselective,
               element.selective,
-              element.moderatelyselective,
+              element.moderativelyselective,
               element.bareleyselective,
               element.nonselective
             )
@@ -112,7 +111,7 @@ export default function PATable() {
 
     if (label === "done") {
       var row = rows.find((row) => row.id === id)
-      axios.post("http://localhost:5000/admin/pavalues", row).then((resp) => {
+      axios.post("https://collegeportfoliobackendnode.azurewebsites.net/admin/pavalues", row).then((resp) => {
         console.log(resp);
       });
     }

@@ -21,10 +21,11 @@ function ProfileCompletionGreeting(){
     ])
 
     localStorage.setItem("profile-filled", 1);
+    window.location.reload();
 
     return(
         <div>
-            <center>Hey {FirstName} {LastName}, Thank you for completing profile.</center>
+            <center>Hi {FirstName} {LastName}, Thank you for completing profile.</center>
             <center> <Link to ='dashboard'>Goto DashBoard </Link></center>
         </div>
     )

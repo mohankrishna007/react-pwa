@@ -10,9 +10,9 @@ function AdmissibilityLogs() {
     const location = useLocation();
     const [data, setData] = useState([]);
 
-    useQuery(Names.Admissibility, () => Functions.getAdmissibilityScore(location.state.colleges),
+    useQuery(Names.Admissibilitylogs, () => Functions.getAdmissibilityLogs(location.state.colleges),
         {
-            onSuccess: ((data) => {setData(data?.data.data)}),
+            onSuccess: ((data) => {setData(data?.data)}),
             onError: ((error) => console.log("ERROR: "+error))
         })
 
