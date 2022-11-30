@@ -11,17 +11,18 @@ import Login from "./Authentication/Login";
 import Register from "./Authentication/Register";
 import EmailVerify from "./Authentication/EmailVerify";
 import ForgetPassword from "./Authentication/ForgetPassword";
-import Affinitty from "./Affinity/Affinity";
+import Affinitty from "./GradeScores/Affinity";
 import NearbyAirports from "./NearbyAirports/NearbyAirports";
-import Threea from "./Affinity/Threea";
+import Threea from "./GradeScores/Threea";
 import PageNotFound from "./Utils/PageNotFound";
 import ScheduleAppointment from "./body/ScheduleAppointment";
 import AccessDenied from "./Utils/AccessDenied";
-import Admissibility from "./Affinity/Admissibility";
+import Admissibility from "./GradeScores/Admissibility";
 import DialogBox from './body/DialogBox'
-import AdmissibilityLogs from "./Affinity/AdmissibilityLogs";
+import AdmissibilityLogs from "./GradeScores/AdmissibilityLogs";
 import Profile from "./body/Profile";
 import PATable from "./Admin/PATable";
+import Affordability from "./GradeScores/Affordability";
 
 class App extends React.Component {
   render() {
@@ -59,6 +60,10 @@ class App extends React.Component {
               <Route path="reset/:id/:token" element={<ForgetPassword />} />
               <Route path="users/:id/verify/:token" element={<EmailVerify />} />
               <Route
+                path="grades"
+                element={user ? <Threea /> : <Navigate replace to="/" />}
+              />
+              <Route
                 path="affinity"
                 element={user ? <Affinitty /> : <Navigate replace to="/" />}
               />
@@ -71,6 +76,14 @@ class App extends React.Component {
                 element={user ? <AdmissibilityLogs /> : <Navigate replace to="/" />}
               />
               <Route
+                path="admissibilitylogs"
+                element={user ? <AdmissibilityLogs /> : <Navigate replace to="/" />}
+              />
+              <Route
+                path="affordability"
+                element={user ? <Affordability /> : <Navigate replace to="/" />}
+              />
+              <Route
                 path="profile"
                 element={user ? <Profile /> : <Navigate replace to="/" />}
               />
@@ -80,7 +93,6 @@ class App extends React.Component {
               />
               <Route path="schedule" element={<ScheduleAppointment />} />
               <Route path="nearbyairports" element={<NearbyAirports />} />
-              <Route path="threea" element={<Threea />} />
               <Route path="accessdenied" element={<AccessDenied />} />
               <Route path="*" element={<PageNotFound />} />
             </Routes>

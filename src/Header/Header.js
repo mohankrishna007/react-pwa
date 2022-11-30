@@ -19,7 +19,7 @@ import { Image } from "react-bootstrap";
 import IconButton from '@mui/material/IconButton';
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Schedule','Profile', 'Register'];
+const navItems = ['Home', 'Schedule', 'Profile', 'Register'];
 
 const user = localStorage.getItem("token");
 
@@ -42,9 +42,9 @@ function Header(props) {
 
   React.useState(() => {
     if(user){
-      navItems[4] = 'Logout';
+      navItems[navItems.length-1] = 'Logout';
     }else{
-      navItems[4] = 'Register';
+      navItems[navItems.length-1] = 'Register';
     }
   }, user)
 
@@ -52,13 +52,11 @@ function Header(props) {
     if(index === 0){
       navigate("/");
     }else if(index === 1){
-      alert('About');
-    }else if(index === 2){
       navigate('/schedule');
-    }else if(index === 3){
+    }else if(index === 2){
       navigate('/profile')
-    }else if(index === 4){
-      if(navItems[4] === 'Register'){
+    }else if(index === navItems.length-1){
+      if(navItems[navItems.length-1] === 'Register'){
         navigate('register');
       }else{
         handleLogout();

@@ -69,56 +69,56 @@ const FinancialInformation = (props, ref) => {
     { title: "Student Only", value:"1"},
     { title: "Student and Family", value:"2"},
     { title: "Family Only", value:"3"},
-    { title: "Prefer Not to Say", value:"4"},
+    { title: "Prefer Not to Say", value: ""},
   ];
 
   const studentExpectedIncomeOptions = [
-    { title: "$0 - $10,000", value: 1 },
-    { title: "$10,001 - $20,000", value: 2 },
-    { title: "$21,000 - $30,000", value: 3 },
-    { title: "$31,000 - $40,000", value: 4 },
-    { title: "$41,000 - $50,000", value: 5 },
-    { title: "Prefer Not to Say", value: 6 },
+    { title: "$0 - $10,000", value: "1" },
+    { title: "$10,001 - $20,000", value: "2" },
+    { title: "$21,000 - $30,000", value: "3" },
+    { title: "$31,000 - $40,000", value: "4" },
+    { title: "$41,000 - $50,000", value: "5" },
+    { title: "Prefer Not to Say", value: "" },
   ];
 
   const grossFamilyAnnualIncomeOptions = [
-    { title: "$0 - $30,000", value: 1 },
-    { title: "$30,001 - $48,000", value: 2 },
-    { title: "$48,001 - $75,000", value: 3 },
-    { title: "$75,001 - $110,000", value: 4 },
-    { title: "$110,000+", value: 5 },
-    { title: "Prefer Not to Say", value: 6 },
+    { title: "$0 - $30,000", value: "1" },
+    { title: "$30,001 - $48,000", value: "2" },
+    { title: "$48,001 - $75,000", value: "3" },
+    { title: "$75,001 - $110,000", value: "4" },
+    { title: "$110,000+", value: "5" },
+    { title: "Prefer Not to Say", value: "" },
   ];
 
   const totalNetWorthOptions = [
-    { title: "$0 - $100,000", value: 1 },
-    { title: "$100,001 - $500,000", value: 2 },
-    { title: "$500,001 - $1M", value: 3 },
-    { title: "$1M - $2M", value: 4 },
-    { title: "$2M+", value: 5 },
-    { title: "Prefer Not to Say", value: 6 },
+    { title: "$0 - $100,000", value: "1" },
+    { title: "$100,001 - $500,000", value: "2" },
+    { title: "$500,001 - $1M", value: "3" },
+    { title: "$1M - $2M", value: "4" },
+    { title: "$2M+", value: "5" },
+    { title: "Prefer Not to Say", value: "" },
   ];
 
   const amountSavedOptionsOptions = [
-    { title: "$0 - $10,000", value: 1 },
-    { title: "$10,001 - $25,000", value: 2 },
-    { title: "$25,001 - $50,000", value: 3 },
-    { title: "$50,001 - $100,000", value: 4 },
-    { title: "$100,001 - $200,000", value: 5 },
-    { title: "$200,001 - $400,000", value: 6 },
-    { title: "$400,00+", value: 7 },
-    { title: "Prefer Not to Say", value: 8 },
+    { title: "$0 - $10,000", value: "1" },
+    { title: "$10,001 - $25,000", value: "2" },
+    { title: "$25,001 - $50,000", value: "3" },
+    { title: "$50,001 - $100,000", value: "4" },
+    { title: "$100,001 - $200,000", value: "5" },
+    { title: "$200,001 - $400,000", value: "6" },
+    { title: "$400,00+", value: "7" },
+    { title: "Prefer Not to Say", value: "" },
   ];
 
   const monthlyContributionsOptions = [
-    { title: "$0 - $100", value: 1 },
-    { title: "$101 - $250", value: 2 },
-    { title: "$251 - $500", value: 3 },
-    { title: "$501 - $1,000", value: 4 },
-    { title: "$1,001 - $2,000", value: 5 },
-    { title: "$2,001 - $4,000", value: 6 },
-    { title: "$4,000+", value: 7 },
-    { title: "Prefer Not to Say", value: 8 },
+    { title: "$0 - $100", value: "1" },
+    { title: "$101 - $250", value: "2" },
+    { title: "$251 - $500", value: "3" },
+    { title: "$501 - $1,000", value: "4" },
+    { title: "$1,001 - $2,000", value: "5" },
+    { title: "$2,001 - $4,000", value: "6" },
+    { title: "$4,000+", value: "8" },
+    { title: "Prefer Not to Say", value: "" },
   ];
 
   const prevFinance = useSelector((state) => state.profile.finance);

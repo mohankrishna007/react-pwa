@@ -1,6 +1,3 @@
-import * as Names from '../Constants/ReactQueryConsts';
-import * as Functions from '../Queries/3AScores';
-
 import { Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
 import { styled } from "@mui/material/styles";
@@ -11,10 +8,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useQuery } from "react-query";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-function Admissibility() {
+
+function Affordability() {
   const location = useLocation();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -27,16 +25,10 @@ function Admissibility() {
     });
   };
 
-  useQuery(
-    Names.Admissibility,
-    () => Functions.getAdmissibilityScore(location.state.colleges),
-    {
-      onSuccess: (data) => {
-        setData(data?.data);
-      },
-      onError: (error) => console.log("ERROR: " + error),
-    }
-  );
+  useEffect(() => {
+    setData(location.state.data)
+  }, [location]);
+
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -63,16 +55,18 @@ function Admissibility() {
       <TableContainer
         component={Paper}
         style={{ width: "90%", marginLeft: "4%" }}
-      >
+      > 
+        <Button onClick={() => navigate(-1)}> <ArrowBackIcon /> BACK</Button>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
-              <StyledTableCell align="center">
-                COLLEGE COHORTS
-              </StyledTableCell>
-              <StyledTableCell align="center">STUDENT COMPETETITVE</StyledTableCell>
-              <StyledTableCell align="center">MEAN GRADE</StyledTableCell>
+              <StyledTableCell align="center">EXPECTED FAMILY CONTRIBUTION</StyledTableCell>
+              <StyledTableCell align="center">EXPECTED FAMILY CONTRIBUTION</StyledTableCell>
+              <StyledTableCell align="center">AVERAGE INFLATION FEE</StyledTableCell>
+              <StyledTableCell align="center">EXPECTED INCOME POSTGRADUATION</StyledTableCell>
+              <StyledTableCell align="center">3 YEARS ROI</StyledTableCell>
+              <StyledTableCell align="center">OVERALL GRADE</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -80,10 +74,10 @@ function Admissibility() {
               <StyledTableRow key={inst.NAME}>
                 <StyledTableCell align="center">{inst.NAME}</StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.CollegeCohorts}
+                  {parseFloat(parseFloat(inst.ADMRATE)*100).toFixed(2)}%
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.OverallCompetitive}
+                {parseFloat(parseFloat(inst.ProbabilityOfAdmission)*100).toFixed(2)}%
                 </StyledTableCell>
                 <StyledTableCell align="center">
                  <b style={{ color: 'blue'}}>
@@ -100,4 +94,4 @@ function Admissibility() {
   );
 }
 
-export default Admissibility;
+export default Affordability;

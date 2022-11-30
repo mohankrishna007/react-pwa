@@ -7,7 +7,6 @@ function ScheduleAppointment() {
     }
     return(
         <div>
-            <h1> Schedule an appointment now !!</h1>
             <Button onClick={navigateToShedule}>Book appointment</Button>
         </div>
     )

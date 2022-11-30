@@ -47,10 +47,6 @@ const DemographicInformation = (props, ref) => {
 
   useImperativeHandle(ref, () => ({
     postAboutStudent,
-
-    test(){
-      console.log("TEST ")
-    }
   }));
 
   const postAboutStudent = () => {
@@ -268,7 +264,7 @@ const DemographicInformation = (props, ref) => {
                 </MDBCol>
               </MDBRow>
               <MDBRow>
-                <MDBCol md={residencyStatus === 2 ? "5" : "12"}>
+                <MDBCol md={String(residencyStatus) === '2' ? "5" : "12"}>
                   <FormControl fullWidth>
                     <InputLabel id="residency-status-select-label" required>
                       Residency Status
@@ -296,7 +292,7 @@ const DemographicInformation = (props, ref) => {
                 <MDBCol
                   md="7"
                   style={
-                    residencyStatus === 2
+                    String(residencyStatus) === "2"
                       ? { display: "block" }
                       : { display: "none" }
                   }
@@ -357,7 +353,7 @@ const DemographicInformation = (props, ref) => {
                       ) || null
                     }
                     options={
-                      residencyStatus === 2
+                      String(residencyStatus) === '2'
                         ? getStates(country)
                         : getStates("US")
                     }

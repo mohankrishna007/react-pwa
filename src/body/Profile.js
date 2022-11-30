@@ -42,6 +42,10 @@ const Profile = () => {
     Functions.getUserProfile
   );
 
+  React.useEffect(() => {
+    refetch();
+  }, [refetch])
+
   if (filled === "0") {
     return (
       <div>
@@ -63,10 +67,10 @@ const Profile = () => {
     );
   }
 
-  const updateItemData = () => {
+  const updateItemData = async() => {
     if (item === 0) {
       const about =  childRef.current.postAboutStudent();
-      axios.post(APP_URL+'/student/about', about).then((resp) => {
+      await axios.post(APP_URL+'/student/about', about).then((resp) => {
         if(resp.status === 200){
           setAlertData("About data updated successfully");
           setShowAlert(false);
@@ -74,7 +78,7 @@ const Profile = () => {
       })
      } else if (item === 1) {
       const academics =  childRef.current.postAcademicProfile();
-      axios.post(APP_URL+'/student/academics', academics).then((resp) => {
+      await axios.post(APP_URL+'/student/academics', academics).then((resp) => {
         if(resp.status === 200){
           setAlertData("Academics data updated successfully");
           setShowAlert(false);
@@ -82,7 +86,7 @@ const Profile = () => {
       })
      } else if (item === 2) {
       const financial =  childRef.current.postFinancial();
-      axios.post(APP_URL+'/student/financial', financial).then((resp) => {
+      await axios.post(APP_URL+'/student/financial', financial).then((resp) => {
         if(resp.status === 200){
           setAlertData("Financial data updated successfully");
           setShowAlert(false);
@@ -90,14 +94,14 @@ const Profile = () => {
       })
      } else if (item === 3) {
       const preference = childRef.current.postPreference();
-      axios.post(APP_URL+'/student/preference', preference).then((resp) => {
+      await axios.post(APP_URL+'/student/preference', preference).then((resp) => {
         if(resp.status === 200){
           setAlertData("Preferences data updated successfully");
           setShowAlert(false);
         }
       })
      }
-    refetch();
+    window.location.reload();
   };
 
   const profile = data.data;
@@ -268,6 +272,7 @@ const Profile = () => {
         ) : (
           <h1> COMING SOON </h1>
         )}
+        <br/>
         <Alert variant="standard" severity="success" hidden={showAlert}>
           {alertData}
         </Alert>

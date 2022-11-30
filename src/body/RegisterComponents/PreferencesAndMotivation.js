@@ -21,6 +21,7 @@ import {
   Snackbar,
   Alert,
   responsiveFontSizes,
+  Button,
 } from "@mui/material";
 
 import * as Names from "../../Constants/ReactQueryConsts";
@@ -35,7 +36,6 @@ import { useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
 
 const States = [
   "Entire US",
@@ -91,7 +91,7 @@ const States = [
 ];
 
 const PreferenceMotivation = (props, ref) => {
-  const [collegeType, setCollegeType] = useState([]);
+  const [collegeTypes, setCollegeTypes] = React.useState([]);
   const [fieldOfStudy, setFieldOfStudy] = useState("");
   const [regiliousAffliations, setReligiousAffliations] = useState("");
   const [specializedMission, setSpecializedMission] = useState("");
@@ -179,10 +179,15 @@ const PreferenceMotivation = (props, ref) => {
   });
 
   const postPreference = () => {
+    var selectedCollegeTypes = [];
     var selectedSchoolSize = [];
     var selectedUrbanicity = [];
     var selectedReasonstoAttend = [];
     var selectedKeyConsiderations = [];
+
+    collegeTypes.forEach((ele) => {
+      selectedCollegeTypes.push(ele.value);
+    })
 
     schoolSize.forEach((ele) => {
       if (ele.checked === true) {
@@ -206,7 +211,7 @@ const PreferenceMotivation = (props, ref) => {
     });
 
     var PreferenceMotivation = {
-      CollegeType: collegeType,
+      CollegeType: selectedCollegeTypes,
       FieldOfStudy: fieldOfStudy,
       ReligiousAffliation: regiliousAffliations,
       SpecializedMission: specializedMission,
@@ -259,17 +264,17 @@ const PreferenceMotivation = (props, ref) => {
     var name = event.target.name;
     var val = event.target.value;
 
-    if(name === 'check'){
+    if (name === "check") {
       var checked = event.target.checked;
       var keyConsiderationsCheck = [...keyConsiderations];
       keyConsiderationsCheck[val - 1].checked = checked;
-      if(checked === false){
-        keyConsiderations[val -1].score = "";
-        if(scoreClicked) validateScore();
+      if (checked === false) {
+        keyConsiderations[val - 1].score = "";
+        if (scoreClicked) validateScore();
       }
       setKeyConsiderations(keyConsiderationsCheck);
-    }else{
-      setScoreClicked(true)
+    } else {
+      setScoreClicked(true);
       var keyConsiderationsScore = [...keyConsiderations];
       keyConsiderationsScore[name - 1].score = val;
       setKeyConsiderations(keyConsiderationsScore);
@@ -280,85 +285,91 @@ const PreferenceMotivation = (props, ref) => {
   React.useEffect(() => {
     var newDisable = [...disable];
     keyConsiderations.forEach((ele) => {
-      if(ele.checked === true){
+      if (ele.checked === true) {
         newDisable[ele.value] = false;
-        setDisableScore(newDisable)
-      }else{
+        setDisableScore(newDisable);
+      } else {
         newDisable[ele.value] = true;
-        setDisableScore(newDisable)
+        setDisableScore(newDisable);
       }
-    })
-  }, [disable, keyConsiderations])
+    });
+  }, [disable, keyConsiderations]);
 
   const validateScore = () => {
     var total = 0;
     keyConsiderations.forEach((ele) => {
       var score;
-      if(ele.score === ""){
+      if (ele.score === "") {
         score = 0;
-      }else{
+      } else {
         score = parseInt(ele.score);
       }
       total += score;
-    })
-    if(total === 100 || total === 0){
-      setScoreError(false)
-    }else{
-      setScoreError(true)
+    });
+    if (total === 100 || total === 0) {
+      setScoreError(false);
+    } else {
+      setScoreError(true);
     }
   };
 
-  const handleCollegeType = (value) => {
-    setCollegeType(String(value));
-  };
-
-  const handleLocation = (value) => {
-    setLocation(String(value));
-  };
-
   const collegePreferenceOptions = [
-    "Public",
-    "Private Non-Profit",
-    "Private Profit",
+    { title: "Public", value: "1" },
+    { title: "Private Non-Profit", value: "2" },
+    { title: "Private Profit", value: "3" },
   ];
 
   const religiousAffliationOptions = [
-    { title: "None", value: 0 },
-    { title: "African Methodist Episcopal", value: 1 },
-    { title: "African Methodist Episcopal Zion Church", value: 2 },
-    { title: "American Bapist", value: 3 },
-    { title: "American Lutheran", value: 4 },
-    { title: "Assemblies of God Church", value: 5 },
+    { title: "None", value: "" },
+    { title: "African Methodist Episcopal", value: "1" },
+    { title: "African Methodist Episcopal Zion Church", value: "2" },
+    { title: "American Bapist", value: "3" },
+    { title: "American Lutheran", value: "4" },
+    { title: "Assemblies of God Church", value: "5" },
   ];
 
   const specializedMissionsOptions = [
-    { title: "None", value: 0 },
-    { title: "Women Only", value: 1 },
-    { title: "Men Only", value: 2 },
-    { title: "Asian American", value: 3 },
-    { title: "Alaska Native", value: 4 },
-    { title: "Hispanic-Serving", value: 5 },
-    { title: "Historically Black College", value: 6 },
+    { title: "None", value: "" },
+    { title: "Women Only", value: "1" },
+    { title: "Men Only", value: "2" },
+    { title: "Asian American", value: "3" },
+    { title: "Alaska Native", value: "4" },
+    { title: "Hispanic-Serving", value: "5" },
+    { title: "Historically Black College", value: "6" },
   ];
 
   const prevPreference = useSelector((state) => state.profile.preference);
 
-
   React.useEffect(() => {
-
-    if(fieldOfStudy.length === 0){
+    if (fieldOfStudy.length === 0) {
       props.handleError(true);
-    }else{
+    } else {
       props.handleError(false);
     }
-  }, [fieldOfStudy, props])
+  }, [fieldOfStudy, props]);
 
   React.useEffect(() => {
     if (prevPreference != null) {
-      setCollegeType(prevPreference.CollegeType);
+
+      var newCollegeTypes = [];
+      String(prevPreference.CollegeType).split(",").forEach((ele) => {
+        var val = parseInt(ele);
+        if(isNaN(val)) return;
+        var temp = collegePreferenceOptions.find((ele) => ele.value === String(val));
+        newCollegeTypes.push(temp);
+      })
+      setCollegeTypes(newCollegeTypes);
+      
       setFieldOfStudy(prevPreference.FieldOfStudy);
       setReligiousAffliations(prevPreference.ReligiousAffliation);
       setSpecializedMission(prevPreference.SpecializedMission);
+
+      var newPrefferedColleges = [];
+      String(prevPreference.Location).split(",").forEach((ele) => {
+        if(ele.length === 0) return;
+        newPrefferedColleges.push(ele)
+      })
+      setLocation(newPrefferedColleges);
 
       var newSchoolSize = [...schoolSize];
       String(prevPreference.SchoolSize)
@@ -397,12 +408,14 @@ const PreferenceMotivation = (props, ref) => {
           var val = parseInt(ele);
           if (isNaN(val)) return;
           newKeyConsiderations[val - 1].checked = true;
-          if(val === 1){
-            newKeyConsiderations[val -1].score = prevPreference.AffinityScore;
-          }else if(val === 2){
-            newKeyConsiderations[val -1].score = prevPreference.AffordabilityScore;
-          }else if(val === 3){
-            newKeyConsiderations[val -1].score = prevPreference.AdmissibilityScore;
+          if (val === 1) {
+            newKeyConsiderations[val - 1].score = prevPreference.AffinityScore;
+          } else if (val === 2) {
+            newKeyConsiderations[val - 1].score =
+              prevPreference.AffordabilityScore;
+          } else if (val === 3) {
+            newKeyConsiderations[val - 1].score =
+              prevPreference.AdmissibilityScore;
           }
         });
       setKeyConsiderations(newKeyConsiderations);
@@ -417,28 +430,21 @@ const PreferenceMotivation = (props, ref) => {
             <MDBRow>
               <MDBCol md="12">
                 <Autocomplete
+                value={collegeTypes}
+                onChange={(event, newValue) => {
+                  setCollegeTypes(newValue)
+                }}
                   multiple
                   options={collegePreferenceOptions}
-                  disableCloseOnSelect
-                  getOptionLabel={(option) => option}
+                  isOptionEqualToValue={(option, college) => option.value === college.value}
+                  getOptionLabel={(option) => option.title}
+                  filterSelectedOptions
                   sx={{ mb: 2 }}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option}
-                    </li>
-                  )}
-                  onChange={(event, value) => handleCollegeType(value)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="CollegeType"
-                      placeholder="Choose College Type"
+                      label="College type"
+                      placeholder="College type"
                     />
                   )}
                 />
@@ -516,33 +522,32 @@ const PreferenceMotivation = (props, ref) => {
             </MDBRow>
             <MDBRow>
               <MDBCol md="12">
-                <Autocomplete
+              <Autocomplete
+                  value={location}
+                  onChange={(event, newValue) => {
+                    if(newValue.indexOf(States[0]) !== -1){
+                      setLocation([States[0]])
+                    }else{
+                      setLocation(newValue);
+                    }
+                  }}
                   multiple
                   options={States}
-                  disableCloseOnSelect
+                  disableCloseOnSelect='false'
+                  isOptionEqualToValue={(option, college) => option === college}
                   getOptionLabel={(option) => option}
+                  filterSelectedOptions
+                  sx={{ mb: 2 }}
                   getOptionDisabled={(option) => {
-                    if (location.indexOf("Entire US") !== -1) {
+                    if (location.indexOf(States[0]) !== -1) {
                       return true;
                     }
                     return false;
                   }}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={icon}
-                        checkedIcon={checkedIcon}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option}
-                    </li>
-                  )}
-                  onChange={(event, value) => handleLocation(value)}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Location preference"
+                      label="Preffered States"
                       placeholder="Choose States"
                     />
                   )}
@@ -635,54 +640,50 @@ const PreferenceMotivation = (props, ref) => {
                 </FormLabel>
                 <FormGroup aria-label="position">
                   {keyConsiderations.map((ele) => (
-                    <Grid
-                    container
-                    direction="row"
-                    key={ele.value}
-                  >
-                    <Grid item xs={10}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={ele.checked}
-                            value={ele.value}
-                            onChange={handleKeyConsiderations}
-                            name={'check'}
-                          />
-                        }
-                        key={ele.value}
-                        label={ele.title}
-                        labelPlacement="end"
-                        onChange={handleKeyConsiderations}
-                        name={'check'}
-                      />
-                      <Tooltip
-                        style={{ marginLeft: "-20px" }}
-                        title={ele.info}
-                      >
-                        <IconButton>
-                          <InfoIcon />
-                        </IconButton>
-                      </Tooltip>
+                    <Grid container direction="row" key={ele.value}>
+                      <Grid item xs={10}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={ele.checked}
+                              value={ele.value}
+                              onChange={handleKeyConsiderations}
+                              name={"check"}
+                            />
+                          }
+                          key={ele.value}
+                          label={ele.title}
+                          labelPlacement="end"
+                          onChange={handleKeyConsiderations}
+                          name={"check"}
+                        />
+                        <Tooltip
+                          style={{ marginLeft: "-20px" }}
+                          title={ele.info}
+                        >
+                          <IconButton>
+                            <InfoIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Input
+                          error={scoreError}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <PercentIcon style={{ fontSize: "1em" }} />
+                            </InputAdornment>
+                          }
+                          style={{
+                            width: "150%",
+                          }}
+                          name={ele.value}
+                          value={ele.score}
+                          onChange={handleKeyConsiderations}
+                          hidden={disable[ele.value]}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                      <Input
-                        error={scoreError}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <PercentIcon style={{ fontSize: "1em" }} />
-                          </InputAdornment>
-                        }
-                        style={{
-                          width: "150%",
-                        }}
-                        name={ele.value}
-                        value={ele.score}
-                        onChange={handleKeyConsiderations}
-                        hidden={disable[ele.value]}
-                      />
-                    </Grid>
-                  </Grid>
                   ))}
                 </FormGroup>
               </MDBCol>

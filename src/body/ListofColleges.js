@@ -158,7 +158,7 @@ export default function ListofColleges() {
   };
 
   const showThreea = () => {
-    navigate("/Threea", {
+    navigate("/grades", {
       state: {
         colleges: selectedColleges,
       },
