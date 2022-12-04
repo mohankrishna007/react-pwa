@@ -9,7 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useLocation, useNavigate } from "react-router";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -22,7 +22,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
@@ -33,60 +32,73 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
 function Affinitty() {
   const location = useLocation();
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setData(location.state.data)
-  }, [location])
+    setData(location.state.data);
+  }, [location]);
 
   return (
     <div>
-        <TableContainer
-          component={Paper}
-          style={{ width: "90%", marginLeft: "4%" }}
-        >
-          <Button onClick={() => navigate(-1)}> <ArrowBackIcon /> BACK</Button>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
+      <TableContainer
+        component={Paper}
+        style={{ width: "90%", marginLeft: "4%" }}
+      >
+        <Button onClick={() => navigate(-1)}>
+          {" "}
+          <ArrowBackIcon /> BACK
+        </Button>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
+              <StyledTableCell align="center">
+                STUDENT PREFRENCE GRADE
+              </StyledTableCell>
+              <StyledTableCell align="center">WEATHER GRADE</StyledTableCell>
+              <StyledTableCell align="center">SAFETY GRADE</StyledTableCell>
+              <StyledTableCell align="center">
+                TRANPORTATION GRADE
+              </StyledTableCell>
+              <StyledTableCell align="center">OVERALL GRADE</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((inst) => (
+              <StyledTableRow key={inst.college.UNITD}>
                 <StyledTableCell align="center">
-                  STUDENT PREFRENCE GRADE
+                  <h6>
+                    {inst.college.INSTNM}
+                    <div style={{ fontSize: "0.5em" }}>
+                      {inst.college.CITY}
+                      {", "}
+                      {inst.college.STATE_NAME}
+                    </div>
+                  </h6>
                 </StyledTableCell>
-                <StyledTableCell align="center">WEATHER GRADE</StyledTableCell>
-                <StyledTableCell align="center">SAFETY GRADE</StyledTableCell>
                 <StyledTableCell align="center">
-                  TRANPORTATION GRADE
+                  {inst.affinity.StudentPreference}
                 </StyledTableCell>
-                <StyledTableCell align="center">OVERALL GRADE</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((inst) => (
-                <StyledTableRow key={inst.NAME}>
-                  <StyledTableCell align="center">{inst.NAME}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {inst.StudentPreference}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {inst.WeatherGrade}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {inst.CrimeGrade}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {inst.TransportGrade}
-                  </StyledTableCell>
-                  <StyledTableCell align="center"><b style={{ color: 'blue'}}>{inst.Overall}</b></StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                <StyledTableCell align="center">
+                  {inst.affinity.WeatherGrade}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {inst.affinity.CrimeGrade}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {inst.affinity.TransportGrade}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <b style={{ color: "blue" }}>{inst.affinity.Overall}</b>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

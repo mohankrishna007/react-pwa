@@ -19,6 +19,15 @@ export const getAdmissibilityScore = (data) => {
   );
 };
 
+export const getAffordability = (data) => {
+  var req = {
+    colleges : data
+  }
+  return axios.post(
+    "https://collegeportfoliobackendnode.azurewebsites.net/college/affordability", req
+  );
+};
+
 export const getAdmissibilityLogs = (data) => {
   var req = {
     colleges : data
@@ -28,3 +37,12 @@ export const getAdmissibilityLogs = (data) => {
   );
 };
 
+export const getAffinityLogs = (data) => {
+  var req = {
+    colleges : data
+  }
+
+  return axios.post(
+    "https://collegeportfoliobackendnode.azurewebsites.net/college/affinitylogs", req
+  );
+};

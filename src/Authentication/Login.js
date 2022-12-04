@@ -202,7 +202,6 @@ export default function Login() {
               <Alert severity={variant} hidden={hideAlert}>
                 {message}
               </Alert>
-              <AutoDisabler>
               <Button
                 type="submit"
                 fullWidth
@@ -212,7 +211,6 @@ export default function Login() {
               >
                 Sign In
               </Button>
-              </AutoDisabler>
               <Grid container>
                 <Grid item xs>
                   <span

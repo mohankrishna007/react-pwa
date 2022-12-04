@@ -19,10 +19,10 @@ import ScheduleAppointment from "./body/ScheduleAppointment";
 import AccessDenied from "./Utils/AccessDenied";
 import Admissibility from "./GradeScores/Admissibility";
 import DialogBox from './body/DialogBox'
-import AdmissibilityLogs from "./GradeScores/AdmissibilityLogs";
 import Profile from "./body/Profile";
 import PATable from "./Admin/PATable";
 import Affordability from "./GradeScores/Affordability";
+import LOGS from "./GradeScores/LOGS";
 
 class App extends React.Component {
   render() {
@@ -72,16 +72,12 @@ class App extends React.Component {
                 element={user ? <Admissibility /> : <Navigate replace to="/" />}
               />
               <Route
-                path="admissibilitylogs"
-                element={user ? <AdmissibilityLogs /> : <Navigate replace to="/" />}
-              />
-              <Route
-                path="admissibilitylogs"
-                element={user ? <AdmissibilityLogs /> : <Navigate replace to="/" />}
-              />
-              <Route
                 path="affordability"
                 element={user ? <Affordability /> : <Navigate replace to="/" />}
+              />
+               <Route
+                path="logs"
+                element={user ? <LOGS /> : <Navigate replace to="/" />}
               />
               <Route
                 path="profile"

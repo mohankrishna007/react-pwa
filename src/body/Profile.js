@@ -23,7 +23,7 @@ import { Alert, Button } from "@mui/material";
 import { useRef } from "react";
 import axios from "axios";
 
-const drawerWidth = 240;
+var drawerWidth = 200;
 
 const APP_URL = "https://collegeportfoliobackendnode.azurewebsites.net";
 
@@ -209,12 +209,12 @@ const Profile = () => {
             boxSizing: "border-box",
           },
         }}
-      >
+      > 
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
           <br />
           <List>
-            {["Demographic", "Academics", "Finances", "Preferences"].map(
+            {["Demographics", "Academics", "Finances", "Preferences"].map(
               (text, index) => (
                 <ListItem
                   key={text}

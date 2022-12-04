@@ -16,6 +16,7 @@ import { IconButton } from "@material-ui/core";
 import { MDBCol, MDBRow } from "mdb-react-ui-kit";
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from "react-router";
+import { InputAdornment } from "@mui/material";
 
 
 const LISTBOX_PADDING = 8; // px
@@ -134,6 +135,7 @@ const StyledPopper = styled(Popper)({
 export default function ListofColleges() {
   const [colleges, setColleges] = React.useState([]);
   const [selectedColleges, setSelectedColleges] = React.useState([]);
+  const [randNum, setRanNum] = React.useState(100);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -155,9 +157,15 @@ export default function ListofColleges() {
     var col = [];
     value.forEach((opt) => col.push({unitID: opt.UNITID}));
     setSelectedColleges(col);
+
+    var ran = parseInt(Math.random() * (colleges.length - 0) + 0);
+    setRanNum(ran)
   };
 
   const showThreea = () => {
+    if(selectedColleges.length === 0){
+      return;
+    }
     navigate("/grades", {
       state: {
         colleges: selectedColleges,
@@ -167,7 +175,7 @@ export default function ListofColleges() {
 
   return (
     <MDBRow>
-      <MDBCol md="10">
+      <MDBCol md="12">
         <Autocomplete
           multiple
           options={colleges}
@@ -189,14 +197,23 @@ export default function ListofColleges() {
           filterSelectedOptions
           sx={{ mb: 2 }}
           renderInput={(params) => (
-            <TextField {...params} required label="Choose Colleges" />
+            <TextField {...params} required
+            placeholder= {(colleges.length !== 0)? colleges[randNum].INSTNM : "Choose colleges"}
+            InputProps={{
+              ...params.InputProps,
+              startAdornment: (
+                <>
+                  <InputAdornment position="start">
+                    <IconButton onClick={showThreea}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                  {params.InputProps.startAdornment}
+                </>
+              )
+            }}/>
           )}
         />
-      </MDBCol>
-      <MDBCol md="2">
-        <IconButton onClick={() => showThreea()}>
-          <SearchIcon />
-        </IconButton>
       </MDBCol>
     </MDBRow>
   );

@@ -20,7 +20,6 @@ import { useLocation } from "react-router";
 import { useNavigate } from "react-router";
 import { Button } from "@material-ui/core";
 import { useQueries, useQuery, useQueryClient } from "react-query";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import LinearProgress from "@mui/material/LinearProgress";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -79,6 +78,11 @@ function Threea() {
       queryFn: () => Functions.getAdmissibilityScore(location.state.colleges),
       onSuccess: (data) => setAdmissibility(data?.data),
     },
+    {
+      queryKey: Names.Affordability,
+      queryFn: () => Functions.getAffordability(location.state.colleges),
+      onSuccess: (data) => setAffordability(data?.data),
+    }
   ]);
 
   useQuery(PreloadNames.COLLEGES, PreloadFunctions.fetchColleges, {
@@ -95,28 +99,29 @@ function Threea() {
   });
 
   useEffect(() => {
-    if (affinity.length !== 0 && admissibility.length !== 0) {
-      var gradeData = [];
-      for (let index = 0; index < location.state.colleges.length; index++) {
-        gradeData.push({
-          Name: filteredColleges[index].INSTNM,
-          City: filteredColleges[index].CITY,
-          State: filteredColleges[index].STATE_NAME,
-          affinityTotal: affinity[index].Overall,
-          admissibilityTotal: admissibility[index].MeanGrade,
-          affordabilityTotal: "",
+    if (affordability.length !== 0 && affinity.length !== 0 && admissibility.length !== 0 && filteredColleges.length !== 0) {
+
+      console.log(affordability)
+
+      var data = [];
+      var colleges = location.state.colleges;
+      for (let index = 0; index < colleges.length; index++) {
+         var college = filteredColleges.find(inst => inst.UNITID === colleges[index].unitID);
+         var collegeAffinity = affinity.find(inst => inst.UNITID === colleges[index].unitID);
+         var collegeAdmissibility = admissibility.find(inst => inst.UNITID === colleges[index].unitID);
+         var collegeAffordability = affordability.find(inst => inst.UNITID === colleges[index].unitID);
+
+        data.push({
+          college: college,
+          affinity: collegeAffinity,
+          admissibility: collegeAdmissibility,
+          affordability: collegeAffordability,
           Total: "",
         });
       }
-
-      setData(gradeData);
+      setData(data);
     }
-  }, [
-    affinity,
-    admissibility,
-    location.state.colleges.length,
-    filteredColleges,
-  ]);
+  }, [affinity, admissibility, location.state.colleges.length, filteredColleges, location.state.colleges, affordability]);
 
   useEffect(() => {
     var filtered = colleges.filter((array) =>
@@ -126,42 +131,43 @@ function Threea() {
   }, [colleges, location.state.colleges]);
 
   const showAffinity = () => {
-    if (affinity.length !== 0) {
+    if (data.length !== 0) {
       navigate("/affinity", {
         state: {
-          data: affinity,
+          data: data,
         },
       });
     }
   };
 
   const showAdmissibility = () => {
-    if (admissibility.length !== 0) {
+    if (data.length !== 0) {
       navigate("/admissibility", {
         state: {
-          data: admissibility,
+          data: data,
         },
       });
     }
   };
 
   const showAffordability = () => {
-    if (affordability.length !== 0) {
+    if (data.length !== 0) {
       navigate("/affordability", {
         state: {
-          data: affordability,
+          data: data,
         },
       });
     }
   };
 
-  const handleAdmssibilityLogs = () => {
-    navigate("/admissibilitylogs", {
+  const handleLogs = () => {
+    navigate("/logs", {
       state: {
         colleges: location.state.colleges,
       },
     });
   };
+
 
   return (
     <div>
@@ -177,20 +183,17 @@ function Threea() {
               <StyledTableCell align="center"> INSTITUTE NAME</StyledTableCell>
               <StyledTableCell align="center">
                 <Button style={{ color: "white" }} onClick={showAffordability}>
-                  AFFORDABILITY GRADE
-                  <ArrowDownwardIcon fontSize="small" />
+                 <u> AFFORDABILITY GRADE</u>
                 </Button>
               </StyledTableCell>
               <StyledTableCell align="center">
                 <Button style={{ color: "white" }} onClick={showAdmissibility}>
-                  ADMISSABILITY GRADE
-                  <ArrowDownwardIcon fontSize="small" />
+                  <u> ADMISSABILITY GRADE</u>
                 </Button>
               </StyledTableCell>
               <StyledTableCell align="center">
                 <Button style={{ color: "white" }} onClick={showAffinity}>
-                  AFFINITY GRADE
-                  <ArrowDownwardIcon fontSize="small" />
+                  <u> AFFINITY GRADE </u>
                 </Button>
               </StyledTableCell>
               <StyledTableCellOverAll align="center">
@@ -200,26 +203,26 @@ function Threea() {
           </TableHead>
           <TableBody>
             {data.map((inst) => (
-              <StyledTableRow key={inst.Name}>
+              <StyledTableRow key={inst.college.UNITD}>
                 <StyledTableCell align="center">
                   <h6>
-                    {inst.Name}
+                    {inst.college.INSTNM}
                     <div style={{ fontSize: "0.5em" }}>
-                      {inst.City}{" - "}{inst.State}
+                      {inst.college.CITY}{", "}{inst.college.STATE_NAME}
                     </div>
                   </h6>
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.affordabilityTotal}
+                  {inst.affordability.OVERALLGRADE}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.admissibilityTotal}
+                  {inst.admissibility.MeanGrade}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {inst.affinityTotal}
+                  {inst.affinity.Overall}
                 </StyledTableCell>
                 <StyledTableCellOverAll align="center">
-                  <b style={{ color: "red" }}>{inst.Total}</b>
+                  <b style={{ color: "red" }}>{".."}</b>
                 </StyledTableCellOverAll>
               </StyledTableRow>
             ))}
@@ -227,9 +230,8 @@ function Threea() {
         </Table>
       </TableContainer>
 
-      <Button onClick={handleAdmssibilityLogs}>
-        {" "}
-        click to show Admissability Logs{" "}
+      <Button onClick={handleLogs}>
+        click to show Logs
       </Button>
     </div>
   );

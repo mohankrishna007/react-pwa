@@ -21,7 +21,6 @@ import {
   Snackbar,
   Alert,
   responsiveFontSizes,
-  Button,
 } from "@mui/material";
 
 import * as Names from "../../Constants/ReactQueryConsts";
@@ -29,14 +28,9 @@ import * as Functions from "../../PrefetchData/DataLoadFunctions";
 
 import InfoIcon from "@mui/icons-material/Info";
 import PercentIcon from "@mui/icons-material/Percent";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import RegisterTheme from "../../Themes/RegisterTheme";
 import { useQuery, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
 const States = [
   "Entire US",
   "Alabama",
@@ -320,7 +314,7 @@ const PreferenceMotivation = (props, ref) => {
   ];
 
   const religiousAffliationOptions = [
-    { title: "None", value: "" },
+    { title: "None", value: "none" },
     { title: "African Methodist Episcopal", value: "1" },
     { title: "African Methodist Episcopal Zion Church", value: "2" },
     { title: "American Bapist", value: "3" },
@@ -329,7 +323,7 @@ const PreferenceMotivation = (props, ref) => {
   ];
 
   const specializedMissionsOptions = [
-    { title: "None", value: "" },
+    { title: "None", value: "none" },
     { title: "Women Only", value: "1" },
     { title: "Men Only", value: "2" },
     { title: "Asian American", value: "3" },

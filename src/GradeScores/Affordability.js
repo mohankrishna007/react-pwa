@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { useLocation, useNavigate } from "react-router";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -10,6 +10,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import InfoIcon from "@mui/icons-material/Info";
+
 
 
 function Affordability() {
@@ -26,6 +28,7 @@ function Affordability() {
   };
 
   useEffect(() => {
+    console.log(location.state.data);
     setData(location.state.data)
   }, [location]);
 
@@ -61,28 +64,62 @@ function Affordability() {
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">INSTITUTE NAME</StyledTableCell>
-              <StyledTableCell align="center">EXPECTED FAMILY CONTRIBUTION</StyledTableCell>
-              <StyledTableCell align="center">EXPECTED FAMILY CONTRIBUTION</StyledTableCell>
-              <StyledTableCell align="center">AVERAGE INFLATION FEE</StyledTableCell>
+              <StyledTableCell align="center">
+                <Tooltip title={'EXPECTED FAMILY CONTRIBUTION'}>
+                  <IconButton>
+                    <span style={{color: 'white', fontSize: '0.6em'}}>EFC ENROLLMENT YEAR</span>
+                  </IconButton>
+                </Tooltip>
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <Tooltip title={'EXPECTED FAMILY CONTRIBUTION'}>
+                  <IconButton>
+                    <span style={{color: 'white', fontSize: '0.6em'}}>EFC FULL UNDERGRADUATE PROGRAME</span>
+                  </IconButton>
+                </Tooltip>
+              </StyledTableCell>
+              <StyledTableCell align="center">AVERAGE FEE INFLATION</StyledTableCell>
               <StyledTableCell align="center">EXPECTED INCOME POSTGRADUATION</StyledTableCell>
-              <StyledTableCell align="center">3 YEARS ROI</StyledTableCell>
+              <StyledTableCell align="center">3 YEAR ROI</StyledTableCell>
               <StyledTableCell align="center">OVERALL GRADE</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((inst) => (
-              <StyledTableRow key={inst.NAME}>
-                <StyledTableCell align="center">{inst.NAME}</StyledTableCell>
-                <StyledTableCell align="center">
-                  {parseFloat(parseFloat(inst.ADMRATE)*100).toFixed(2)}%
+              <StyledTableRow key={inst.college.INSTNM}>
+                 <StyledTableCell align="center">
+                  <h6>
+                    {inst.college.INSTNM}
+                    <div style={{ fontSize: "0.5em" }}>
+                      {inst.college.CITY}
+                      {", "}
+                      {inst.college.STATE_NAME}
+                    </div>
+                  </h6>
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                {parseFloat(parseFloat(inst.ProbabilityOfAdmission)*100).toFixed(2)}%
+                  ${inst.affordability.EFCENROLLMENTYEAR}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  ${inst.affordability.EFCFULLUNDERGRADUATE}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {parseFloat(parseFloat(inst.affordability.AVERAGEINFLATIONFEE) * 100).toFixed(2)}%
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  ${inst.affordability.EXPECTEDINCOME}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <Tooltip title={inst.affordability.ROIPERCENT}>
+                    <IconButton>
+                      <span style={{color: 'black', fontSize: '0.6em'}}>{inst.affordability.ROIGRADE}</span>
+                    </IconButton>
+                  </Tooltip>
                 </StyledTableCell>
                 <StyledTableCell align="center">
                  <b style={{ color: 'blue'}}>
-                  {inst.MeanGrade}
-                  </b>
+                  {inst.affordability.OVERALLGRADE}
+                 </b>
                 </StyledTableCell>
               </StyledTableRow>
             ))}
