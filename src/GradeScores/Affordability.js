@@ -10,9 +10,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import InfoIcon from "@mui/icons-material/Info";
-
-
 
 function Affordability() {
   const location = useLocation();
@@ -79,7 +76,13 @@ function Affordability() {
                 </Tooltip>
               </StyledTableCell>
               <StyledTableCell align="center">AVERAGE FEE INFLATION</StyledTableCell>
-              <StyledTableCell align="center">EXPECTED INCOME POSTGRADUATION</StyledTableCell>
+              <StyledTableCell align="center">
+                <Tooltip title={'THIRD YEAR EXPECTED INCOME POSTGRADUATION'}>
+                  <IconButton>
+                    <span style={{color: 'white', fontSize: '0.6em'}}>MEDIAN EARNINGS</span>
+                  </IconButton>
+                </Tooltip>
+              </StyledTableCell>
               <StyledTableCell align="center">3 YEAR ROI</StyledTableCell>
               <StyledTableCell align="center">OVERALL GRADE</StyledTableCell>
             </TableRow>
@@ -98,23 +101,19 @@ function Affordability() {
                   </h6>
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  ${inst.affordability.EFCENROLLMENTYEAR}
+                  ${Number(inst.affordability.EFCENROLLMENTYEAR).toLocaleString()}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  ${inst.affordability.EFCFULLUNDERGRADUATE}
+                  ${Number(inst.affordability.EFCFULLUNDERGRADUATE).toLocaleString()}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {parseFloat(parseFloat(inst.affordability.AVERAGEINFLATIONFEE) * 100).toFixed(2)}%
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  ${inst.affordability.EXPECTEDINCOME}
+                  ${Number(inst.affordability.EXPECTEDINCOME).toLocaleString()}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  <Tooltip title={inst.affordability.ROIPERCENT}>
-                    <IconButton>
-                      <span style={{color: 'black', fontSize: '0.6em'}}>{inst.affordability.ROIGRADE}</span>
-                    </IconButton>
-                  </Tooltip>
+                {inst.affordability.ROIPERCENT}%
                 </StyledTableCell>
                 <StyledTableCell align="center">
                  <b style={{ color: 'blue'}}>

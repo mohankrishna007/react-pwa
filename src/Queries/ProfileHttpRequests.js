@@ -31,3 +31,7 @@ export const updateProfileCompletetion = () => {
 export const getUserProfile = () => {
   return axios.get("https://collegeportfoliobackendnode.azurewebsites.net/student/getprofile");
 }
+
+export const getScores = () => {
+  return axios.get("https://collegeportfoliobackendnode.azurewebsites.net/student/get3Ascores");
+}

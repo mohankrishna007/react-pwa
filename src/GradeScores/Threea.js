@@ -3,6 +3,9 @@ import { React, useState } from "react";
 import * as Names from "../Constants/ReactQueryConsts";
 import * as Functions from "../Queries/3AScores";
 
+import { GETSCOREVALUES } from '../Constants/ReactQueryConsts'
+import { getScores } from '../Queries/ProfileHttpRequests';
+
 import * as PreloadNames from "../Constants/ReactQueryConsts";
 import * as PreloadFunctions from "../PrefetchData/DataLoadFunctions";
 
@@ -14,7 +17,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import axios from "axios";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router";
@@ -52,8 +54,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const token = localStorage.getItem("token");
-axios.defaults.headers.common["auth-token"] = token;
+const overrallScoreMap = {
+  'A+': 4.3,
+  'A' : 4.0,
+  'A-': 3.7,
+  'B+': 3.3,
+  'B' : 3.0,
+  'B-': 2.7,
+  'C+': 2.3,
+  'C' : 2.0,
+  'C-': 1.7
+}
 
 function Threea() {
   const navigate = useNavigate();
@@ -61,6 +72,7 @@ function Threea() {
   const [affinity, setAffinity] = useState([]);
   const [admissibility, setAdmissibility] = useState([]);
   const [affordability, setAffordability] = useState([]);
+  const [scores, setScores] = useState([]);
   const [colleges, setColleges] = useState([]);
   const [filteredColleges, setFilteredColleges] = useState([]);
 
@@ -98,10 +110,15 @@ function Threea() {
     },
   });
 
+  useQuery(GETSCOREVALUES, getScores, {
+    onSuccess: (data) => setScores(data?.data),
+    onError: () => console.log("ERROR ON GETTING SCORE VALUES")
+  })
+
   useEffect(() => {
     if (affordability.length !== 0 && affinity.length !== 0 && admissibility.length !== 0 && filteredColleges.length !== 0) {
 
-      console.log(affordability)
+      console.log(scores)
 
       var data = [];
       var colleges = location.state.colleges;
@@ -111,12 +128,30 @@ function Threea() {
          var collegeAdmissibility = admissibility.find(inst => inst.UNITID === colleges[index].unitID);
          var collegeAffordability = affordability.find(inst => inst.UNITID === colleges[index].unitID);
 
+         var affinityScore = parseFloat(overrallScoreMap[collegeAffinity.Overall]);
+         var admissibilityScore = parseFloat(overrallScoreMap[collegeAdmissibility.MeanGrade]);
+         var affordabilityScore = parseFloat(overrallScoreMap[collegeAffordability.OVERALLGRADE]);
+
+         var avg = ((affinityScore * (parseInt(scores.affinity))/100) +
+          (admissibilityScore * (parseInt(scores.admissibility)/100)) + 
+          (affordabilityScore * (parseInt(scores.affordability))/100))
+        
+         // eslint-disable-next-line no-loop-func
+         var closest = Object.values(overrallScoreMap).reduce(function (prev, curr) {
+            return Math.abs(curr - avg) <= Math.abs(prev - avg) ? curr : prev;
+          });
+          
+         var overAll = Object.keys(overrallScoreMap).find(
+            // eslint-disable-next-line no-loop-func
+            (key) => overrallScoreMap[key] === closest
+          );
+
         data.push({
           college: college,
           affinity: collegeAffinity,
           admissibility: collegeAdmissibility,
           affordability: collegeAffordability,
-          Total: "",
+          Total: overAll,
         });
       }
       setData(data);
@@ -222,7 +257,7 @@ function Threea() {
                   {inst.affinity.Overall}
                 </StyledTableCell>
                 <StyledTableCellOverAll align="center">
-                  <b style={{ color: "red" }}>{".."}</b>
+                  <b style={{ color: "red" }}>{inst.Total}</b>
                 </StyledTableCellOverAll>
               </StyledTableRow>
             ))}

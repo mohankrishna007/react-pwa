@@ -28,6 +28,15 @@ export const getAffordability = (data) => {
   );
 };
 
+export const getAffordabilityLogs = (data) => {
+  var req = {
+    colleges : data
+  }
+  return axios.post(
+    "https://collegeportfoliobackendnode.azurewebsites.net/college/affordabilitylogs", req
+  );
+};
+
 export const getAdmissibilityLogs = (data) => {
   var req = {
     colleges : data

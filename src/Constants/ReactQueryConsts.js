@@ -10,11 +10,13 @@ export const FINANCE = 'finance';
 export const PREFERENCE = 'preference';
 export const UPDATEPROFILE = 'updateprofile';
 export const GETPROFILEDATA = 'profiledata';
+export const GETSCOREVALUES = 'scorevalues';
 
 //3A Scores
 export const Affinity = 'affinity';
 export const Admissibility = 'admissibility';
 export const Affordability = 'affordability';
+export const Affordabilitylogs = 'affordabilitylogs';
 export const Admissibilitylogs = 'admissibilitylogs';
 export const affinityogs = 'affinitylogs';
 
